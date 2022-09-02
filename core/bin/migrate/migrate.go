@@ -1,22 +1,23 @@
 package main
 
 import (
-	"cardamom/core/app"
+	cfg "cardamom/core/config"
 	"cardamom/core/models"
-	"os"
 )
 
 func main() {
-	app.Init()
 	models.Migrate()
 
-	admin := models.User{
-		FirstName: os.Getenv("ADMIN_USER_FIRST_NAME"),
-		LastName:  os.Getenv("ADMIN_USER_LAST_NAME"),
-		Email:     os.Getenv("ADMIN_USER_EMAIL"),
-		Role:      "admin",
-		Password:  models.HashPassword(os.Getenv("ADMIN_USER_PASSWORD")),
+	if cfg.C.Env == "local" {
+		if err := models.DB.Where(&models.User{
+			Email: cfg.C.AdminUserEmail,
+		}).Attrs(models.User{
+			Uid:      "admin",
+			Role:     "admin",
+			Password: models.HashPassword(cfg.C.AdminUserPassword),
+		}).FirstOrCreate(&models.User{}).Error; err != nil {
+			panic(err)
+		}
 	}
 
-	models.DB.Create(&admin)
 }

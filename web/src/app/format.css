@@ -1,0 +1,25 @@
+.app-root {
+  --format-line-height: 30px;
+  --format-heading-small-height: 40px;
+  --format-heading-medium-height: 50px;
+  --format-heading-large-height: 70px;
+
+  --format-font-size-small: 12px;
+  --format-font-size-medium: 16px;
+  --format-font-size-large: 20px;
+  --format-font-size-heading-small: 24px;
+  --format-font-size-heading-medium: 32px;
+  --format-font-size-heading-large: 48px;
+}
+
+.format-font-small {
+  font-size: var(--format-font-size-small);
+}
+
+.format-font-medium {
+  font-size: var(--format-font-size-medium);
+}
+
+.format-font-large {
+  font-size: var(--format-font-size-large);
+}

@@ -1,0 +1,59 @@
+/* Form Text */
+.form-text-root, .form-password-root {
+  display: flex;
+  flex-direction: column;
+
+  padding: 10px 5px;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.form-text-root:focus-within, .form-password-root:focus-within {
+  outline: 1px solid var(--theme-primary-color);
+}
+
+.form-text-label, .form-password-label, .form-number-label {
+  font-size: var(--format-font-size-small);
+}
+
+.form-text-root>.input-text-box {
+  font-size: var(--format-font-size-medium);
+}
+
+/* Form Drop Down */
+.form-dropdown-root {
+  display: flex;
+  flex-direction: column;
+
+  padding: 10px 5px;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.form-dropdown-label {
+  font-size: var(--format-font-size-small);
+}
+
+.form-dropdown-select {
+  font-size: var(--format-font-size-medium);
+}
+
+/* Form Text Area */
+.form-textarea-root {
+  flex-direction: column;
+
+  padding: 10px 5px;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.form-textarea-label {
+  font-size: var(--format-font-size-small);
+}
+
+.form-textarea-input {
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: var(--format-font-size-medium);
+}

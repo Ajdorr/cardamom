@@ -1,0 +1,89 @@
+.app-root {
+  --theme-focus-color: white;
+  --theme-on-focus-color: black;
+  --theme-surface-color: lightgrey;
+  --theme-on-surface-color: black;
+  --theme-background-color: darkgrey;
+  --theme-on-background-color: black;
+
+  --theme-primary-color: #4caf50;
+  --theme-on-primary-color: black;
+  --theme-primary-color-light: #80e27e;
+  --theme-on-primary-color-light: black;
+  --theme-primary-color-dark: #087f23;
+  --theme-on-primary-color-dark: white;
+
+  --theme-secondary-color: #dcde60;
+  --theme-on-secondary-color: black;
+  --theme-secondary-color-light: #ffff91;
+  --theme-on-secondary-color-light: black;
+  --theme-secondary-color-dark: #a8ac2e;
+  --theme-on-secondary-color-dark: black;
+
+  --theme-tertiary-color: #4a5f95;
+  --theme-on-tertiary-color: white;
+  --theme-tertiary-color-light: #7a8cc6;
+  --theme-on-tertiary-color-light: white;
+  --theme-tertiary-color-dark: #183667;
+  --theme-on-tertiary-color-dark: black;
+}
+
+.theme-focus {
+  color: var(--theme-on-focus-color);
+  background-color: var(--theme-focus-color);
+}
+
+.theme-surface {
+  color: var(--theme-on-surface-color);
+  background-color: var(--theme-surface-color);
+}
+
+.theme-background {
+  color: var(--theme-on-background-color);
+  background-color: var(--theme-background-color);
+}
+
+.theme-primary {
+  color: var(--theme-on-primary-color);
+  background-color: var(--theme-primary-color);
+}
+
+.theme-primary-light {
+  color: var(--theme-on-primary-color-light);
+  background-color: var(--theme-primary-color-light);
+}
+
+.theme-primary-dark {
+  color: var(--theme-on-primary-color-dark);
+  background-color: var(--theme-primary-color-dark);
+}
+
+.theme-secondary {
+  color: var(--theme-on-secondary-color);
+  background-color: var(--theme-secondary-color);
+}
+
+.theme-secondary-light {
+  color: var(--theme-on-secondary-color-light);
+  background-color: var(--theme-secondary-color-light);
+}
+
+.theme-secondary-dark {
+  color: var(--theme-on-secondary-color-dark);
+  background-color: var(--theme-secondary-color-dark);
+}
+
+.theme-tertiary {
+  color: var(--theme-on-tertiary-color);
+  background-color: var(--theme-tertiary-color);
+}
+
+.theme-tertiary-light {
+  color: var(--theme-on-tertiary-color-light);
+  background-color: var(--theme-tertiary-color-light);
+}
+
+.theme-tertiary-dark {
+  color: var(--theme-on-tertiary-color-dark);
+  background-color: var(--theme-tertiary-color-dark);
+}

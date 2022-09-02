@@ -1,0 +1,34 @@
+/* Inventory Item */
+.inventory-item-root {
+  display: flex;
+  flex-direction: row;
+  padding: 5px 5px;
+}
+
+/* Inventory Add Item */
+.inventory-list-add-item {
+  padding: 0px 0px 0px 5px;
+  height: var(--format-heading-small-height);
+}
+
+.inventory-list-add-item-input {
+  height: 100%;
+}
+
+/* Inventory item list */
+.inventory-item-root {
+  height: var(--format-line-height);
+}
+
+.inventory-list-items>.inventory-item-root:nth-child(even) {
+  background-color: var(--theme-surface-color);
+}
+
+.inventory-item-input {
+  flex-grow: 1;
+}
+
+.inventory-item-unstock {
+  height: var(--format-line-height);
+  width: var(--format-line-height);
+}

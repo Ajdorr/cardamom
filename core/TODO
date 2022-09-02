@@ -1,0 +1,13 @@
+MVP
++ Add ingredient portion (cup, tsp, tbsp)
++ Add ingredient measurements (cup, tsp, tbsp)
++ Convert environment variables to config struct
++ Set up postgresql database
++ Setup mirror environment
++ Set up production environment
+
+Backlog
++ Build database generator
++ Test password policy
++ Add ingredient annotations (chopped, sliced, diced, melted, chilled)
++ Enforce ingredient names - singular, converter

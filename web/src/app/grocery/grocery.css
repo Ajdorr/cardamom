@@ -1,0 +1,118 @@
+/* Grocery Drop Down */
+.modifiable-drop-down-workspace {
+  position: relative;
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.modifiable-drop-down-input {
+  flex-grow: 1;
+  display: flex;
+}
+
+.modifiable-drop-down-input > input {
+  text-transform: capitalize;
+}
+
+.modifiable-drop-down-overlay  {
+  position: absolute;
+  cursor: pointer;
+  width: 175px;
+  text-transform: capitalize;
+  z-index: 10;
+  border: 1px solid black;
+  box-sizing: border-box;
+}
+
+/* Grocery List */
+.grocery-list-root > .grocery-list-store .input-box,
+.grocery-list-root > .grocery-item-add-root .input-box,
+.grocery-list-root > .grocery-list-items .grocery-item-input > .input-box,
+.grocery-list-root > .grocery-list-items > .grocery-list-items-empty,
+.grocery-list-collected-items > .grocery-list-collected-root {
+  padding: 0px 0px 0px 5px;
+  box-sizing: border-box;
+}
+
+/* Grocery Store */
+.grocery-list-store {
+  height: var(--format-line-height);
+}
+
+/* Grocery Add Item */
+.grocery-item-add-root {
+  display: flex;
+  flex-direction: row;
+  height: var(--format-heading-small-height);
+}
+
+/* Grocery Item List */
+.grocery-item-root {
+  height: var(--format-line-height);
+  display: flex;
+  flex-direction: row;
+}
+
+.grocery-list-items > .grocery-item-root:nth-child(even),
+.grocery-list-collected-items > .grocery-list-collected-root:nth-child(even) {
+  background-color: var(--theme-surface-color);
+}
+
+.grocery-item-input {
+  flex-grow: 2;
+  text-transform: capitalize;
+}
+
+.grocery-item-store {
+  flex-grow: 1;
+  max-width: 150px;
+}
+
+.grocery-item-collect {
+  width: var(--format-line-height);
+}
+
+.grocery-list-items-empty {
+  height: var(--format-line-height);
+  display: flex;
+  align-items: center;
+}
+
+/* Collected Grocery Item Divider */
+.grocery-list-collected-divider {
+  height: var(--format-line-height);
+  display: flex;
+  flex-direction: row;
+}
+
+/* Collected Grocery Items */
+.grocery-list-collected-space {
+  flex-grow: 1;
+}
+
+.grocery-list-collected-clear-all {
+  height: var(--format-line-height);
+  width: var(--format-line-height);
+}
+
+.grocery-list-collected-root {
+  height: 25px;
+  display: flex;
+  flex-direction: row;
+}
+
+.grocery-collected-item {
+  flex-grow: 2;
+}
+
+.grocery-collected-store {
+  flex-grow: 1;
+  max-width: 100px;
+}
+
+.grocery-list-collected-empty {
+  padding: 5px 10px;
+  text-align: center;
+}

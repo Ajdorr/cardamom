@@ -1,0 +1,24 @@
+.input-box, .input-number-box, .input-password-box {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background-color: inherit;
+}
+
+.input-number-box {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+.input-box:focus-visible,  .input-number-box:focus-visible, .input-password-box:focus-visible {
+  outline: none;
+}
+
+.input-text-button {
+  padding: 10px 15px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  font: inherit;
+}
+

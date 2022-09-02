@@ -1,0 +1,11 @@
+
+.widget-interget-input-root {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.widget-interget-input-value {
+  width: 35px;
+  text-align: center;
+}

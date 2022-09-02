@@ -1,0 +1,50 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app-root {
+  height: 100vh;
+}
+
+.home-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.workspace-root {
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.workspace-menu-bar {
+  width: 100%;
+  height: var(--format-heading-small-height);
+
+  box-sizing: border-box;
+  padding: 5px 10px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.workspace-menu-bar > * {
+  display: contents;
+}
+
+.workspace-menu-bar img {
+  width: 35px;
+  height: 35px;
+}
+
+.workspace-main {
+  flex-grow: 1;
+  overflow-y: scroll;
+}
