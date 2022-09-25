@@ -30,6 +30,7 @@ func (c *oauth2Config_Google) get() *oauth2.Config {
 			panic(err)
 		} else {
 			c.cfg = config
+			c.cfg.RedirectURL = getOAuthRedirectURL("google")
 		}
 	})
 

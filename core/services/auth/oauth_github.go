@@ -27,6 +27,7 @@ func (c *oauth2Config_Github) get() *oauth2.Config {
 			ClientSecret: cfg.C.OAuthGithubClientSecret,
 			Scopes:       []string{"user:email"},
 			Endpoint:     github.Endpoint,
+			RedirectURL:  getOAuthRedirectURL("github"),
 		}
 	})
 	return c.cfg

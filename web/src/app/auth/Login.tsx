@@ -1,9 +1,10 @@
 import "./auth.css"
-import { useState } from 'react';
-import { useNavigate } from "react-router-dom"
-import { login, startOAuthLogin } from '../api';
+// import { useState } from 'react';
+// import { useNavigate } from "react-router-dom"
+// import { login, startOAuthLogin } from '../api';
+// import { FormText, FormPassword } from '../component/form'
+import { startOAuthLogin } from '../api';
 import { TextButton } from '../component/input'
-import { FormText, FormPassword } from '../component/form'
 import { Theme } from '../theme';
 
 

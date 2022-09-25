@@ -26,7 +26,7 @@ func (c *oauth2Config_Facebook) get() *oauth2.Config {
 			ClientSecret: cfg.C.OAuthFacebookClientSecret,
 			Scopes:       []string{"email"},
 			Endpoint:     facebook.Endpoint,
-			RedirectURL:  "http://localhost:3000/auth/oauth-return/facebook",
+			RedirectURL:  getOAuthRedirectURL("facebook"),
 		}
 	})
 	return c.cfg

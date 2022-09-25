@@ -73,7 +73,7 @@ func Refresh(c *gin.Context) {
 		gin_ext.Abort(c, http.StatusUnauthorized, fmt.Errorf("refresh token validation -- %w", err))
 	} else if claims, err := jwt_ext.CheckJWT(cookie, &models.AuthToken{}); err != nil {
 		gin_ext.Abort(c, http.StatusUnauthorized, fmt.Errorf("refresh token validation -- %w", err))
-	} else if err = models.DB.First(&user, claims.Uid).Error; err != nil {
+	} else if err = models.DB.First(&user, "uid = ?", claims.Uid).Error; err != nil {
 		gin_ext.Abort(c, http.StatusUnauthorized, fmt.Errorf("refresh token validation -- %w", err))
 	} else if access_token, csrf, err := user.GetAccessToken(); err != nil {
 		gin_ext.Abort(c, http.StatusUnauthorized, fmt.Errorf("refresh token validation -- %w", err))
@@ -131,8 +131,8 @@ var CompleteOAuth2Microsoft func(*gin.Context, *CompleteOAuth2Request)
 func init() {
 	StartOAuth2Github = StartOAuth2("github", oa2Cfg_Github.get())
 	CompleteOAuth2Github = CompleteOAuth2("github", oa2Cfg_Github.get(), completeOAuth2Github)
-	// StartOAuth2Google = StartOAuth2("gootle", oa2Cfg_Google.get())
-	// CompleteOAuth2Google = CompleteOAuth2("google", oa2Cfg_Google.get(), completeOAuth2Google)
+	StartOAuth2Google = StartOAuth2("google", oa2Cfg_Google.get())
+	CompleteOAuth2Google = CompleteOAuth2("google", oa2Cfg_Google.get(), completeOAuth2Google)
 	StartOAuth2Facebook = StartOAuth2("facebook", oa2Cfg_Facebook.get())
 	CompleteOAuth2Facebook = CompleteOAuth2("facebook", oa2Cfg_Facebook.get(), completeOAuth2Facebook)
 	StartOAuth2Microsoft = StartOAuth2("microsoft", oa2Cfg_Microsoft.get())

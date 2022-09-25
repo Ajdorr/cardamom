@@ -32,9 +32,14 @@ function InventoryList() {
 
   return (<div className="inventory-list-root">
 
-    <div className="inventory-list-add-item theme-primary">
+    <div className="inventory-list-add-item theme-primary-light">
       <InputTextBox value="" className="inventory-list-add-item-input" clearOnChange={true}
         placeholder="Add grocery item" onChange={s => {
+          const newItem = s.trim()
+          if (newItem.length === 0) {
+            return
+          }
+
           api.post("inventory/create", { item: s }).then(rsp => {
             updateInventoryList([...items, rsp.data])
           }).catch(e => console.log(e))

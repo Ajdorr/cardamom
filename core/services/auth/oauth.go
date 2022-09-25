@@ -1,8 +1,10 @@
 package auth
 
 import (
+	cfg "cardamom/core/config"
 	"cardamom/core/ext/gin_ext"
 	"cardamom/core/models"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -38,4 +40,12 @@ func CompleteOAuth2(
 		}
 	}
 
+}
+
+func getOAuthRedirectURL(provider string) string {
+	if cfg.C.Env != "local" {
+		return fmt.Sprintf("https://%s/auth/oauth-return/%s", cfg.C.Domain, provider)
+	} else {
+		return fmt.Sprintf("http://%s:8080/auth/oauth-return/%s", cfg.C.Domain, provider)
+	}
 }

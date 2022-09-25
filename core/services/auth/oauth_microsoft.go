@@ -26,7 +26,7 @@ func (c *oauth2Config_Microsoft) get() *oauth2.Config {
 			ClientSecret: cfg.C.OAuthMicrosoftClientSecret,
 			Scopes:       []string{"User.Read"},
 			Endpoint:     microsoft.AzureADEndpoint("common"),
-			RedirectURL:  "http://localhost:3000/auth/oauth-return/microsoft",
+			RedirectURL:  getOAuthRedirectURL("microsoft"),
 		}
 	})
 	return c.cfg

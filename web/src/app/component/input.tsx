@@ -70,7 +70,12 @@ type InputBoxProps = {
 function InputBox(props: InputBoxProps) {
   const [isFocused, setFocus] = useState(false)
   const [value, setValue] = useState(props.value)
+
   const save = function (newValue: string) {
+    if (newValue === props.value) {
+      return
+    }
+
     if (props.clearOnChange) {
       setValue("")
       props.onChange(newValue)

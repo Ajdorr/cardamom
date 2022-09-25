@@ -15,6 +15,7 @@ func main() {
 	r.Use(gin.Logger())   // TODO replace?
 	r.Use(gin.Recovery()) // TODO add custom logic
 	r.Use(log_ext.ErrorHandler)
+	r.SetTrustedProxies([]string{"localhost"})
 	router.RegisterEndpoints(r)
 
 	r.Run(fmt.Sprintf("%s:%s", cfg.C.Host, cfg.C.Port))

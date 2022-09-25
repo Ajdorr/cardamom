@@ -9,11 +9,15 @@ type AddGroceryItemProps = {
 }
 
 export function AddGroceryItem(props: AddGroceryItemProps) {
-  const save = function (item: string) {
+  const save = function (s: string) {
+    const item = s.trim()
+    if (item.length === 0) {
+      return
+    }
+
     api.post("grocery/create", {
       item: item,
-      store: props.store.length > 0 ? props.store : null,
-      quantity: 1,
+      store: props.store.length > 0 ? props.store : null
     }).then(rsp => {
       props.onAdd(rsp.data)
     }).catch(e => { console.log(e) })

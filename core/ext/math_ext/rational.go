@@ -2,11 +2,12 @@ package gorm_ext
 
 import (
 	"database/sql/driver"
-	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 type Rational struct {
@@ -48,21 +49,21 @@ func (r *Rational) Parse(s string) error {
 	}
 
 	if arr := strings.Split(s, "/"); len(arr) == 2 {
-		num, err := strconv.Atoi(arr[0])
-		if err != nil {
-			return err
-		}
-		r.a = uint(num + whole)
-
 		den, err := strconv.Atoi(arr[1])
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 		r.b = uint(den)
+
+		num, err := strconv.Atoi(arr[0])
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		r.a = uint(num + (whole * den))
 	} else {
 		num, err := strconv.Atoi(arr[0])
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 		r.a = uint(num)
 		r.b = 1
@@ -106,7 +107,7 @@ func (r *Rational) UnmarshalJSON(data []byte) error {
 
 func init() {
 	var err error
-	whitespaceRe, err = regexp.Compile(`\\S+`)
+	whitespaceRe, err = regexp.Compile(`\s+`)
 	if err != nil {
 		panic(err)
 	}

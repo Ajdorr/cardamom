@@ -9,7 +9,34 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 )
+
+type stackTracer interface {
+	StackTrace() errors.StackTrace
+}
+
+type errorFrame struct {
+	Time       string            `json:"time"`
+	Endpoint   string            `json:"endpoint"`
+	Method     string            `json:"method"`
+	Code       int               `json:"code"`
+	Level      string            `json:"level"`
+	User       string            `json:"user"`
+	Message    string            `json:"msg"`
+	Stacktrace errors.StackTrace `json:"stacktrace"`
+	Request    any               `json:"request"`
+}
+
+func (ef *errorFrame) log() {
+	if data, err := json.MarshalIndent(*ef, "", "  "); err != nil {
+		fmt.Fprintf(os.Stderr, "[%s] %s %d %s %s: %s --- unable to marshal error to json",
+			ef.Time, ef.Level, ef.Code, ef.Method, ef.Endpoint, ef.Message)
+	} else {
+		fmt.Fprintf(os.Stderr, "[%s] %s %d %s %s: %s",
+			ef.Time, ef.Level, ef.Code, ef.Method, ef.Endpoint, data)
+	}
+}
 
 func ErrorHandler(c *gin.Context) {
 	c.Next()
@@ -19,13 +46,7 @@ func ErrorHandler(c *gin.Context) {
 	if c.Writer.Status() >= 500 {
 		errorLevel = "Error"
 	}
-
-	reqObj := "<None>"
-	if obj, ok := c.Get(gin_ext.REQUEST_OBJ); ok {
-		if bin, err := json.Marshal(obj); err == nil {
-			reqObj = string(bin)
-		}
-	}
+	obj, _ := c.Get(gin_ext.REQUEST_OBJ)
 
 	userID := "Anonymous"
 	if userClaims := gin_ext.Get[models.AuthToken](c, gin_ext.JWT_ACCESS_CLAIMS_KEY); userClaims != nil {
@@ -33,12 +54,22 @@ func ErrorHandler(c *gin.Context) {
 	}
 
 	for _, err := range c.Errors {
-		fmt.Fprintf(
-			os.Stderr,
-			"[%s] %s %s %d User(%s) %s: %v --- Request: %s\n",
-			time.Now().Format(time.RFC3339), c.Request.Method, c.Request.URL.String(),
-			statusCode, userID, errorLevel, err, reqObj,
-		)
+		ef := errorFrame{
+			Time:       time.Now().Format(time.RFC3339),
+			Method:     c.Request.Method,
+			Endpoint:   c.Request.URL.String(),
+			Code:       statusCode,
+			User:       userID,
+			Level:      errorLevel,
+			Message:    err.Error(),
+			Request:    obj,
+			Stacktrace: nil,
+		}
+		if st, ok := err.Err.(stackTracer); ok {
+			ef.Stacktrace = st.StackTrace()
+		}
+
+		ef.log()
 	}
 }
 

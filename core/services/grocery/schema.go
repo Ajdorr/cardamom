@@ -51,13 +51,6 @@ func (req *UpdateItemRequest) Validate() (string, error) {
 		}
 	}
 
-	if req.Store != nil {
-		*req.Store = strings.ToLower(strings.TrimSpace(*req.Store))
-		if len(*req.Store) == 0 {
-			return log_ext.ReturnBoth("store must not be empty")
-		}
-	}
-
 	return "", nil
 }
 
