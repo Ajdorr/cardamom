@@ -11,7 +11,7 @@ go run bin/migrate/migrate.go
 go run bin/server/server.go
 ```
 
-# OAuth2 setup 
+# OAuth2 setup
 ## Local environment variables
 ```bash
 OAUTH_GITHUB_CLIENT_ID="41ff89a3f1011fec0fae"
@@ -27,14 +27,14 @@ OAUTH_GOOGLE_CREDS_FILEPATH="/path/to/credentials/file/google-creds.json"
 ```json
 {
   "web": {
-    "client_id": "905474909199-0e9h53ahdm3e4uoqo7b8ur7uuv3omg55.apps.googleusercontent.com",
-    "client_secret": "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",
-    "project_id": "ajdorr-cardamom-local",
+    "client_id": "357567058246-dtms8mvh75urpg6hd1c45sdv2c2k9a4a.apps.googleusercontent.com",
+    "project_id": "jaguar-cardamom-develop",
     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
     "token_uri": "https://oauth2.googleapis.com/token",
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "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",
     "redirect_uris": [
-      "http://localhost:3000/auth/oauth-return/google"
+      "http://localhost:8080/auth/oauth-return/google"
     ]
   }
 }

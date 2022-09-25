@@ -5,13 +5,14 @@ import { InputPasswordBox, InputTextBox } from "./input";
 type TextProps = {
   value: string
   label: string
+  id?: string
   className?: string
   onChange: (s: string) => void
 }
 
 export function FormText(props: TextProps) {
   const clazz = props.className ? "form-text-root " + props.className : "form-text-root"
-  return (<div className={clazz}>
+  return (<div id={props.id} className={clazz}>
     <div className="form-text-label">{props.label}</div>
     <InputTextBox value={props.value} onChange={props.onChange} />
   </div>)
@@ -19,14 +20,15 @@ export function FormText(props: TextProps) {
 
 type PasswordProps = {
   value: string
-  className?: boolean
+  id?: string
+  className?: string
   label: string
   onChange: (s: string) => void
 }
 
 export function FormPassword(props: PasswordProps) {
   const clazz = props.className ? "form-password-root " + props.className : "form-password-root"
-  return (<div className={clazz}>
+  return (<div id={props.id} className={clazz}>
     <div className="form-password-label">{props.label}</div>
     <InputPasswordBox value={props.value} onChange={props.onChange} />
   </div>)
@@ -36,6 +38,7 @@ type TextAreaProps = {
   value: string
   label: string
   rows?: number
+  id?: string
   className?: string
   defaultValue?: string
   onChange: (s: string) => void
@@ -50,7 +53,7 @@ export function FormTextArea(props: TextAreaProps) {
   }
 
   const clazz = props.className ? "form-textarea-root " + props.className : "form-textarea-root"
-  return (<div className={clazz}>
+  return (<div id={props.id} className={clazz}>
     <div className="form-textarea-label">{props.label}</div>
     <textarea className="form-textarea-input"
       placeholder={props.label}
@@ -67,6 +70,7 @@ export function FormTextArea(props: TextAreaProps) {
 type DropDownProps = {
   value: string
   label: string
+  id?: string
   className?: string
   options: Map<string, string>
   onChange: (s: string) => void
@@ -75,7 +79,7 @@ export function FormDropDown(props: DropDownProps) {
   const optArr = Array.from(props.options.entries())
 
   const clazz = props.className ? "form-dropdown-root " + props.className : "form-dropdown-root"
-  return (<div className={clazz}>
+  return (<div id={props.id} className={clazz}>
     <div className="form-dropdown-label">{props.label}</div>
     <select className="form-dropdown-select" value={props.value} onChange={e => props.onChange(e.target.value)}>
       {optArr.map(([k, v]) => <option key={k} value={k}>{v}</option>)}

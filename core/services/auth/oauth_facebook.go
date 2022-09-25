@@ -12,14 +12,14 @@ import (
 	"golang.org/x/oauth2/facebook"
 )
 
-var oa2Cfg_Facebook = oauth2Config_Facebook{}
+var oa2Cfg_Facebook = oauthConfig_Facebook{}
 
-type oauth2Config_Facebook struct {
+type oauthConfig_Facebook struct {
 	once sync.Once
 	cfg  *oauth2.Config
 }
 
-func (c *oauth2Config_Facebook) get() *oauth2.Config {
+func (c *oauthConfig_Facebook) get() *oauth2.Config {
 	c.once.Do(func() {
 		c.cfg = &oauth2.Config{
 			ClientID:     cfg.C.OAuthFacebookClientId,
@@ -32,7 +32,7 @@ func (c *oauth2Config_Facebook) get() *oauth2.Config {
 	return c.cfg
 }
 
-type oauth2FacebookEmailResponse struct {
+type facebookEmailResponse struct {
 	ID    string `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
@@ -46,7 +46,7 @@ func completeOAuth2Facebook(code string) (*models.User, []error) {
 	}
 
 	url := "https://graph.facebook.com/v15.0/me?locale=en_US&fields=name,email&access_token=" + token.AccessToken
-	var body oauth2FacebookEmailResponse
+	var body facebookEmailResponse
 	rsp, bodyRaw, errs := gorequest.New().Get(url).EndStruct(&body)
 	if len(errs) > 0 || rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
 		errs = append(errs, fmt.Errorf("user email response body -- %s", string(bodyRaw)))

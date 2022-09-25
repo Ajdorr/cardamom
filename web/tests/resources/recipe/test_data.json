@@ -1,0 +1,162 @@
+[
+  {
+    "name": "Pancakes",
+    "desc": "Breakfast pancakes",
+    "meal": "Breakfast",
+    "ingre": [
+      {
+        "quantity": "1",
+        "unit": "cup",
+        "item": "flour"
+      },
+      {
+        "quantity": "1",
+        "unit": "none",
+        "item": "egg"
+      },
+      {
+        "quantity": "3/4",
+        "unit": "cup",
+        "item": "water"
+      }
+    ],
+    "instr": [
+      "Combine pancake mix and water, whisk until lumps are gone",
+      "grease pan and pour approx 1 Tbsp per pancake",
+      "flip after approximately 5 minutes, then for an additional 3 minutes or until golden brown"
+    ]
+  },
+  {
+    "name": "Arroz con Pollo",
+    "desc": "Mexican chicken and rice",
+    "meal": "Dinner",
+    "ingre": [
+      {
+        "quantity": "200",
+        "unit": "g",
+        "item": "chicken"
+      },
+      {
+        "quantity": "1 1/2",
+        "unit": "cup",
+        "item": "rice"
+      },
+      {
+        "quantity": "1/2",
+        "unit": "tsp",
+        "item": "cumin"
+      }
+    ],
+    "instr": [
+      "Pan fry chicken",
+      "cook rice in rice cooker",
+      "combine"
+    ]
+  },
+  {
+    "name": "Chicken tacos",
+    "desc": "Mexican tacos",
+    "meal": "Dinner",
+    "ingre": [
+      {
+        "quantity": "200",
+        "unit": "g",
+        "item": "chicken"
+      },
+      {
+        "quantity": "1 1/2",
+        "unit": "cup",
+        "item": "rice"
+      },
+      {
+        "quantity": "500",
+        "unit": "g",
+        "item": "taco"
+      }
+    ],
+    "instr": [
+      "Pan fry chicken",
+      "cook rice in rice cooker",
+      "combine and serve"
+    ]
+  },
+  {
+    "name": "Mashed potatos",
+    "desc": "Boil em, mash em, stick em in a stew",
+    "meal": "Dinner",
+    "ingre": [
+      {
+        "quantity": "750",
+        "unit": "g",
+        "item": "potato"
+      }
+    ],
+    "instr": [
+      "Boil potatoes",
+      "mash"
+    ]
+  },
+  {
+    "name": "Butter chicken",
+    "desc": "Indian curry",
+    "meal": "Dinner",
+    "ingre": [
+      {
+        "quantity": "1/4",
+        "unit": "kg",
+        "item": "chicken"
+      },
+      {
+        "quantity": "2 1/4",
+        "unit": "cup",
+        "item": "rice"
+      },
+      {
+        "quantity": "1",
+        "unit": "tsp",
+        "item": "ginger"
+      },
+      {
+        "quantity": "1",
+        "unit": "tsp",
+        "item": "tumeric"
+      },
+      {
+        "quantity": "1",
+        "unit": "tsp",
+        "item": "cayenne pepper"
+      },
+      {
+        "quantity": "1/2",
+        "unit": "cup",
+        "item": "cream"
+      },
+      {
+        "quantity": "1/2",
+        "unit": "cup",
+        "item": "tomato sauce"
+      },
+      {
+        "quantity": "1",
+        "unit": "tsp",
+        "item": "paprika"
+      },
+      {
+        "quantity": "1",
+        "unit": "tsp",
+        "item": "garam masala"
+      },
+      {
+        "quantity": "1",
+        "unit": "tsp",
+        "item": "cinnamon"
+      }
+    ],
+    "instr": [
+      "In a medium size bowl, marinate the chicken, tumeric and cayenne pepper for 10 mins",
+      "cook rice in a rice cooker",
+      "Add chicken to medium pot, and fry medium for 10-15 minutes",
+      "Add tomato sauce and cream, let simmer and turn the head down to low for 5 mins"
+    ]
+  }
+]

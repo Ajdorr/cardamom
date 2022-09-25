@@ -34,7 +34,7 @@ export function RecipeIngredient(props: IngredientProps) {
       }} />
 
     <select className="recipe-ingredient-unit" value={props.unit} onChange={e => props.onUnitChange(e.target.value)}>{
-      Units.map(u => { return (<option value={u}>{u}</option>) })
+      Units.map((u, i) => { return (<option key={i} value={u}>{u.length > 0 ? u : "none"}</option>) })
     }</select>
 
     <InputTextBox value={props.value} className="recipe-ingredient-item" placeholder={props.placeholder}
@@ -58,10 +58,8 @@ type InstructionProps = {
 
 export function RecipeInstruction(props: InstructionProps) {
 
-  const [value, setValue] = useState(props.value)
   const save = function (newValue: string) {
     if (newValue.length > 0 && !/^\s+$/.test(newValue)) {
-      setValue(props.clearOnChange ? "" : value)
       props.onChange(newValue)
     }
   }
@@ -69,7 +67,7 @@ export function RecipeInstruction(props: InstructionProps) {
   return (<div className="recipe-instruction-root">
     <span className="recipe-instruction-marker">{props.order}</span>
     <InputTextBox
-      value={value} className="recipe-instruction-input" placeholder={props.placeholder}
+      value={props.value} className="recipe-instruction-input" placeholder={props.placeholder}
       clearOnChange={props.clearOnChange} onChange={s => { save(s) }}
     />
     {!props.onDelete ? null :

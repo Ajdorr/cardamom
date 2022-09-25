@@ -18,7 +18,9 @@ const (
 type Recipe struct {
 	Uid          string              `gorm:"primaryKey;not null;default:null" json:"uid"`
 	CreatedAt    time.Time           `json:"created_at"`
-	UpdateAt     time.Time           `json:"update_at"`
+	UpdatedAt    time.Time           `json:"updated_at"`
+	IsTrashed    bool                `gorm:"index;default:false" json:"is_trashed"`
+	TrashAt      uint64              `json:"-"`
 	UserUid      string              `gorm:"index" json:"user_uid"`
 	Name         string              `json:"name"`
 	Description  string              `json:"description"`
@@ -32,7 +34,7 @@ type RecipeInstruction struct {
 	RecipeUid string    `gorm:"index" json:"recipe_uid"`
 	UserUid   string    `gorm:"index" json:"user_uid"`
 	CreatedAt time.Time `json:"created_at"`
-	UpdateAt  time.Time `json:"update_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 	Meal      MealType  `json:"meal"`
 	SortOrder int       `json:"order"`
 	Text      string    `json:"text"`
@@ -43,10 +45,10 @@ type RecipeIngredient struct {
 	RecipeUid string     `gorm:"index" json:"recipe_uid"`
 	UserUid   string     `gorm:"index" json:"user_uid"`
 	CreatedAt time.Time  `json:"created_at"`
-	UpdateAt  time.Time  `json:"update_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
 	Meal      MealType   `json:"meal"`
 	SortOrder int        `json:"order"`
 	Quantity  m.Rational `gorm:"decimal(30,2)" json:"quantity"`
-	Unit      u.Unit     `json:"unit"`
+	Unit      *u.Unit    `json:"unit"`
 	Item      string     `gorm:"index" json:"item"`
 }

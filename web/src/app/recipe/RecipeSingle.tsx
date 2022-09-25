@@ -23,11 +23,12 @@ function RecipeSingle(props: RecipeSingleProps) {
   const [recipe, setRecipe] = useState<RecipeModel>({
     uid: "",
     created_at: "",
-    update_at: "",
+    updated_at: "",
+    is_trashed: false,
     user_uid: "",
     name: "",
     description: "",
-    meal: "",
+    meal: "breakfast",
     instructions: [],
     ingredients: [],
   })
@@ -56,7 +57,9 @@ function RecipeSingle(props: RecipeSingleProps) {
 
     if (name) newRecipe.name = name
     if (meal) newRecipe.meal = meal
-    if (description) newRecipe.description = description
+    if (description !== undefined && description !== null) {
+      newRecipe.description = description
+    }
 
     updateRecipe(newRecipe)
   }
@@ -66,7 +69,7 @@ function RecipeSingle(props: RecipeSingleProps) {
     newRecipe.instructions = [...newRecipe.instructions, {
       uid: "",
       created_at: "",
-      update_at: "",
+      updated_at: "",
       user_uid: "",
       recipe_uid: "",
       order: newRecipe.instructions.length + 1,
@@ -95,7 +98,7 @@ function RecipeSingle(props: RecipeSingleProps) {
     newRecipe.ingredients = [...newRecipe.ingredients, {
       uid: "",
       created_at: "",
-      update_at: "",
+      updated_at: "",
       user_uid: "",
       recipe_uid: "",
       order: 0,
@@ -113,8 +116,10 @@ function RecipeSingle(props: RecipeSingleProps) {
     var newRecipe = { ...recipe }
 
     if (quantity) { newRecipe.ingredients[ndx].quantity = quantity }
-    if (unit) { newRecipe.ingredients[ndx].unit = unit }
     if (item) { newRecipe.ingredients[ndx].item = item }
+    if (unit !== null && unit !== undefined) {
+      newRecipe.ingredients[ndx].unit = unit.length > 0 ? unit : null
+    }
 
     updateRecipe(newRecipe)
   }
@@ -136,13 +141,15 @@ function RecipeSingle(props: RecipeSingleProps) {
     }
   }, [recipeUid, nav, props.isCreate])
 
-  return (<div className="reciple-single-root theme-background">
-    <div className="reciple-single-name-meal">
+  return (<div className="recipe-single-root theme-background">
+
+    <div className="recipe-single-name-meal">
       <FormText label="Name" value={recipe.name} className="recipe-single-name theme-focus"
         onChange={s => setRecipeState({ name: s })} />
       <FormDropDown label="Meal" value={recipe.meal} className="recipe-single-meal theme-focus"
         options={MealTypes} onChange={s => setRecipeState({ meal: s })} />
     </div>
+
     <FormTextArea label="Description" value={recipe.description} className="recipe-single-desc theme-focus"
       onChange={s => setRecipeState({ description: s })} />
 
@@ -150,7 +157,8 @@ function RecipeSingle(props: RecipeSingleProps) {
       <div className="format-font-small">Ingredients</div>
       {
         recipe.ingredients.map((ingre, i) => {
-          return (<RecipeIngredient key={i} value={ingre.item} quantity={ingre.quantity} unit={ingre.unit}
+          return (<RecipeIngredient key={i} value={ingre.item} quantity={ingre.quantity}
+            unit={ingre.unit ? ingre.unit : ""}
             onQuantityChange={s => setRecipeIngredient(i, { quantity: s })}
             onUnitChange={s => setRecipeIngredient(i, { unit: s })}
             onValueChange={s => setRecipeIngredient(i, { item: s })}
@@ -158,15 +166,15 @@ function RecipeSingle(props: RecipeSingleProps) {
         })
       }
 
-        <ImageButton alt="Add ingredient" src="/icons/plus.svg" className="recipe-single-ingredient-add"
-          onClick={e => addRecipeIngredient()} />
+      <ImageButton alt="Add ingredient" src="/icons/plus.svg" className="recipe-single-ingredient-add"
+        onClick={e => addRecipeIngredient()} />
     </div>
 
     <div className="recipe-single-instruction-list theme-focus">
       <div className="format-font-small">Instructions</div>
       {
         recipe.instructions.map((instr, i) => {
-          return (<RecipeInstruction key={i} clearOnChange={false} order={instr.order.toString()}
+          return (<RecipeInstruction key={i} clearOnChange={false} order={(i + 1).toString()}
             value={instr.text} onChange={s => setRecipeInstruction(i, s)} onDelete={() => removeRecipeInstruction(i)} />)
         })
       }
@@ -174,7 +182,12 @@ function RecipeSingle(props: RecipeSingleProps) {
         onChange={s => addRecipeInstruction(s)} />
     </div>
 
-    {props.isCreate ? <ImageButton alt="Save recipe" src="/icons/save.svg" onClick={e => createRecipe()} /> : null}
+    {props.isCreate ?
+      <div className="recipe-single-save theme-focus">
+        <ImageButton alt="Save recipe" src="/icons/save.svg"
+          onClick={e => createRecipe()} />
+      </div>
+      : null}
   </div>)
 
 }

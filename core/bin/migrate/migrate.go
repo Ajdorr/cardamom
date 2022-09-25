@@ -8,7 +8,7 @@ import (
 func main() {
 	models.Migrate()
 
-	if cfg.C.Env == "local" {
+	if cfg.IsLocal() {
 		if err := models.DB.Where(&models.User{
 			Email: cfg.C.AdminUserEmail,
 		}).Attrs(models.User{

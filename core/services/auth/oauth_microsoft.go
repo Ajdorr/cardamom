@@ -12,14 +12,14 @@ import (
 	"golang.org/x/oauth2/microsoft"
 )
 
-var oa2Cfg_Microsoft = oauth2Config_Microsoft{}
+var oa2Cfg_Microsoft = oauthConfig_Microsoft{}
 
-type oauth2Config_Microsoft struct {
+type oauthConfig_Microsoft struct {
 	once sync.Once
 	cfg  *oauth2.Config
 }
 
-func (c *oauth2Config_Microsoft) get() *oauth2.Config {
+func (c *oauthConfig_Microsoft) get() *oauth2.Config {
 	c.once.Do(func() {
 		c.cfg = &oauth2.Config{
 			ClientID:     cfg.C.OAuthMicrosoftClientId,
@@ -32,7 +32,7 @@ func (c *oauth2Config_Microsoft) get() *oauth2.Config {
 	return c.cfg
 }
 
-type oauth2MicrosoftEmailResponse struct {
+type microsoftEmailResponse struct {
 	ID        string `json:"id"`
 	Name      string `json:"displayName"`
 	FirstName string `json:"givenName"`
@@ -47,7 +47,7 @@ func completeOAuth2Microsoft(code string) (*models.User, []error) {
 		return nil, []error{err}
 	}
 
-	var body oauth2MicrosoftEmailResponse
+	var body microsoftEmailResponse
 	rsp, bodyRaw, errs := gorequest.New().Get("https://graph.microsoft.com/v1.0/me").
 		Set("Authorization", "Bearer "+token.AccessToken).
 		EndStruct(&body)

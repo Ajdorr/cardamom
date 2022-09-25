@@ -13,14 +13,14 @@ import (
 	"golang.org/x/oauth2/github"
 )
 
-var oa2Cfg_Github = oauth2Config_Github{}
+var oa2Cfg_Github = oauthConfig_Github{}
 
-type oauth2Config_Github struct {
+type oauthConfig_Github struct {
 	once sync.Once
 	cfg  *oauth2.Config
 }
 
-func (c *oauth2Config_Github) get() *oauth2.Config {
+func (c *oauthConfig_Github) get() *oauth2.Config {
 	c.once.Do(func() {
 		c.cfg = &oauth2.Config{
 			ClientID:     cfg.C.OAuthGithubClientId,

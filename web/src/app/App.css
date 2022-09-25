@@ -20,12 +20,11 @@ body {
 .workspace-root {
   height: 100%;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
 }
 
 .workspace-menu-bar {
   width: 100%;
-  height: var(--format-heading-small-height);
 
   box-sizing: border-box;
   padding: 5px 10px;
@@ -40,8 +39,8 @@ body {
 }
 
 .workspace-menu-bar img {
-  width: 35px;
-  height: 35px;
+  width: var(--format-heading-small-height);
+  height: var(--format-heading-small-height);
 }
 
 .workspace-main {

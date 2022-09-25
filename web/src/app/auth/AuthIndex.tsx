@@ -14,9 +14,9 @@ function OAuthReturn() {
   useEffect(() => {
     if (source && code && state) {
       if (completeOAuthLogin(nav, source, code, state)) {
-        console.log("Sent request")
+        // FIXME
       } else {
-        // TODO
+        // FIXME
       }
     }
   })

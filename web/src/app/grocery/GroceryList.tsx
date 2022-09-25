@@ -69,10 +69,20 @@ class GroceryList extends Component<{}, GroceryState> {
     return (
       <div className="grocery-list-root">
 
-        <ModifiableDropDown options={this.state.uniqueStores} value={this.state.selectedStore}
-          className="grocery-list-store" displayClear={true} onChange={s => this.setState({ selectedStore: s })}
+        <ModifiableDropDown options={this.state.uniqueStores} value={this.state.selectedStore} id={"grocery-list-store"}
+          className="grocery-list-store theme-primary-light" displayClear={true} onChange={s => this.setState({ selectedStore: s })}
         />
-        <AddGroceryItem store={this.state.selectedStore} onAdd={i => this.updateGroceryList([i, ...this.state.items])} />
+
+        <AddGroceryItem id="grocery-list-add-item" store={this.state.selectedStore}
+          onAdd={newItem => {
+            // Only update if its a new item
+            if (this.state.items.map(i => i.item).indexOf(newItem.item) < 0) {
+              this.updateGroceryList([newItem, ...this.state.items])
+            } else {
+              this.updateGroceryItem(newItem)
+            }
+          }
+          } />
 
         <div className="grocery-list-items">
           {displayedItems.length > 0 ? displayedItems.map(i => {

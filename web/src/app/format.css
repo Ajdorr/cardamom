@@ -1,8 +1,8 @@
 .app-root {
-  --format-line-height: 30px;
-  --format-heading-small-height: 40px;
-  --format-heading-medium-height: 50px;
-  --format-heading-large-height: 70px;
+  --format-line-height: 40px;
+  --format-heading-small-height: 50px;
+  --format-heading-medium-height: 60px;
+  --format-heading-large-height: 80px;
 
   --format-font-size-small: 12px;
   --format-font-size-medium: 16px;

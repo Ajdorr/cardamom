@@ -7,6 +7,7 @@ import { SaveOnEnter } from "./util";
 type NumberProps = {
   value: number
   placeholder?: string
+  id?: string
   className?: string
   clearOnChange?: boolean
   onChange: (s: number) => void
@@ -14,7 +15,7 @@ type NumberProps = {
 
 export function InputNumberBox(props: NumberProps) {
   const clazz = props.className ? "input-number-box " + props.className : "input-number-box"
-  return <InputBox value={props.value.toString()} className={clazz}
+  return <InputBox value={props.value.toString()} className={clazz} id={props.id}
     inputType="number"
     clearOnChange={props.clearOnChange}
     placeholder={props.placeholder}
@@ -25,6 +26,7 @@ export function InputNumberBox(props: NumberProps) {
 type TextProps = {
   value: string
   placeholder?: string
+  id?: string
   className?: string
   clearOnChange?: boolean
   onChange: (s: string) => void
@@ -32,7 +34,7 @@ type TextProps = {
 
 export function InputTextBox(props: TextProps) {
   const clazz = props.className ? "input-text-box " + props.className : "input-text-box"
-  return <InputBox value={props.value} className={clazz}
+  return <InputBox value={props.value} className={clazz} id={props.id}
     inputType="text"
     clearOnChange={props.clearOnChange}
     placeholder={props.placeholder}
@@ -43,6 +45,7 @@ export function InputTextBox(props: TextProps) {
 type PasswordProps = {
   value: string
   placeholder?: string
+  id?: string
   className?: string
   clearOnChange?: boolean
   onChange: (s: string) => void
@@ -50,7 +53,7 @@ type PasswordProps = {
 
 export function InputPasswordBox(props: PasswordProps) {
   const clazz = props.className ? "input-password-box " + props.className : "input-password-box"
-  return <InputBox value={props.value} className={clazz}
+  return <InputBox value={props.value} className={clazz} id={props.id}
     inputType="password"
     clearOnChange={props.clearOnChange}
     placeholder={props.placeholder}
@@ -62,6 +65,7 @@ type InputBoxProps = {
   value: string
   inputType: string
   placeholder?: string
+  id?: string
   className?: string
   clearOnChange?: boolean
   onChange: (s: string) => void
@@ -85,7 +89,7 @@ function InputBox(props: InputBoxProps) {
     }
   }
 
-  return (<div className={props.className}>
+  return (<div id={props.id} className={props.className}>
     <input className="input-box"
       type={props.inputType}
       placeholder={props.placeholder}
@@ -100,6 +104,8 @@ function InputBox(props: InputBoxProps) {
 }
 
 type TextButtonProps = {
+  id?: string
+  className?: string
   label: string
   theme: Theme
   onClick: MouseEventHandler
@@ -108,10 +114,13 @@ type TextButtonProps = {
 export class TextButton extends Component<TextButtonProps> {
 
   render() {
+    const clazz = this.props.className ? "input-text-button " + this.props.className : "input-text-button"
+
     return (<input type="button"
+      id={this.props.id}
       value={this.props.label}
       onClick={this.props.onClick}
-      className={joinWithClass("input-text-button", this.props.theme)}
+      className={joinWithClass(clazz, this.props.theme)}
     />)
   }
 

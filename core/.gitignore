@@ -23,5 +23,7 @@ go.work
 
 # Project specific
 core.db
+core.db.bak
 .env
+events-*.txt
 **/.vscode/

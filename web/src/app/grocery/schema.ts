@@ -1,7 +1,7 @@
 export type GroceryItemModel = {
   uid: string,
   created_at: string,
-  update_at: string,
+  updated_at: string,
   user_uid: string,
   item: string,
   quantity: number,

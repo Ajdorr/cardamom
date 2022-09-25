@@ -14,7 +14,7 @@ function Home() {
   return (
     <div className="home-root">
       <div>Welcome to Cardamom!</div>
-      <Link to="/auth/login"><div>Login</div></Link>
+      <Link to="/auth/login" className="home-login-link"><div>Login</div></Link>
     </div>
   );
 }
@@ -38,10 +38,18 @@ function Workspace() {
   return (
     <div className="workspace-root">
       <div className="workspace-menu-bar theme-primary">
-        <Link to="/grocery"><img src="/icons/cart.svg" alt="grocery"/></Link>
-        <Link to="/inventory"><img src="/icons/inventory.svg" alt="inventory" /></Link>
-        <Link to="/recipe"><img src="/icons/book.svg" alt="recipes" /></Link>
-        <Link to="/account"><img src="/icons/menu.svg" alt="grocery" /></Link>
+        <Link to="/grocery" id="workspace-menu-link-grocery">
+          <img src="/icons/cart.svg" alt="grocery" />
+        </Link>
+        <Link to="/inventory" id="workspace-menu-link-inventory">
+          <img src="/icons/inventory.svg" alt="inventory" />
+        </Link>
+        <Link to="/recipe" id="workspace-menu-link-recipe">
+          <img src="/icons/book.svg" alt="recipes" />
+        </Link>
+        <Link to="/account" id="workspace-menu-link-account">
+          <img src="/icons/menu.svg" alt="grocery" />
+        </Link>
         {/* Account */}
         {/* <TextButton label="Logout" theme={Theme.Primary} onClick={e => logout()} /> */}
       </div>
@@ -59,6 +67,10 @@ function Workspace() {
 }
 
 function App() {
+
+  // Set title
+  useEffect(() => { document.title = "Cardamom" }, [])
+
   return (<div className="app-root">
     <Routes>
       <Route path="/" element={<Home />} />

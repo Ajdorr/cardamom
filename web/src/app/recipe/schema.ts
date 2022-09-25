@@ -1,9 +1,10 @@
-export const Units = ["cup", "tsp", "Tbsp", "kg", "g", "pt", "pt", "gal"]
+export const Units = ["cup", "tsp", "Tbsp", "kg", "g", "pt", "pt", "gal", "mL", "L", ""]
 
 export type RecipeModel = {
   uid: string,
   created_at: string,
-  update_at: string,
+  updated_at: string,
+  is_trashed: boolean,
   user_uid: string,
   name: string,
   description: string,
@@ -17,10 +18,10 @@ export type IngredientModel = {
   user_uid: string,
   recipe_uid: string,
   created_at: string,
-  update_at: string,
+  updated_at: string,
   meal: string,
   order: number,
-  unit: string,
+  unit: string | null,
   quantity: string | number,
   item: string,
 }
@@ -30,7 +31,7 @@ export type InstructionModel = {
   user_uid: string,
   recipe_uid: string,
   created_at: string,
-  update_at: string,
+  updated_at: string,
   meal: string,
   order: number,
   text: string,
@@ -57,6 +58,7 @@ export function UpdateRecipeRequest(model: RecipeModel): any {
   return {
     uid: model.uid,
     name: model.name,
+    is_trashed: model.is_trashed,
     description: model.description,
     meal: model.meal,
     ingredients: model.ingredients.map(i => { return { quantity: i.quantity, unit: i.unit, item: i.item } }),

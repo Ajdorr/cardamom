@@ -1,6 +1,7 @@
 package grocery
 
 import (
+	"cardamom/core/events"
 	"cardamom/core/ext/gin_ext"
 	"cardamom/core/models"
 	"cardamom/core/services/auth"
@@ -26,11 +27,8 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 		return
 	}
 
-	// If it does not already exists
-	if db.RowsAffected == 1 {
-		if r.Store != nil {
-			item.Store = *r.Store
-		}
+	if r.Store != nil {
+		item.Store = *r.Store
 	}
 	item.IsCollected = false
 	if err := models.DB.Save(&item).Error; err != nil {
@@ -38,6 +36,12 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 	} else {
 		c.JSON(http.StatusOK, item)
 	}
+
+	events.Publish(&events.Event{
+		Domain: "grocery",
+		Type:   "add",
+		Data:   map[string]string{"item": item.Item, "store": item.Store},
+	})
 }
 
 func ListItems(c *gin.Context) {
@@ -95,6 +99,12 @@ func UpdateItem(c *gin.Context, r *UpdateItemRequest) {
 	} else {
 		c.JSON(http.StatusOK, &item)
 	}
+
+	events.Publish(&events.Event{
+		Domain: "grocery",
+		Type:   "update",
+		Data:   map[string]string{"item": item.Item, "store": item.Store},
+	})
 }
 
 func ClearCollected(c *gin.Context) {

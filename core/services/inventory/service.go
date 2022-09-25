@@ -36,6 +36,6 @@ func CollectItem(groceryItem *models.GroceryItem, userUid string, isUndo bool) e
 
 func GetInventory(userUid string) ([]models.InventoryItem, error) {
 	var items []models.InventoryItem
-	err := models.DB.Where(&models.InventoryItem{UserUid: userUid}).Find(&items).Error
+	err := models.DB.Where(&models.InventoryItem{UserUid: userUid, InStock: true}).Find(&items).Error
 	return items, err
 }

@@ -10,7 +10,7 @@ import (
 
 type IngredientPart struct {
 	Quantity m.Rational `json:"quantity"`
-	Unit     u.Unit     `json:"unit"`
+	Unit     *u.Unit    `json:"unit"`
 	Item     string     `json:"item"`
 }
 
@@ -42,6 +42,7 @@ func (req *CreateRecipeRequest) Validate() (string, error) {
 
 type UpdateRecipeRequest struct {
 	Uid          string           `json:"uid"`
+	IsTrashed    *bool            `json:"is_trashed,omitempty"`
 	Name         *string          `json:"name,omitempty"`
 	Description  *string          `json:"description,omitempty"`
 	Meal         *models.MealType `json:"meal,omitempty"`

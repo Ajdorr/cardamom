@@ -81,7 +81,7 @@ func Refresh(c *gin.Context) {
 		// gin_ext.ServerError(c, fmt.Errorf("creating refresh JWT -- %w", err))
 	} else {
 		// TODO Invalidate refresh token and set it
-		isSecure := !(cfg.C.Env == "local")
+		isSecure := !cfg.IsLocal()
 		setAccessToken(c, access_token, csrf, isSecure)
 		// setRefreshToken(c, refresh_token, isSecure)
 		c.JSON(http.StatusOK, &gin.H{})
@@ -119,22 +119,22 @@ func ResetPassword(c *gin.Context, req *ResetPasswordRequest) {
 }
 
 // Initialized by init()
-var StartOAuth2Github func(*gin.Context)
-var CompleteOAuth2Github func(*gin.Context, *CompleteOAuth2Request)
-var StartOAuth2Google func(*gin.Context)
-var CompleteOAuth2Google func(*gin.Context, *CompleteOAuth2Request)
-var StartOAuth2Facebook func(*gin.Context)
-var CompleteOAuth2Facebook func(*gin.Context, *CompleteOAuth2Request)
-var StartOAuth2Microsoft func(*gin.Context)
-var CompleteOAuth2Microsoft func(*gin.Context, *CompleteOAuth2Request)
+var StartOAuthGithub func(*gin.Context)
+var CompleteOAuthGithub func(*gin.Context, *CompleteOAuth2Request)
+var StartOAuthGoogle func(*gin.Context)
+var CompleteOAuthGoogle func(*gin.Context, *CompleteOAuth2Request)
+var StartOAuthFacebook func(*gin.Context)
+var CompleteOAuthFacebook func(*gin.Context, *CompleteOAuth2Request)
+var StartOAuthMicrosoft func(*gin.Context)
+var CompleteOAuthMicrosoft func(*gin.Context, *CompleteOAuth2Request)
 
 func init() {
-	StartOAuth2Github = StartOAuth2("github", oa2Cfg_Github.get())
-	CompleteOAuth2Github = CompleteOAuth2("github", oa2Cfg_Github.get(), completeOAuth2Github)
-	StartOAuth2Google = StartOAuth2("google", oa2Cfg_Google.get())
-	CompleteOAuth2Google = CompleteOAuth2("google", oa2Cfg_Google.get(), completeOAuth2Google)
-	StartOAuth2Facebook = StartOAuth2("facebook", oa2Cfg_Facebook.get())
-	CompleteOAuth2Facebook = CompleteOAuth2("facebook", oa2Cfg_Facebook.get(), completeOAuth2Facebook)
-	StartOAuth2Microsoft = StartOAuth2("microsoft", oa2Cfg_Microsoft.get())
-	CompleteOAuth2Microsoft = CompleteOAuth2("microsoft", oa2Cfg_Microsoft.get(), completeOAuth2Microsoft)
+	StartOAuthGithub = StartOAuth("github", oa2Cfg_Github.get())
+	CompleteOAuthGithub = CompleteOAuth("github", oa2Cfg_Github.get(), completeOAuth2Github)
+	StartOAuthGoogle = StartOAuth("google", oa2Cfg_Google.get())
+	CompleteOAuthGoogle = CompleteOAuth("google", oa2Cfg_Google.get(), completeOAuth2Google)
+	StartOAuthFacebook = StartOAuth("facebook", oa2Cfg_Facebook.get())
+	CompleteOAuthFacebook = CompleteOAuth("facebook", oa2Cfg_Facebook.get(), completeOAuth2Facebook)
+	StartOAuthMicrosoft = StartOAuth("microsoft", oa2Cfg_Microsoft.get())
+	CompleteOAuthMicrosoft = CompleteOAuth("microsoft", oa2Cfg_Microsoft.get(), completeOAuth2Microsoft)
 }

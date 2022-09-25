@@ -1,13 +1,14 @@
 MVP
-+ Add ingredient portion (cup, tsp, tbsp)
-+ Add ingredient measurements (cup, tsp, tbsp)
-+ Convert environment variables to config struct
-+ Set up postgresql database
-+ Setup mirror environment
-+ Set up production environment
++ Create simple bizevent write to file
 
 Backlog
++ Setup staging environment
++ convert tests to golang test
++ convert errors to pkg/errors
++ create command line interface
 + Build database generator
-+ Test password policy
 + Add ingredient annotations (chopped, sliced, diced, melted, chilled)
++ Add prep and cook times
 + Enforce ingredient names - singular, converter
++ Optional ingredients
++ Setup sandbox environment

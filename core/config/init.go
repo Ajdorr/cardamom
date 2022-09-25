@@ -21,6 +21,9 @@ type Config struct {
 	JwtTokenSecret string `env:"JWT_TOKEN_SECRET" envDefault:"CadamomIsGreat!1234"`
 	PasswordSalt   string `env:"PASSWORD_SALT" envDefault:"#SecretCardamomSalt-5555"`
 
+	// Events
+	EventFileStreamDirectory string `env:"EVENT_FILE_STREAM_PATH" envDefault:""`
+
 	// Database
 	// https://gorm.io/docs/connecting_to_the_database.html#PostgreSQL
 	DB_Host     string `env:"DB_HOST" envDefault:"localhost"`
@@ -41,6 +44,14 @@ type Config struct {
 	OAuthFacebookClientId      string `env:"OAUTH_FACEBOOK_CLIENT_ID"`
 	OAuthFacebookClientSecret  string `env:"OAUTH_FACEBOOK_CLIENT_SECRET"`
 	OAuthGoogleJsonFilepath    string `env:"OAUTH_GOOGLE_CREDS_FILEPATH"`
+}
+
+func IsProd() bool {
+	return C.Env == "prod"
+}
+
+func IsLocal() bool {
+	return C.Env == "local"
 }
 
 func init() {

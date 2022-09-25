@@ -4,6 +4,7 @@ import { ImageButton, InputTextBox } from "../../component/input"
 type ModifiableDropDownProps = {
   options: string[]
   value: string
+  id?: string
   className?: string
   displayClear?: boolean
   onChange: (s: string) => void
@@ -22,23 +23,24 @@ export function ModifiableDropDown(props: ModifiableDropDownProps) {
 
   const clazz = props.className ? "modifiable-drop-down-root " + props.className : "modifiable-drop-down-root"
   return (
-    <div onMouseLeave={e => setVisible(false)} className={clazz}>
+    <div id={props.id} onMouseLeave={e => setVisible(false)} className={clazz}>
       <div className="modifiable-drop-down-workspace">
-        <InputTextBox value={value} className="modifiable-drop-down-input" 
-        placeholder="Add or select store"
-        onChange={s => save(s)}/>
+        <InputTextBox value={value} className="modifiable-drop-down-input"
+          placeholder="Add or select store"
+          onChange={s => save(s)} />
 
-        <ImageButton alt="expand" src="icons/drop-down.svg" onClick={e => setVisible(!isVisible)} />
+        <ImageButton alt="expand" src="icons/drop-down.svg" className="modifiable-drop-down-list"
+          onClick={e => setVisible(!isVisible)} />
 
         {
           props.displayClear ? <ImageButton
-            src="icons/backspace.svg" alt="clear selected store"
+            src="icons/backspace.svg" alt="clear selected store" className="modifiable-drop-down-clear"
             onClick={e => save("")} /> : null
         }
 
       </div>
       <div style={{ display: displayList ? "block" : "none" }} className="modifiable-drop-down-overlay theme-focus">{
-        props.options.map(o => { return (<DropDownElement key={o} value={o} onClick={() => {save(o); setVisible(false)}} />) })
+        props.options.map(o => { return (<DropDownElement key={o} value={o} onClick={() => { save(o); setVisible(false) }} />) })
       }</div>
     </div>
   )

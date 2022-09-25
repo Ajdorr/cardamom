@@ -83,7 +83,7 @@ func setRefreshToken(c *gin.Context, token string, isSecure bool) {
 }
 
 func sendAuthTokenResponse(c *gin.Context, user *models.User) {
-	isSecure := !(cfg.C.Env == "local")
+	isSecure := !cfg.IsLocal()
 	if accessToken, csrf, err := user.GetAccessToken(); err != nil {
 		gin_ext.ServerError(c, fmt.Errorf("creating access JWT -- %w", err))
 	} else if refresh_token, _, err := user.GetRefreshToken(); err != nil {

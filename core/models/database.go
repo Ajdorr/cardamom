@@ -11,16 +11,9 @@ import (
 
 var DB *gorm.DB
 
-func Migrate() {
-	DB.AutoMigrate(
-		User{}, OAuthState{},
-		GroceryItem{}, InventoryItem{},
-		Recipe{}, RecipeIngredient{}, RecipeInstruction{})
-}
-
 func init() {
 
-	if cfg.C.Env == "local" {
+	if cfg.IsLocal() {
 		if db, err := gorm.Open(sqlite.Open("core.db"), &gorm.Config{}); err != nil {
 			panic(fmt.Errorf("failed to connect to database -- %w", err))
 		} else {

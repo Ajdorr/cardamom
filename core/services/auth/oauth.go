@@ -12,7 +12,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-func StartOAuth2(provider string, cfg *oauth2.Config) func(*gin.Context) {
+func StartOAuth(provider string, cfg *oauth2.Config) func(*gin.Context) {
 
 	return func(c *gin.Context) {
 		if state, err := SetOAuthState(c.ClientIP(), provider); err != nil {
@@ -23,7 +23,7 @@ func StartOAuth2(provider string, cfg *oauth2.Config) func(*gin.Context) {
 	}
 }
 
-func CompleteOAuth2(
+func CompleteOAuth(
 	provider string, cfg *oauth2.Config,
 	providerCompleteFunc func(code string) (*models.User, []error),
 ) func(*gin.Context, *CompleteOAuth2Request) {
@@ -43,7 +43,7 @@ func CompleteOAuth2(
 }
 
 func getOAuthRedirectURL(provider string) string {
-	if cfg.C.Env != "local" {
+	if !cfg.IsLocal() {
 		return fmt.Sprintf("https://%s/auth/oauth-return/%s", cfg.C.Domain, provider)
 	} else {
 		return fmt.Sprintf("http://%s:8080/auth/oauth-return/%s", cfg.C.Domain, provider)

@@ -2,22 +2,20 @@ package recipe
 
 import (
 	"cardamom/core/ext/gin_ext"
-	"cardamom/core/models"
+	m "cardamom/core/models"
 	"cardamom/core/services"
 	"cardamom/core/services/auth"
 	"cardamom/core/services/inventory"
 	"fmt"
-	"math/rand"
 	"net/http"
 	"sort"
 
 	"github.com/gin-gonic/gin"
-	"github.com/thoas/go-funk"
 )
 
 func CreateRecipe(c *gin.Context, r *CreateRecipeRequest) {
 	user := auth.GetActiveUserClaims(c)
-	recipe := models.Recipe{
+	recipe := m.Recipe{
 		Uid:         generateRecipeUid(),
 		UserUid:     user.Uid,
 		Name:        r.Name,
@@ -25,14 +23,14 @@ func CreateRecipe(c *gin.Context, r *CreateRecipeRequest) {
 		Meal:        r.Meal,
 	}
 
-	if err := models.DB.Create(&recipe).Error; err != nil {
+	if err := m.DB.Create(&recipe).Error; err != nil {
 		gin_ext.ServerError(c, fmt.Errorf("unable to create recipe -- %w", err))
 		return
 	}
 
-	recipe.Instructions = make([]models.RecipeInstruction, len(r.Instructions))
+	recipe.Instructions = make([]m.RecipeInstruction, len(r.Instructions))
 	for i, instr := range r.Instructions {
-		recipe.Instructions[i] = models.RecipeInstruction{
+		recipe.Instructions[i] = m.RecipeInstruction{
 			Uid:       generateInstrUid(),
 			UserUid:   user.Uid,
 			RecipeUid: recipe.Uid,
@@ -40,16 +38,16 @@ func CreateRecipe(c *gin.Context, r *CreateRecipeRequest) {
 			SortOrder: i,
 			Text:      instr,
 		}
-		err := models.DB.Create(&recipe.Instructions[i]).Error
+		err := m.DB.Create(&recipe.Instructions[i]).Error
 		if err != nil {
 			gin_ext.ServerError(c, fmt.Errorf("unable to create instruction -- %w", err))
 			return
 		}
 	}
 
-	recipe.Ingredients = make([]models.RecipeIngredient, len(r.Ingredients))
+	recipe.Ingredients = make([]m.RecipeIngredient, len(r.Ingredients))
 	for i, ingre := range r.Ingredients {
-		recipe.Ingredients[i] = models.RecipeIngredient{
+		recipe.Ingredients[i] = m.RecipeIngredient{
 			Uid:       generateIngreUid(),
 			UserUid:   user.Uid,
 			RecipeUid: recipe.Uid,
@@ -59,7 +57,7 @@ func CreateRecipe(c *gin.Context, r *CreateRecipeRequest) {
 			Unit:      ingre.Unit,
 			Item:      ingre.Item,
 		}
-		err := models.DB.Create(&recipe.Ingredients[i]).Error
+		err := m.DB.Create(&recipe.Ingredients[i]).Error
 		if err != nil {
 			gin_ext.ServerError(c, fmt.Errorf("unable to create ingredient -- %w", err))
 			return
@@ -71,8 +69,8 @@ func CreateRecipe(c *gin.Context, r *CreateRecipeRequest) {
 
 func UpdateRecipe(c *gin.Context, r *UpdateRecipeRequest) {
 	user := auth.GetActiveUserClaims(c)
-	recipe := models.Recipe{}
-	err := models.DB.Where(&models.Recipe{UserUid: user.Uid, Uid: r.Uid}).
+	recipe := m.Recipe{}
+	err := m.DB.Where(&m.Recipe{UserUid: user.Uid, Uid: r.Uid}).
 		Preload("Instructions").Preload("Ingredients").First(&recipe).Error
 	if err != nil {
 		gin_ext.AbortNotFound(c, fmt.Errorf("finding recipe -- %w", err))
@@ -81,13 +79,16 @@ func UpdateRecipe(c *gin.Context, r *UpdateRecipeRequest) {
 	if r.Name != nil {
 		recipe.Name = *r.Name
 	}
+	if r.IsTrashed != nil {
+		recipe.IsTrashed = *r.IsTrashed
+	}
 	if r.Description != nil {
 		recipe.Description = *r.Description
 	}
 	if r.Meal != nil {
 		recipe.Meal = *r.Meal
 	}
-	if err = models.DB.Save(&recipe).Error; err != nil {
+	if err = m.DB.Save(&recipe).Error; err != nil {
 		gin_ext.ServerError(c, fmt.Errorf("saving recipe -- %w", err))
 		return
 	}
@@ -98,70 +99,16 @@ func UpdateRecipe(c *gin.Context, r *UpdateRecipeRequest) {
 		return recipe.Ingredients[i].SortOrder < recipe.Ingredients[j].SortOrder
 	})
 
-	if len(r.Instructions) < len(recipe.Instructions) {
-		for i := len(r.Instructions); i < len(recipe.Instructions); i++ {
-			if err = models.DB.Delete(recipe.Instructions[i]).Error; err != nil {
-				gin_ext.ServerError(c, fmt.Errorf("deleting instructions -- %w", err))
-				return
-			}
-		}
-
-		recipe.Instructions = recipe.Instructions[:len(r.Instructions)]
-	}
-	for i, instr := range r.Instructions {
-		if i >= len(recipe.Instructions) {
-			recipe.Instructions = append(recipe.Instructions, models.RecipeInstruction{
-				Uid:       generateInstrUid(),
-				UserUid:   user.Uid,
-				RecipeUid: recipe.Uid,
-				Meal:      recipe.Meal,
-				SortOrder: i,
-				Text:      instr,
-			})
-		} else {
-			recipe.Instructions[i].Meal = recipe.Meal
-			recipe.Instructions[i].Text = instr
-			recipe.Instructions[i].SortOrder = i
-		}
-
-		if err = models.DB.Save(&recipe.Instructions[i]).Error; err != nil {
-			gin_ext.ServerError(c, fmt.Errorf("updating instruction(%d) -- %w", i, err))
+	if len(r.Instructions) > 0 {
+		if err = resizeInstructions(user.Uid, r.Instructions, &recipe); err != nil {
+			gin_ext.ServerError(c, err)
 			return
 		}
 	}
 
-	if len(r.Ingredients) < len(recipe.Ingredients) {
-		for i := len(r.Ingredients); i < len(recipe.Ingredients); i++ {
-			if err = models.DB.Delete(recipe.Ingredients[i]).Error; err != nil {
-				gin_ext.ServerError(c, fmt.Errorf("deleting instructions -- %w", err))
-				return
-			}
-		}
-
-		recipe.Ingredients = recipe.Ingredients[:len(r.Ingredients)]
-	}
-	for i, ingre := range r.Ingredients {
-		if i >= len(recipe.Ingredients) {
-			recipe.Ingredients = append(recipe.Ingredients, models.RecipeIngredient{
-				Uid:       generateIngreUid(),
-				UserUid:   user.Uid,
-				RecipeUid: recipe.Uid,
-				Meal:      recipe.Meal,
-				SortOrder: i,
-				Quantity:  ingre.Quantity,
-				Unit:      ingre.Unit,
-				Item:      ingre.Item,
-			})
-		} else {
-			recipe.Ingredients[i].Meal = recipe.Meal
-			recipe.Ingredients[i].Quantity = ingre.Quantity
-			recipe.Ingredients[i].Unit = ingre.Unit
-			recipe.Ingredients[i].Item = ingre.Item
-			recipe.Ingredients[i].SortOrder = i
-		}
-
-		if err = models.DB.Save(&recipe.Ingredients[i]).Error; err != nil {
-			gin_ext.ServerError(c, fmt.Errorf("updating ingredient(%d) -- %w", i, err))
+	if len(r.Ingredients) > 0 {
+		if err = resizeIngredients(user.Uid, r.Ingredients, &recipe); err != nil {
+			gin_ext.ServerError(c, err)
 			return
 		}
 	}
@@ -171,8 +118,8 @@ func UpdateRecipe(c *gin.Context, r *UpdateRecipeRequest) {
 
 func ReadRecipe(c *gin.Context, r *services.ReadRequest) {
 	user := auth.GetActiveUserClaims(c)
-	recipe := models.Recipe{}
-	err := models.DB.Where(&models.Recipe{Uid: r.Uid, UserUid: user.Uid}).
+	recipe := m.Recipe{}
+	err := m.DB.Where(&m.Recipe{Uid: r.Uid, UserUid: user.Uid}).
 		Preload("Instructions").Preload("Ingredients").First(&recipe).Error
 	if err != nil {
 		gin_ext.ServerError(c, fmt.Errorf("listing recipes -- %w", err))
@@ -184,8 +131,8 @@ func ReadRecipe(c *gin.Context, r *services.ReadRequest) {
 
 func ListRecipes(c *gin.Context) {
 	user := auth.GetActiveUserClaims(c)
-	var recipes []models.Recipe
-	err := models.DB.Where(&models.Recipe{UserUid: user.Uid}).Find(&recipes).Error
+	var recipes []m.Recipe
+	err := m.DB.Where("user_uid = ? and is_trashed = false", user.Uid).Find(&recipes).Error
 	if err != nil {
 		gin_ext.ServerError(c, fmt.Errorf("listing recipes -- %w", err))
 		return
@@ -194,48 +141,38 @@ func ListRecipes(c *gin.Context) {
 	c.JSON(http.StatusOK, recipes)
 }
 
-func GetRandomAvailableRecipes(c *gin.Context) {
+func ListTrashedRecipes(c *gin.Context) {
 	user := auth.GetActiveUserClaims(c)
+	var recipes []m.Recipe
+	err := m.DB.Where("user_uid = ? and is_trashed = true", user.Uid).Find(&recipes).Error
+	if err != nil {
+		gin_ext.ServerError(c, fmt.Errorf("listing trashed recipes -- %w", err))
+		return
+	}
+
+	c.JSON(http.StatusOK, recipes)
+}
+
+func GetAvailableRecipes(c *gin.Context) {
+
+	user := auth.GetActiveUserClaims(c)
+
+	// Get inventory
 	inventory, err := inventory.GetInventory(user.Uid)
 	if err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("getting items -- %w", err))
+		gin_ext.ServerError(c, fmt.Errorf("getting groceries -- %w", err))
 		return
 	}
-	items := funk.Map(inventory, func(i models.InventoryItem) string { return i.Item }).([]string)
 
-	randItem := items[rand.Intn(len(items))]
-	var ingredients []models.RecipeIngredient
-	err = models.DB.
-		Where(&models.RecipeIngredient{UserUid: user.Uid, Item: randItem}).
-		Find(&ingredients).Error
+	// Get all recipes that belong to this user
+	var recipes []m.Recipe
+	err = m.DB.Where("user_uid = ? and is_trashed = false", user.Uid).
+		Preload("Instructions").Preload("Ingredients").
+		Find(&recipes).Error
 	if err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("finding recipe ingredients -- %w", err))
+		gin_ext.ServerError(c, fmt.Errorf("getting recipes -- %w", err))
 		return
 	}
 
-	recipes := make([]models.Recipe, len(ingredients))
-	for i, ingre := range ingredients {
-		err = models.DB.
-			Where(&models.Recipe{UserUid: user.Uid, Uid: ingre.RecipeUid}).
-			Preload("Instructions").Preload("Ingredients").
-			Find(&recipes[i]).Error
-		if err != nil {
-			gin_ext.ServerError(c, fmt.Errorf("finding related recipes -- %w", err))
-			return
-		}
-	}
-
-	filteredRecipes := funk.Filter(recipes, func(r models.Recipe) bool {
-		for _, ingre := range r.Ingredients {
-			if !funk.Contains(items, ingre.Item) {
-				return false
-			}
-		}
-		return true
-	}).([]models.Recipe)
-	rand.Shuffle(len(filteredRecipes), func(i, j int) {
-		filteredRecipes[i], filteredRecipes[j] = filteredRecipes[j], filteredRecipes[i]
-	})
-
-	c.JSON(http.StatusOK, filteredRecipes)
+	c.JSON(http.StatusOK, filterRecipesByIngredients(inventory, recipes))
 }

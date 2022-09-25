@@ -4,11 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 )
 
 func ServerErrors(c *gin.Context, errs []error) {
 	for _, err := range errs {
-		c.Error(err)
+		c.Error(errors.WithStack(err))
 	}
 	c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{})
 }
@@ -22,6 +23,6 @@ func AbortNotFound(c *gin.Context, err error) {
 }
 
 func Abort(c *gin.Context, code int, err error) {
-	c.Error(err)
+	c.Error(errors.WithStack(err))
 	c.AbortWithStatusJSON(code, gin.H{})
 }
