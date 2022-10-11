@@ -36,7 +36,7 @@ function RecipeSingle(props: RecipeSingleProps) {
   const createRecipe = () => {
     api.post("recipe/create", CreateRecipeRequest(recipe))
       .then(rsp => {
-        nav(`/recipe/${rsp.data.uid}`)
+        nav(`/recipe/edit/${rsp.data.uid}`)
       })
   }
 
@@ -135,7 +135,6 @@ function RecipeSingle(props: RecipeSingleProps) {
       api.post("recipe/read", { uid: recipeUid }).then(rsp => {
         setRecipe(rsp.data)
       }).catch(e => {
-        console.log(e)
         nav("/recipe/list")
       })
     }

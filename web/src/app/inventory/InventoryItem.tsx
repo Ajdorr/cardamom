@@ -17,14 +17,14 @@ function InventoryItem(props: InventoryItemProps) {
       onChange={s => {
         api.post("inventory/update", { uid: props.model.uid, item: s }).then(rsp => {
           props.onUpdate(rsp.data)
-        }).catch(e => {console.log(e)})
-      }}/>
+        })
+      }} />
 
     <ImageButton src="icons/delete.svg" className="inventory-item-unstock" alt="unstock"
       onClick={() => {
         api.post("inventory/update", { uid: props.model.uid, in_stock: false }).then(rsp => {
           props.onRemove(rsp.data)
-        }).catch(e => console.log(e))
+        })
       }} />
 
   </div>)

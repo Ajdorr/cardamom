@@ -49,7 +49,8 @@ def test_complex():
 
   # Go to recipe list screen
   w.until(lambda x: x.find_element(
-      By.CSS_SELECTOR, "#workspace-menu-link-recipe img")).click()
+      By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img")).click()
+  d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-recipe img").click()
 
   # Create recipe
   d.find_element(By.ID, "recipe-index-create-btn").click()
@@ -108,5 +109,5 @@ def test_complex():
   # Save
   d.find_element(By.CSS_SELECTOR, ".recipe-single-save img").click()
   w.until(lambda x: x.find_element(
-      By.CSS_SELECTOR, "#workspace-menu-link-recipe img"))
+      By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img"))
   verify(d, info)

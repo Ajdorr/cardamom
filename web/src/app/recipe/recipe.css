@@ -30,21 +30,24 @@
 }
 
 .recipe-list-recipes > .recipe-list-element-root:nth-child(even)>*>*,
+.recipe-search-list-recipes > .recipe-search-list-element-root:nth-child(even)>*>*,
 .recipe-trash-list-recipes > .recipe-trash-list-element-root:nth-child(even)>*>*{
   background-color: var(--theme-surface-color);
 }
 
 .recipe-list-element-root, .recipe-list-element-root>a,
+.recipe-search-list-element-root, .recipe-search-list-element-root>a,
 .recipe-trash-list-element-root, .recipe-trash-list-element-root>a {
   display: contents;
 }
 
-.recipe-list-element-root>a, .recipe-trash-list-element-root>a {
+.recipe-list-element-root>a, .recipe-search-list-element-root>a, .recipe-trash-list-element-root>a {
   color: unset;
   text-decoration: none;
 }
 
 .recipe-list-element-name,
+.recipe-search-list-element-name,
 .recipe-trash-list-element-name {
   height: var(--format-line-height);
 
@@ -57,6 +60,7 @@
 }
 
 .recipe-list-element-name>span,
+.recipe-search-list-element-name>span,
 .recipe-trash-list-element-name>span{
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -273,4 +277,57 @@
 .recipe-shuffle-empty {
   display: flex;
   justify-content: center;
+}
+
+/* Recipe Search  */
+.recipe-search-list-root {
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe-search-menu {
+  display: grid;
+  grid-template-areas:
+  "search more"
+  "advanced advanced";
+  grid-template-columns: 1fr var(--format-line-height);
+  grid-template-rows: var(--format-line-height) max-content;
+
+  padding: 0px 5px;
+}
+
+.recipe-search-menu-name {
+  grid-area: search;
+}
+
+.recipe-search-menu-show-advanced {
+  grid-area: more;
+}
+
+.recipe-search-advanced-menu {
+  flex-direction: column;
+}
+
+.recipe-search-advanced-menu > .input-text-box {
+  height: var(--format-line-height);
+}
+
+.recipe-search-advanced-submit {
+  grid-area: search;
+  width: var(--format-line-height);
+}
+
+.recipe-search-list-recipes {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.recipe-search-list-empty {
+  display: flex;
+}
+
+.recipe-search-list-empty > span {
+  padding: 10px;
+  text-align: center;
 }

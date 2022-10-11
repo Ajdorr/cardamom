@@ -26,15 +26,16 @@ type Config struct {
 
 	// Database
 	// https://gorm.io/docs/connecting_to_the_database.html#PostgreSQL
+	DB_Sqlite   string `env:"DB_SQLITE_PATH" envDefault:"/tmp/core.db"`
 	DB_Host     string `env:"DB_HOST" envDefault:"localhost"`
 	DB_Port     string `env:"DB_PORT" envDefault:"5432"`
 	DB_Name     string `env:"DB_NAME" envDefault:"core"`
 	DB_Username string `env:"DB_USERNAME" envDefault:"gorm"`
 	DB_Password string `env:"DB_PASSWORD" envDefault:"Password1234"`
 
-	// Admin user, maybe omit?
-	AdminUserEmail    string `env:"ADMIN_USER_EMAIL" envDefault:"admin@cardamom.com"`
-	AdminUserPassword string `env:"ADMIN_USER_PASSWORD" envDefault:"a"`
+	// Testing env variables
+	TestUserEmail    string `env:"TEST_USER_EMAIL" envDefault:"admin@cardamom.com"`
+	TestUserPassword string `env:"TEST_USER_PASSWORD" envDefault:"a"`
 
 	// OAuth2
 	OAuthGithubClientId        string `env:"OAUTH_GITHUB_CLIENT_ID"`

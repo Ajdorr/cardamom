@@ -35,7 +35,7 @@ func (req *StartRegisterRequest) Validate() (string, error) {
 	}
 
 	if err := validatePassword(req.Password); err != nil {
-		return log_ext.ReturnBothErr(fmt.Errorf("invalid password -- %w", err))
+		return log_ext.ReturnBothErr(log_ext.Errorf("invalid password -- %w", err))
 	}
 
 	return "", nil

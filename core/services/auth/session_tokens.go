@@ -4,8 +4,8 @@ import (
 	cfg "cardamom/core/config"
 	"cardamom/core/ext/gin_ext"
 	"cardamom/core/ext/jwt_ext"
+	"cardamom/core/ext/log_ext"
 	"cardamom/core/models"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -16,14 +16,14 @@ const JWT_ACCESS_TOKEN_KEY = "access_token"
 const JWT_REFRESH_TOKEN_KEY = "refresh_token"
 
 func GetActiveUser(c *gin.Context) *models.User {
-	if cachedUser := gin_ext.Get[models.User](c, gin_ext.USER_KEY); cachedUser != nil {
+	if cachedUser := gin_ext.GetKey[models.User](c, gin_ext.USER_KEY); cachedUser != nil {
 		return cachedUser
 	}
 
 	user := models.User{}
 	claims := GetActiveUserClaims(c)
 	if err := models.DB.First(&user, claims.Uid).Error; err != nil {
-		panic(fmt.Errorf("unable to get active user from database -- %w", err))
+		panic(log_ext.Errorf("unable to get active user from database -- %w", err))
 	} else {
 		c.Set(gin_ext.USER_KEY, &user)
 		return &user
@@ -31,22 +31,22 @@ func GetActiveUser(c *gin.Context) *models.User {
 }
 
 func GetActiveUserClaims(c *gin.Context) *models.AuthToken {
-	if claims := gin_ext.Get[models.AuthToken](c, gin_ext.JWT_ACCESS_CLAIMS_KEY); claims != nil {
+	if claims := gin_ext.GetKey[models.AuthToken](c, gin_ext.JWT_ACCESS_CLAIMS_KEY); claims != nil {
 		return claims
 	} else {
-		panic(fmt.Errorf("missing active user claims"))
+		panic(log_ext.Errorf("missing active user claims"))
 	}
 }
 
 func IsAuthenticated(c *gin.Context) error {
 	if tokenCookie, err := c.Request.Cookie(JWT_ACCESS_TOKEN_KEY); err != nil {
-		return fmt.Errorf("unable to retrieve access token -- %w", err)
+		return log_ext.Errorf("unable to retrieve access token -- %w", err)
 	} else if claims, err := jwt_ext.CheckJWT(tokenCookie.Value, &models.AuthToken{}); err != nil {
-		return fmt.Errorf("unable to parse token -- %w", err)
+		return log_ext.Errorf("unable to parse token -- %w", err)
 	} else if claims == nil {
-		return fmt.Errorf("empty claims")
+		return log_ext.Errorf("empty claims")
 	} else if claims.CSRF != c.GetHeader(CSRF_HEADER_KEY) {
-		return fmt.Errorf("%s header token mismatch", CSRF_HEADER_KEY)
+		return log_ext.Errorf("%s header token mismatch", CSRF_HEADER_KEY)
 	} else {
 		c.Set(gin_ext.JWT_ACCESS_CLAIMS_KEY, claims)
 		return nil
@@ -58,7 +58,7 @@ func setAccessToken(c *gin.Context, token, csrf string, isSecure bool) {
 	http.SetCookie(c.Writer, &http.Cookie{
 		Name:     JWT_ACCESS_TOKEN_KEY,
 		Value:    token,
-		Expires:  time.Now().Add(time.Hour * 1),
+		Expires:  time.Now().Add(time.Hour),
 		Path:     "/api",
 		HttpOnly: true,
 		SameSite: http.SameSiteStrictMode,
@@ -85,9 +85,9 @@ func setRefreshToken(c *gin.Context, token string, isSecure bool) {
 func sendAuthTokenResponse(c *gin.Context, user *models.User) {
 	isSecure := !cfg.IsLocal()
 	if accessToken, csrf, err := user.GetAccessToken(); err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("creating access JWT -- %w", err))
+		gin_ext.ServerError(c, log_ext.Errorf("creating access JWT -- %w", err))
 	} else if refresh_token, _, err := user.GetRefreshToken(); err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("creating refresh JWT -- %w", err))
+		gin_ext.ServerError(c, log_ext.Errorf("creating refresh JWT -- %w", err))
 	} else {
 		setAccessToken(c, accessToken, csrf, isSecure)
 		setRefreshToken(c, refresh_token, isSecure)

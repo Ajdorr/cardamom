@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/pkg/errors"
 )
 
 var JWT_VALID_METHODS = jwt.WithValidMethods([]string{jwt.SigningMethodHS512.Name})
@@ -21,7 +22,8 @@ func CheckJWT[T jwt.Claims](tokenStr string, template T) (T, error) {
 
 	claims, ok := token.Claims.(T)
 	if !ok || !token.Valid {
-		return template, fmt.Errorf("invalid claims")
+		// Done to prevent cyclical import
+		return template, errors.WithStack(fmt.Errorf("invalid claims"))
 	}
 	return claims, nil
 }

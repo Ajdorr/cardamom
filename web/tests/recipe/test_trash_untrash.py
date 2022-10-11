@@ -31,7 +31,8 @@ def test_trash_untrash():
 
   # Go to recipe list screen
   w.until(lambda x: x.find_element(
-      By.CSS_SELECTOR, "#workspace-menu-link-recipe img")).click()
+      By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img")).click()
+  d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-recipe img").click()
 
   # Wait until screen loads
   w.until(lambda x: x.find_elements(
@@ -45,7 +46,8 @@ def test_trash_untrash():
 
     # Go to recipe list screen
     w.until(lambda x: x.find_element(
-        By.CSS_SELECTOR, "#workspace-menu-link-recipe img")).click()
+        By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img")).click()
+    d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-recipe img").click()
 
     # Wait until screen loads
     w.until(lambda x: x.find_elements(
@@ -72,7 +74,8 @@ def test_trash_untrash():
 
   # Go to recipe list screen
   w.until(lambda x: x.find_element(
-      By.CSS_SELECTOR, "#workspace-menu-link-recipe img")).click()
+      By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img")).click()
+  d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-recipe img").click()
 
   w.until(lambda x: x.find_element(
       By.XPATH,

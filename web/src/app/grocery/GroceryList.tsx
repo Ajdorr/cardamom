@@ -43,16 +43,12 @@ class GroceryList extends Component<{}, GroceryState> {
   clearAll() {
     api.post("grocery/clear").then(rsp => {
       this.refresh()
-    }).catch(e => {
-      console.log(e) // FIXME
     })
   }
 
   refresh() {
     api.post("grocery/list").then(rsp => {
       this.updateGroceryList(rsp.data)
-    }).catch(e => {
-      console.log(e) // FIXME
     })
   }
 
@@ -127,8 +123,6 @@ function CollectedGroceryItem(props: CollectedGroceryItemProps) {
 
       api.post("grocery/collect", { uid: props.uid, is_collected: false }).then(rsp => {
         props.onUndo(rsp.data)
-      }).catch(e => {
-        console.log(e)
       })
     }} />
   </div>)

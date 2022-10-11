@@ -3,11 +3,11 @@ package grocery
 import (
 	"cardamom/core/events"
 	"cardamom/core/ext/gin_ext"
+	"cardamom/core/ext/log_ext"
 	"cardamom/core/models"
 	"cardamom/core/services"
 	"cardamom/core/services/auth"
 	"cardamom/core/services/inventory"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +24,7 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 		FirstOrCreate(&item)
 
 	if db.Error != nil {
-		gin_ext.AbortNotFound(c, fmt.Errorf("finding grocery item -- %w", db.Error))
+		gin_ext.AbortNotFound(c, log_ext.Errorf("finding grocery item -- %w", db.Error))
 		return
 	}
 
@@ -33,9 +33,9 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 	}
 	item.IsCollected = false
 	if err := models.DB.Save(&item).Error; err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("adding grocery item -- %w", db.Error))
+		gin_ext.ServerError(c, log_ext.Errorf("adding grocery item -- %w", db.Error))
 	} else {
-		c.JSON(http.StatusOK, item)
+		c.JSON(http.StatusCreated, item)
 	}
 
 	events.Publish(&events.Event{
@@ -49,7 +49,7 @@ func ListItems(c *gin.Context) {
 	user := auth.GetActiveUserClaims(c)
 	var items []models.GroceryItem
 	if err := models.DB.Where(&models.GroceryItem{UserUid: user.Uid}).Order("created_at desc").Find(&items).Error; err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("finding grocery items -- %w", err))
+		gin_ext.ServerError(c, log_ext.Errorf("finding grocery items -- %w", err))
 	} else {
 		c.JSON(http.StatusOK, items)
 	}
@@ -59,7 +59,7 @@ func CollectItem(c *gin.Context, r *CollectItemRequest) {
 	user := auth.GetActiveUserClaims(c)
 	item, err := itemByUid(r.Uid, user.Uid)
 	if err != nil {
-		gin_ext.Abort(c, http.StatusBadRequest, fmt.Errorf("attempt to update non existant item -- %w", err))
+		gin_ext.Abort(c, http.StatusBadRequest, log_ext.Errorf("attempt to update non existant item -- %w", err))
 		return
 	}
 
@@ -72,7 +72,7 @@ func CollectItem(c *gin.Context, r *CollectItemRequest) {
 
 		item.IsCollected = r.IsCollected
 		if err = models.DB.Save(&item).Error; err != nil {
-			gin_ext.ServerError(c, fmt.Errorf("unable to update GroceryItem -- %w", err))
+			gin_ext.ServerError(c, log_ext.Errorf("unable to update GroceryItem -- %w", err))
 			return
 		}
 	}
@@ -84,7 +84,7 @@ func UpdateItem(c *gin.Context, r *UpdateItemRequest) {
 	user := auth.GetActiveUserClaims(c)
 	item, err := itemByUid(r.Uid, user.Uid)
 	if err != nil {
-		gin_ext.Abort(c, http.StatusBadRequest, fmt.Errorf("attempt to update non existant item -- %w", err))
+		gin_ext.Abort(c, http.StatusBadRequest, log_ext.Errorf("attempt to update non existant item -- %w", err))
 		return
 	}
 
@@ -96,7 +96,7 @@ func UpdateItem(c *gin.Context, r *UpdateItemRequest) {
 	}
 
 	if err = models.DB.Save(&item).Error; err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("unable to update GroceryItem -- %w", err))
+		gin_ext.ServerError(c, log_ext.Errorf("unable to update GroceryItem -- %w", err))
 	} else {
 		c.JSON(http.StatusOK, &item)
 	}
@@ -115,7 +115,7 @@ func DeleteItem(c *gin.Context, r *services.ReadRequest) {
 			Uid:     r.Uid,
 			UserUid: user.Uid,
 		}).Delete(&models.GroceryItem{}).Error; err != nil {
-		gin_ext.Abort(c, http.StatusBadRequest, fmt.Errorf("attempt to delete non existant item -- %w", err))
+		gin_ext.Abort(c, http.StatusBadRequest, log_ext.Errorf("attempt to delete non existant item -- %w", err))
 		return
 	}
 
@@ -131,7 +131,7 @@ func ClearCollected(c *gin.Context) {
 		}).Delete(&models.GroceryItem{}).Error
 
 	if err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("clearing collected -- %w", err))
+		gin_ext.ServerError(c, log_ext.Errorf("clearing collected -- %w", err))
 	} else {
 		c.JSON(http.StatusOK, gin.H{})
 	}

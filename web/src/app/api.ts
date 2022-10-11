@@ -48,8 +48,6 @@ export function login(email: string, password: string, callback: () => void) {
   }).then(rsp => {
     onAuthenticate(rsp.headers["x-csrf-token"])
     callback()
-  }).catch(e => {
-    console.log(e) // FIXME need a logging system
   })
 }
 
@@ -80,7 +78,7 @@ export function startOAuthLogin(provider: string, forward_url?: string) {
 
   api.get(`/auth/oauth-start/${provider}`).then(rsp => {
     window.location.href = rsp.data.redirect_url
-  }).catch(console.log)
+  })
 }
 
 const authorizedOAuthSources = ["github", "google", "facebook", "microsoft"]
@@ -110,7 +108,8 @@ export function completeOAuthLogin(
       nav("/grocery")
     }
     isOAuthLoggingIn = false
-  }).catch(e => console.log)
+  })
+
   return true
 }
 
@@ -120,6 +119,15 @@ export function redirectIfNotAuthenticated(nav: NavigateFunction) {
       nav("/auth/login")
     })
   }
+}
+
+export enum LogLevel {
+  ERROR = "Error",
+  WARNING = "Warning"
+}
+
+export function log(message: string, logLevel: LogLevel, e: any) {
+  api.post("/log", { level: logLevel, msg: message, data: e })
 }
 
 function refreshAuth(): Promise<AxiosResponse<any, any>> {

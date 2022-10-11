@@ -4,6 +4,7 @@ import (
 	cfg "cardamom/core/config"
 	"cardamom/core/ext/gin_ext"
 	"cardamom/core/ext/jwt_ext"
+	"cardamom/core/ext/log_ext"
 	"cardamom/core/models"
 	"fmt"
 	"net/http"
@@ -36,13 +37,13 @@ func StartRegister(c *gin.Context, req *StartRegisterRequest) {
 
 func CompleteRegister(c *gin.Context, req *CompleteRegisterRequest) {
 	if claims, err := jwt_ext.CheckJWT(req.RegisterToken, &RegisterToken{}); err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("invaid jwt -- %w", err))
+		gin_ext.ServerError(c, log_ext.Errorf("invaid jwt -- %w", err))
 
 	} else if user, err := RegisterNewUser(claims.Email, claims.Password); err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("unable to create user -- %w", err))
+		gin_ext.ServerError(c, log_ext.Errorf("unable to create user -- %w", err))
 
 	} else if user != nil {
-		gin_ext.ServerError(c, fmt.Errorf("user with email(%s) already exists", user.Email))
+		gin_ext.ServerError(c, log_ext.Errorf("user with email(%s) already exists", user.Email))
 
 	} else {
 		c.JSON(http.StatusCreated, &gin.H{})
@@ -53,9 +54,9 @@ func Login(c *gin.Context, req *LoginRequest) {
 	if user, err := models.GetUserByEmail(req.Email); err != nil {
 		gin_ext.Abort(c, http.StatusBadRequest, err)
 	} else if user == nil {
-		gin_ext.Abort(c, http.StatusBadRequest, fmt.Errorf("attempt to log in to user(%s) that does not exist", req.Email))
+		gin_ext.Abort(c, http.StatusBadRequest, log_ext.Errorf("attempt to log in to user(%s) that does not exist", req.Email))
 	} else if !user.IsPasswordMatch(req.Password) {
-		gin_ext.Abort(c, http.StatusBadRequest, fmt.Errorf("login with bad password"))
+		gin_ext.Abort(c, http.StatusBadRequest, log_ext.Errorf("login with bad password"))
 	} else {
 		sendAuthTokenResponse(c, user)
 	}
@@ -69,16 +70,20 @@ func Logout(c *gin.Context) {
 
 func Refresh(c *gin.Context) {
 	user := models.User{}
+	// Check refresh cookie exists
 	if cookie, err := c.Cookie(JWT_REFRESH_TOKEN_KEY); err != nil {
-		gin_ext.Abort(c, http.StatusUnauthorized, fmt.Errorf("refresh token validation -- %w", err))
+		gin_ext.Abort(c, http.StatusUnauthorized, log_ext.Errorf("refresh token validation -- %w", err))
+		// Check refresh token is the correct format, parse claims
 	} else if claims, err := jwt_ext.CheckJWT(cookie, &models.AuthToken{}); err != nil {
-		gin_ext.Abort(c, http.StatusUnauthorized, fmt.Errorf("refresh token validation -- %w", err))
+		gin_ext.Abort(c, http.StatusUnauthorized, log_ext.Errorf("refresh token validation -- %w", err))
+		// Find the user in the database
 	} else if err = models.DB.First(&user, "uid = ?", claims.Uid).Error; err != nil {
-		gin_ext.Abort(c, http.StatusUnauthorized, fmt.Errorf("refresh token validation -- %w", err))
+		gin_ext.Abort(c, http.StatusUnauthorized, log_ext.Errorf("refresh token validation -- %w", err))
+		// Create the access token
 	} else if access_token, csrf, err := user.GetAccessToken(); err != nil {
-		gin_ext.Abort(c, http.StatusUnauthorized, fmt.Errorf("refresh token validation -- %w", err))
+		gin_ext.Abort(c, http.StatusUnauthorized, log_ext.Errorf("refresh token validation -- %w", err))
 		// } else if refresh_token, _, err := user.GetRefreshToken(); err != nil {
-		// gin_ext.ServerError(c, fmt.Errorf("creating refresh JWT -- %w", err))
+		// gin_ext.ServerError(c, log_ext.Errorf("creating refresh JWT -- %w", err))
 	} else {
 		// TODO Invalidate refresh token and set it
 		isSecure := !cfg.IsLocal()

@@ -9,7 +9,7 @@ function RecipeTrashList() {
   useEffect(() => {
     api.post("recipe/trash").then(rsp => {
       setRecipes(rsp.data)
-    }).catch(e => console.log(e))
+    })
   }, [])
 
   return (<div className="recipe-trash-list-root">

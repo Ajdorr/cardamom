@@ -1,12 +1,7 @@
-MVP
-+ Test overflow on other screens
-+ Fix apple zoom bug
-
-Backlog
-+ AuthIndex.OAuthReturn(), do something on failure
-+ Convert recipe single screen to grid
+Next release
 + Fix all text fonts, pick some to use
 + Create a saved list of stores
-+ Archive recipe front end
-  + archive button and messaging
++ Recipe search
+
+Backlog
 + Relayout for web

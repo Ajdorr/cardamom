@@ -129,13 +129,14 @@ export class TextButton extends Component<TextButtonProps> {
 type ImageButtonProps = {
   src: string
   alt: string
+  id?: string
   className?: string
   onClick: MouseEventHandler
 }
 
 export function ImageButton(props: ImageButtonProps) {
 
-  return (<div className={props.className ? "input-img-button " + props.className : "input-img-button"}>
+  return (<div id={props.id} className={props.className ? "input-img-button " + props.className : "input-img-button"}>
     <img src={props.src} alt={props.alt} style={{ cursor: "pointer" }}
       onClick={props.onClick} width="100%" height="100%" />
   </div>)

@@ -2,9 +2,9 @@ package inventory
 
 import (
 	"cardamom/core/ext/gin_ext"
+	"cardamom/core/ext/log_ext"
 	"cardamom/core/models"
 	"cardamom/core/services/auth"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,18 +21,18 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 		FirstOrCreate(&item)
 
 	if db.Error != nil {
-		gin_ext.ServerError(c, fmt.Errorf("adding item to database -- %w", db.Error))
+		gin_ext.ServerError(c, log_ext.Errorf("adding item to database -- %w", db.Error))
 		return
 	}
 
 	item.InStock = true
 
 	if err := models.DB.Save(&item).Error; err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("updating quantity to database -- %w", err))
+		gin_ext.ServerError(c, log_ext.Errorf("updating quantity to database -- %w", err))
 		return
 	}
 
-	c.JSON(http.StatusOK, &item)
+	c.JSON(http.StatusCreated, &item)
 }
 
 func ListItems(c *gin.Context) {
@@ -44,7 +44,7 @@ func ListItems(c *gin.Context) {
 	}).Find(&inventoryItems).Error
 
 	if err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("finding grocery items -- %w", err))
+		gin_ext.ServerError(c, log_ext.Errorf("finding grocery items -- %w", err))
 	} else {
 		c.JSON(http.StatusOK, inventoryItems)
 	}
@@ -53,7 +53,7 @@ func ListItems(c *gin.Context) {
 func UpdateItem(c *gin.Context, r *UpdateItemRequest) {
 	user := auth.GetActiveUserClaims(c)
 	if item, err := itemByUid(r.Uid, user.Uid); err != nil {
-		gin_ext.AbortNotFound(c, fmt.Errorf("attempt to update non existant item(%s) -- %w", r.Uid, err))
+		gin_ext.AbortNotFound(c, log_ext.Errorf("attempt to update non existant item(%s) -- %w", r.Uid, err))
 	} else {
 
 		if r.Item != nil {
@@ -64,7 +64,7 @@ func UpdateItem(c *gin.Context, r *UpdateItemRequest) {
 		}
 
 		if err = models.DB.Save(&item).Error; err != nil {
-			gin_ext.ServerError(c, fmt.Errorf("unable to update GroceryItem -- %w", err))
+			gin_ext.ServerError(c, log_ext.Errorf("unable to update GroceryItem -- %w", err))
 		} else {
 			c.JSON(http.StatusOK, &item)
 		}

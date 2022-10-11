@@ -1,6 +1,5 @@
 /* Grocery Drop Down */
 .modifiable-drop-down-workspace {
-  position: relative;
   display: flex;
   height: 100%;
   flex-direction: row;

@@ -2,9 +2,9 @@ package auth
 
 import (
 	cfg "cardamom/core/config"
+	"cardamom/core/ext/log_ext"
 	"cardamom/core/models"
 	"context"
-	"fmt"
 	"sync"
 
 	"github.com/parnurzeal/gorequest"
@@ -52,7 +52,7 @@ func completeOAuth2Microsoft(code string) (*models.User, []error) {
 		Set("Authorization", "Bearer "+token.AccessToken).
 		EndStruct(&body)
 	if len(errs) > 0 || rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		errs = append(errs, fmt.Errorf("user email response body -- %s", string(bodyRaw)))
+		errs = append(errs, log_ext.Errorf("user email response body -- %s", string(bodyRaw)))
 		return nil, errs
 	}
 

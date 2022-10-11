@@ -1,8 +1,8 @@
 package recipe
 
 import (
+	"cardamom/core/ext/log_ext"
 	m "cardamom/core/models"
-	"fmt"
 
 	"github.com/thoas/go-funk"
 )
@@ -31,7 +31,7 @@ func resizeInstructions(user_uid string, instructions []string, recipe *m.Recipe
 	if len(instructions) < len(recipe.Instructions) {
 		for i := len(instructions); i < len(recipe.Instructions); i++ {
 			if err := m.DB.Delete(recipe.Instructions[i]).Error; err != nil {
-				return fmt.Errorf("deleting instructions -- %w", err)
+				return log_ext.Errorf("deleting instructions -- %w", err)
 			}
 		}
 
@@ -56,7 +56,7 @@ func resizeInstructions(user_uid string, instructions []string, recipe *m.Recipe
 		}
 
 		if err := m.DB.Save(&recipe.Instructions[i]).Error; err != nil {
-			return fmt.Errorf("updating instruction(%d) -- %w", i, err)
+			return log_ext.Errorf("updating instruction(%d) -- %w", i, err)
 		}
 	}
 
@@ -69,7 +69,7 @@ func resizeIngredients(user_uid string, ingredients []IngredientPart, recipe *m.
 	if len(ingredients) < len(recipe.Ingredients) {
 		for i := len(ingredients); i < len(recipe.Ingredients); i++ {
 			if err := m.DB.Delete(recipe.Ingredients[i]).Error; err != nil {
-				return fmt.Errorf("deleting instructions -- %w", err)
+				return log_ext.Errorf("deleting instructions -- %w", err)
 			}
 		}
 
@@ -97,7 +97,7 @@ func resizeIngredients(user_uid string, ingredients []IngredientPart, recipe *m.
 		}
 
 		if err := m.DB.Save(&recipe.Ingredients[i]).Error; err != nil {
-			return fmt.Errorf("updating ingredient(%d) -- %w", i, err)
+			return log_ext.Errorf("updating ingredient(%d) -- %w", i, err)
 		}
 	}
 

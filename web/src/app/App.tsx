@@ -3,12 +3,13 @@ import './theme.css';
 import './App.css';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import Account from './auth/Account';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { redirectIfNotAuthenticated } from './api';
 import GroceryList from './grocery/GroceryList';
 import InventoryList from './inventory/InventoryList';
-import RecipeIndex from './recipe/RecipeIndex';
+import RecipeIndex, { RecipeContextMenu } from './recipe/RecipeIndex';
 import AuthIndex from './auth/AuthIndex';
+import { ImageButton } from './component/input';
 
 function Home() {
   return (
@@ -28,6 +29,38 @@ function NotFound() {
   );
 }
 
+function WorkspaceHeader() {
+
+  const [showMenu, setShowMenu] = useState(false)
+  const nav = useNavigate()
+
+  return (
+    <div className="workspace-menu-bar theme-primary">
+
+      <ImageButton alt="Show menu" src="/icons/menu.svg" className="workspace-menu-bar-show-btn"
+        onClick={e => { setShowMenu(!showMenu) }} />
+
+      <div className="workspace-menu-bar-context-sensitive">
+        <Routes>
+          <Route path="recipe/*" element={<RecipeContextMenu />} />
+        </Routes>
+
+      </div>
+
+      <div style={{ display: showMenu ? "flex" : "none" }} className="workspace-menu-bar-overlay theme-primary">
+
+        <ImageButton id="workspace-menu-link-grocery" alt="Go to grocery list" src="/icons/cart.svg"
+          onClick={e => { setShowMenu(false); nav("/grocery") }} />
+        <ImageButton id="workspace-menu-link-inventory" alt="Go to inventory list" src="/icons/inventory.svg"
+          onClick={e => { setShowMenu(false); nav("/inventory") }} />
+        <ImageButton id="workspace-menu-link-recipe" alt="Go to recipe list" src="/icons/book.svg"
+          onClick={e => { setShowMenu(false); nav("/recipe") }} />
+
+      </div>
+    </div>
+  )
+}
+
 function Workspace() {
 
   const nav = useNavigate()
@@ -37,22 +70,7 @@ function Workspace() {
 
   return (
     <div className="workspace-root">
-      <div className="workspace-menu-bar theme-primary">
-        <Link to="/grocery" id="workspace-menu-link-grocery">
-          <img src="/icons/cart.svg" alt="grocery" />
-        </Link>
-        <Link to="/inventory" id="workspace-menu-link-inventory">
-          <img src="/icons/inventory.svg" alt="inventory" />
-        </Link>
-        <Link to="/recipe" id="workspace-menu-link-recipe">
-          <img src="/icons/book.svg" alt="recipes" />
-        </Link>
-        <Link to="/account" id="workspace-menu-link-account">
-          <img src="/icons/menu.svg" alt="grocery" />
-        </Link>
-        {/* Account */}
-        {/* <TextButton label="Logout" theme={Theme.Primary} onClick={e => logout()} /> */}
-      </div>
+      <WorkspaceHeader />
       <div className="workspace-main">
         <Routes>
           <Route path="grocery" element={<GroceryList />} />

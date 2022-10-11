@@ -26,7 +26,7 @@ function RecipeShuffle() {
   useEffect(() => {
     api.post("recipe/available").then(rsp => {
       setRecipes(shuffle(rsp.data))
-    }).catch(e => console.log(e))
+    })
   }, [])
 
   if (recipes.length === 0) {
@@ -59,7 +59,7 @@ function RecipeShuffle() {
     <div className="recipe-shuffle-action-panel theme-focus">
 
       <TextButton label="Yeah!" theme={Theme.Primary} className="recipe-shuffle-action-btn"
-        onClick={() => nav(`/recipe/${recipe.uid}`)}
+        onClick={() => nav(`/recipe/edit/${recipe.uid}`)}
       />
 
       <TextButton label="Nah." theme={Theme.Surface}

@@ -2,9 +2,9 @@ package auth
 
 import (
 	cfg "cardamom/core/config"
+	"cardamom/core/ext/log_ext"
 	"cardamom/core/models"
 	"context"
-	"fmt"
 	"sync"
 
 	"github.com/parnurzeal/gorequest"
@@ -49,7 +49,7 @@ func completeOAuth2Facebook(code string) (*models.User, []error) {
 	var body facebookEmailResponse
 	rsp, bodyRaw, errs := gorequest.New().Get(url).EndStruct(&body)
 	if len(errs) > 0 || rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		errs = append(errs, fmt.Errorf("user email response body -- %s", string(bodyRaw)))
+		errs = append(errs, log_ext.Errorf("user email response body -- %s", string(bodyRaw)))
 		return nil, errs
 	}
 

@@ -2,6 +2,7 @@ package models
 
 import (
 	cfg "cardamom/core/config"
+	"cardamom/core/ext/log_ext"
 	"fmt"
 
 	"gorm.io/driver/postgres"
@@ -14,8 +15,8 @@ var DB *gorm.DB
 func init() {
 
 	if cfg.IsLocal() {
-		if db, err := gorm.Open(sqlite.Open("core.db"), &gorm.Config{}); err != nil {
-			panic(fmt.Errorf("failed to connect to database -- %w", err))
+		if db, err := gorm.Open(sqlite.Open(cfg.C.DB_Sqlite), &gorm.Config{}); err != nil {
+			panic(log_ext.Errorf("failed to connect to database -- %w", err))
 		} else {
 			DB = db
 		}
@@ -24,7 +25,7 @@ func init() {
 			cfg.C.DB_Host, cfg.C.DB_Port, cfg.C.DB_Username, cfg.C.DB_Password, cfg.C.DB_Name),
 		PreferSimpleProtocol: true,
 	}), &gorm.Config{}); err != nil {
-		panic(fmt.Errorf("failed to connect to database -- %w", err))
+		panic(log_ext.Errorf("failed to connect to database -- %w", err))
 	} else {
 		DB = db
 	}

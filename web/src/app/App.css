@@ -24,23 +24,33 @@ body {
 }
 
 .workspace-menu-bar {
+  position: relative;
   width: 100%;
-
-  box-sizing: border-box;
-  padding: 5px 10px;
-
   display: flex;
+
+  padding: 5px 10px;
+  box-sizing: border-box;
   flex-direction: row;
-  justify-content: space-between;
 }
 
-.workspace-menu-bar > * {
-  display: contents;
-}
-
-.workspace-menu-bar img {
+.workspace-menu-bar-show-btn {
   width: var(--format-heading-small-height);
   height: var(--format-heading-small-height);
+}
+
+.workspace-menu-bar-context-sensitive {
+  flex-grow: 1;
+}
+
+.workspace-menu-bar-overlay {
+  position: absolute;
+  top: var(--format-heading-small-height);
+  left: 0px;
+  width: 100%;
+
+  padding: 5px 10px;
+  box-sizing: border-box;
+  justify-content: space-between;
 }
 
 .workspace-main {

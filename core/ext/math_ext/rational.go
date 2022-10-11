@@ -1,6 +1,7 @@
-package gorm_ext
+package math_ext
 
 import (
+	"cardamom/core/ext/log_ext"
 	"database/sql/driver"
 	"fmt"
 	"regexp"
@@ -77,7 +78,7 @@ func (r *Rational) Scan(value interface{}) error {
 	if str, ok := value.(string); !ok {
 		return errors.New(fmt.Sprint("gorm Scan failure, invalid type: ", value))
 	} else if err := r.Parse(str); err != nil {
-		return fmt.Errorf("gorm Scan failure (%s) -- %w ", str, err)
+		return log_ext.Errorf("gorm Scan failure (%s) -- %w ", str, err)
 	}
 	return nil
 }

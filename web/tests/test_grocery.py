@@ -13,7 +13,8 @@ def test_grocery_basic_usage():
 
   # Go to grocery list screen
   w.until(lambda x: x.find_element(
-      By.CSS_SELECTOR, "#workspace-menu-link-grocery img")).click()
+      By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img")).click()
+  d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-grocery img").click()
 
   # Add items
   add_item = w.until(lambda x: x.find_element(
@@ -63,7 +64,8 @@ def test_grocery_collect():
 
   # Go to grocery list screen
   w.until(lambda x: x.find_element(
-      By.CSS_SELECTOR, "#workspace-menu-link-grocery img")).click()
+      By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img")).click()
+  d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-grocery img").click()
 
   add_item: WebElement = w.until(lambda x: x.find_element(
       By.CSS_SELECTOR, "#grocery-list-add-item input"))

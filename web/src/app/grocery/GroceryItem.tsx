@@ -24,7 +24,7 @@ export function AddGroceryItem(props: AddGroceryItemProps) {
       store: props.store.length > 0 ? props.store : null
     }).then(rsp => {
       props.onAdd(rsp.data)
-    }).catch(e => { console.log(e) })
+    })
   }
 
   return (<InputTextBox id={props.id} value="" className="grocery-item-add-root theme-primary-light"
@@ -48,6 +48,7 @@ export function GroceryItem(props: GroceryItemProps) {
 
   const [initX, setInitX] = useState(0)
   const [offsetX, setOffsetX] = useState(0)
+  const translateStyle = (offsetX !== 0) ? `translateX(${offsetX}px)` : ""
 
   const onUpdate = (req: UpdateRequest) => {
 
@@ -58,28 +59,22 @@ export function GroceryItem(props: GroceryItemProps) {
 
     api.post("grocery/update", req).then(rsp => {
       props.onUpdate(rsp.data)
-    }).catch(e => {
-      console.log(e) // FIXME
     })
   }
 
   const collectItem = () => {
     api.post("grocery/collect", { uid: props.model.uid, is_collected: true }).then(rsp => {
       props.onUpdate(rsp.data)
-    }).catch(e => {
-      console.log(e) // FIXME
     })
   }
 
-  return (<div style={{ transform: `translate(${offsetX}px, 0px)` }} className="grocery-item-root"
+  return (<div style={{ transform: translateStyle }} className="grocery-item-root"
     onTouchStart={e => { setInitX(e.touches[0].clientX) }}
     onTouchMove={e => { setOffsetX(e.touches[0].clientX - initX); }}
     onTouchEnd={e => {
       if (Math.abs(offsetX) >= DragToDeleteTolerance) {
         api.post("grocery/delete", { uid: props.model.uid }).then(rsp => {
           props.onDelete(props.model)
-        }).catch(e => {
-          console.log(e) // FIXME
         })
       }
       setInitX(0); setOffsetX(0)

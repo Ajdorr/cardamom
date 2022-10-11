@@ -1,14 +1,14 @@
-MVP
-+ Create simple bizevent write to file
+Next release
++ Add prep and cook times
++ Add ingredient annotations (chopped, sliced, diced, melted, chilled)
++ Optional ingredients
 
 Backlog
 + Setup staging environment
-+ convert tests to golang test
-+ convert errors to pkg/errors
-+ create command line interface
-+ Build database generator
-+ Add ingredient annotations (chopped, sliced, diced, melted, chilled)
-+ Add prep and cook times
++ Grocery List Sharing
++ Recipe Sharing
++ Logging Ingestion
++ Reverse add groceries from recipe to list
 + Enforce ingredient names - singular, converter
-+ Optional ingredients
 + Setup sandbox environment
++ create command line interface

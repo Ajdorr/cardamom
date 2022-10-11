@@ -1,6 +1,7 @@
 package units
 
 import (
+	"cardamom/core/ext/log_ext"
 	"database/sql/driver"
 	"errors"
 	"fmt"
@@ -70,12 +71,12 @@ func (u Unit) Value() (driver.Value, error) {
 
 // JSON compatibility
 func (u *Unit) MarshalJSON() ([]byte, error) {
-	return []byte(fmt.Sprintf("\"%s\"", u.symbol)), nil
+	return []byte(fmt.Sprintf(`"%s"`, u.symbol)), nil
 }
 
 func (u *Unit) UnmarshalJSON(data []byte) error {
 	if data == nil || len(data) <= 2 {
-		return fmt.Errorf("json cannot be empty")
+		return log_ext.Errorf("json cannot be empty")
 	}
 
 	if unit, ok := unitMap[string(data[1:len(data)-1])]; !ok {

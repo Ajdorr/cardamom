@@ -5,7 +5,6 @@ import (
 	"cardamom/core/ext/log_ext"
 	"cardamom/core/models"
 	"cardamom/core/services/auth"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -31,7 +30,7 @@ func ListRecords[T any](c *gin.Context, getKeyModel func(token *models.AuthToken
 	modelKey := getKeyModel(user)
 	var records []T
 	if err := models.DB.Where(modelKey).Find(&records).Error; err != nil {
-		gin_ext.ServerError(c, fmt.Errorf("listing records -- %w", err))
+		gin_ext.ServerError(c, log_ext.Errorf("listing records -- %w", err))
 	} else {
 		c.JSON(http.StatusOK, records)
 	}

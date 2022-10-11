@@ -13,7 +13,8 @@ def test_required_data():
 
   # Go to inventory list screen
   w.until(lambda x: x.find_element(
-      By.CSS_SELECTOR, "#workspace-menu-link-inventory img")).click()
+      By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img")).click()
+  d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-inventory img").click()
 
   add_item = d.find_element(
       By.CSS_SELECTOR, ".inventory-list-add-item-input input")
@@ -34,7 +35,8 @@ def test_basic_usage():
 
   # Go to inventory list screen
   w.until(lambda x: x.find_element(
-      By.CSS_SELECTOR, "#workspace-menu-link-inventory img")).click()
+      By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img")).click()
+  d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-inventory img").click()
 
   add_item = d.find_element(
       By.CSS_SELECTOR, ".inventory-list-add-item-input input")

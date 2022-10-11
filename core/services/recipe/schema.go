@@ -75,3 +75,19 @@ type UpdateRecipeResponse struct {
 	Ingredients  []IngredientPart `json:"ingredients,omitempty"`
 	Instructions []string         `json:"instructions,omitempty"`
 }
+
+type SearchRecipeRequest struct {
+	Name        *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Meal        *string `json:"meal,omitempty"`
+	Ingredient  *string `json:"ingredient,omitempty"`
+}
+
+func (req *SearchRecipeRequest) Validate() (string, error) {
+
+	if req.Name == nil && req.Description == nil && req.Meal == nil && req.Ingredient == nil {
+		return log_ext.ReturnBoth("must have at least one search criteria")
+	}
+
+	return "", nil
+}

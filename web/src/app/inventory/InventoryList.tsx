@@ -25,8 +25,6 @@ function InventoryList() {
   const refresh = () => {
     api.post("inventory/list").then(rsp => {
       setItems(rsp.data)
-    }).catch(e => {
-      console.log(e)
     })
   }
 
@@ -44,7 +42,7 @@ function InventoryList() {
 
           api.post("inventory/create", { item: s }).then(rsp => {
             updateInventoryList([...items, rsp.data])
-          }).catch(e => console.log(e))
+          })
         }} />
     </div>
 

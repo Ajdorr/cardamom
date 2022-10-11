@@ -1,8 +1,8 @@
 package auth
 
 import (
+	"cardamom/core/ext/log_ext"
 	"cardamom/core/models"
-	"fmt"
 
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
@@ -15,7 +15,7 @@ func RegisterNewUser(email string, password string) (*models.User, error) {
 	if user, err := models.GetUserByEmail(email); err != nil {
 		return nil, err
 	} else if user != nil {
-		return nil, fmt.Errorf("user with email(%s) already exists", email)
+		return nil, log_ext.Errorf("user with email(%s) already exists", email)
 	} else {
 		newUser := &models.User{
 			Uid:      generateUid(),
