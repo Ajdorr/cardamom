@@ -36,6 +36,10 @@
 }
 
 /* Grocery List */
+.grocery-list-items {
+  background-color: red;
+}
+
 .grocery-list-root > .grocery-list-store .input-box,
 .grocery-list-root > .grocery-item-add-root .input-box,
 .grocery-list-root > .grocery-list-items .grocery-item-input > .input-box,
@@ -62,6 +66,11 @@
   height: var(--format-line-height);
   display: flex;
   flex-direction: row;
+}
+
+.grocery-list-items > .grocery-item-root:nth-child(odd),
+.grocery-list-collected-items > .grocery-list-collected-root:nth-child(odd) {
+  background-color: var(--theme-focus-color);
 }
 
 .grocery-list-items > .grocery-item-root:nth-child(even),
@@ -99,6 +108,9 @@
 /* Collected Grocery Items */
 .grocery-list-collected-space {
   flex-grow: 1;
+  display: flex;
+  padding-left: 5px;
+  align-items: center;
 }
 
 .grocery-list-collected-clear-all {

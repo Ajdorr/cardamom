@@ -1,7 +1,10 @@
+import { useState } from "react"
 import { api } from "../api"
 import { ImageButton, InputTextBox } from "../component/input"
 import { ModifiableDropDown } from "./component/DropDown"
 import { GroceryItemModel } from './schema'
+
+const DragToDeleteTolerance = 60
 
 type AddGroceryItemProps = {
   id: string
@@ -32,6 +35,7 @@ type GroceryItemProps = {
   model: GroceryItemModel
   stores: string[]
   onUpdate: (i: GroceryItemModel) => void
+  onDelete: (i: GroceryItemModel) => void
 }
 
 type UpdateRequest = {
@@ -41,6 +45,9 @@ type UpdateRequest = {
 }
 
 export function GroceryItem(props: GroceryItemProps) {
+
+  const [initX, setInitX] = useState(0)
+  const [offsetX, setOffsetX] = useState(0)
 
   const onUpdate = (req: UpdateRequest) => {
 
@@ -64,7 +71,20 @@ export function GroceryItem(props: GroceryItemProps) {
     })
   }
 
-  return (<div className="grocery-item-root" >
+  return (<div style={{ transform: `translate(${offsetX}px, 0px)` }} className="grocery-item-root"
+    onTouchStart={e => { setInitX(e.touches[0].clientX) }}
+    onTouchMove={e => { setOffsetX(e.touches[0].clientX - initX); }}
+    onTouchEnd={e => {
+      if (Math.abs(offsetX) >= DragToDeleteTolerance) {
+        api.post("grocery/delete", { uid: props.model.uid }).then(rsp => {
+          props.onDelete(props.model)
+        }).catch(e => {
+          console.log(e) // FIXME
+        })
+      }
+      setInitX(0); setOffsetX(0)
+    }}
+  >
     <ImageButton className="grocery-item-collect" alt="collect" src="icons/done.svg" onClick={e => collectItem()} />
     <InputTextBox value={props.model.item} className="grocery-item-input" onChange={i => onUpdate({ uid: props.model.uid, item: i })} />
     <ModifiableDropDown className="grocery-item-store" value={props.model.store} options={props.stores}

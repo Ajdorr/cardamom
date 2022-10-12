@@ -89,12 +89,13 @@ class GroceryList extends Component<{}, GroceryState> {
           {displayedItems.length > 0 ? displayedItems.map(i => {
             return (<GroceryItem key={i.uid} model={i} stores={this.state.uniqueStores}
               onUpdate={i => this.updateGroceryItem(i)}
+              onDelete={i => this.updateGroceryList([...this.state.items].filter(item => item.uid !== i.uid))}
             />)
           }) : <div className="grocery-list-items-empty"><span>No grocery items in your list</span></div>}
         </div>
 
         <div className="grocery-list-collected-divider theme-primary-light">
-          <div className="grocery-list-collected-space"> </div>
+          <div className="grocery-list-collected-space"><span>Collected Groceries</span></div>
           <ImageButton className="grocery-list-collected-clear-all"
             src="icons/delete-all.svg" alt="clear" onClick={e => this.clearAll()} />
         </div>

@@ -39,6 +39,7 @@ func RegisterEndpoints(r *gin.Engine) {
 		g.POST("/create", handlePost(grocery.AddItem, true))
 		g.POST("/list", handleRequest(grocery.ListItems, true))
 		g.POST("/update", handlePost(grocery.UpdateItem, true))
+		g.POST("/delete", handlePost(grocery.DeleteItem, true))
 		g.POST("/collect", handlePost(grocery.CollectItem, true))
 		g.POST("/clear", handleRequest(grocery.ClearCollected, true))
 	}

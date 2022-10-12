@@ -4,6 +4,7 @@ import (
 	"cardamom/core/events"
 	"cardamom/core/ext/gin_ext"
 	"cardamom/core/models"
+	"cardamom/core/services"
 	"cardamom/core/services/auth"
 	"cardamom/core/services/inventory"
 	"fmt"
@@ -105,6 +106,20 @@ func UpdateItem(c *gin.Context, r *UpdateItemRequest) {
 		Type:   "update",
 		Data:   map[string]string{"item": item.Item, "store": item.Store},
 	})
+}
+
+func DeleteItem(c *gin.Context, r *services.ReadRequest) {
+	user := auth.GetActiveUserClaims(c)
+	if err := models.DB.Where(
+		&models.GroceryItem{
+			Uid:     r.Uid,
+			UserUid: user.Uid,
+		}).Delete(&models.GroceryItem{}).Error; err != nil {
+		gin_ext.Abort(c, http.StatusBadRequest, fmt.Errorf("attempt to delete non existant item -- %w", err))
+		return
+	}
+
+	c.JSON(http.StatusOK, &gin.H{})
 }
 
 func ClearCollected(c *gin.Context) {
