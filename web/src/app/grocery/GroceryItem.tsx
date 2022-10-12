@@ -68,6 +68,7 @@ export function GroceryItem(props: GroceryItemProps) {
     <ImageButton className="grocery-item-collect" alt="collect" src="icons/done.svg" onClick={e => collectItem()} />
     <InputTextBox value={props.model.item} className="grocery-item-input" onChange={i => onUpdate({ uid: props.model.uid, item: i })} />
     <ModifiableDropDown className="grocery-item-store" value={props.model.store} options={props.stores}
+      dropDownButtonOnLeft={true} placeholder="Store"
       onChange={s => onUpdate({ uid: props.model.uid, store: s })} />
   </div>
   )

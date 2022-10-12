@@ -70,7 +70,8 @@ class GroceryList extends Component<{}, GroceryState> {
       <div className="grocery-list-root">
 
         <ModifiableDropDown options={this.state.uniqueStores} value={this.state.selectedStore} id={"grocery-list-store"}
-          className="grocery-list-store theme-primary-light" displayClear={true} onChange={s => this.setState({ selectedStore: s })}
+          className="grocery-list-store theme-primary-light" displayClear={true}
+          onChange={s => this.setState({ selectedStore: s })}
         />
 
         <AddGroceryItem id="grocery-list-add-item" store={this.state.selectedStore}

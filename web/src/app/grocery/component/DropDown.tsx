@@ -6,6 +6,8 @@ type ModifiableDropDownProps = {
   value: string
   id?: string
   className?: string
+  placeholder?: string
+  dropDownButtonOnLeft?: boolean
   displayClear?: boolean
   onChange: (s: string) => void
 }
@@ -24,9 +26,11 @@ export function ModifiableDropDown(props: ModifiableDropDownProps) {
   const clazz = props.className ? "modifiable-drop-down-root " + props.className : "modifiable-drop-down-root"
   return (
     <div id={props.id} onMouseLeave={e => setVisible(false)} className={clazz}>
-      <div className="modifiable-drop-down-workspace">
+      <div className="modifiable-drop-down-workspace" style={{
+        flexDirection: props.dropDownButtonOnLeft ? "row-reverse" : "row"
+      }}>
         <InputTextBox value={value} className="modifiable-drop-down-input"
-          placeholder="Add or select store"
+          placeholder={props.placeholder ? props.placeholder : "Add or select store"}
           onChange={s => save(s)} />
 
         <ImageButton alt="expand" src="icons/drop-down.svg" className="modifiable-drop-down-list"
@@ -39,9 +43,10 @@ export function ModifiableDropDown(props: ModifiableDropDownProps) {
         }
 
       </div>
-      <div style={{ display: displayList ? "block" : "none" }} className="modifiable-drop-down-overlay theme-focus">{
-        props.options.map(o => { return (<DropDownElement key={o} value={o} onClick={() => { save(o); setVisible(false) }} />) })
-      }</div>
+      <div style={{ display: displayList ? "grid" : "none" }}
+        className="modifiable-drop-down-overlay theme-focus format-font-medium">{
+          props.options.map(o => { return (<DropDownElement key={o} value={o} onClick={() => { save(o); setVisible(false) }} />) })
+        }</div>
     </div>
   )
 }

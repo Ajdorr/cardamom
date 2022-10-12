@@ -18,12 +18,21 @@
 
 .modifiable-drop-down-overlay  {
   position: absolute;
-  cursor: pointer;
-  width: 175px;
-  text-transform: capitalize;
-  z-index: 10;
-  border: 1px solid black;
+  max-width: 250px;
   box-sizing: border-box;
+  padding: 0px 5px;
+  border: 1px solid black;
+
+  z-index: 10;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+.modifiable-drop-down-overlay > div {
+  padding: 5px 0px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* Grocery List */
@@ -61,13 +70,13 @@
 }
 
 .grocery-item-input {
-  flex-grow: 2;
+  flex: 1 1 100px;
   text-transform: capitalize;
 }
 
 .grocery-item-store {
-  flex-grow: 1;
-  max-width: 150px;
+  flex: 1 0 100px;
+  max-width: 250px;
 }
 
 .grocery-item-collect {
