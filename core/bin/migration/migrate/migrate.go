@@ -8,7 +8,7 @@ import (
 )
 
 func migrate(mg gorm.Migrator) {
-	mg.CreateIndex(&md.User{}, "idx_users_password")
+	mg.AddColumn(&md.InventoryItem{}, "category")
 	// Constraints aren't automatically dropped automatically, ensure you add them
 }
 

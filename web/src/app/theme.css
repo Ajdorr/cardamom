@@ -87,3 +87,11 @@
   color: var(--theme-on-tertiary-color-dark);
   background-color: var(--theme-tertiary-color-dark);
 }
+
+.theme-indicator-top {
+  border-top: 2px solid blue;
+}
+
+.theme-indicator-bottom {
+  border-bottom: 2px solid blue;
+}

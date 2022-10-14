@@ -2,6 +2,8 @@ Next release
 + Add prep and cook times
 + Add ingredient annotations (chopped, sliced, diced, melted, chilled)
 + Optional ingredients
++ Create spice rack BE, inventory categories
++ Add recipe tags
 
 Backlog
 + Setup staging environment

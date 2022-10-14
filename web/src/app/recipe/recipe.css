@@ -107,6 +107,11 @@
   box-sizing: border-box;
 }
 
+.recipe-single-ingredient-list > .recipe-ingredient-root:nth-child(odd),
+.recipe-single-instruction-list > .recipe-instruction-root:nth-child(odd) {
+  background-color: var(--theme-focus-color);
+}
+
 .recipe-single-ingredient-list > .recipe-ingredient-root:nth-child(even),
 .recipe-single-instruction-list > .recipe-instruction-root:nth-child(even) {
   background-color: var(--theme-surface-color);
@@ -135,8 +140,16 @@
 .recipe-ingredient-marker {
   flex: 0 0 var(--format-line-height);
   height: var(--format-line-height);
+  width: var(--format-line-height);
   text-align: center;
   line-height: var(--format-line-height);
+}
+
+.recipe-ingredient-marker img {
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
 .recipe-ingredient-quantity {

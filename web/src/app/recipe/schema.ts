@@ -1,4 +1,4 @@
-export const Units = ["cup", "tsp", "Tbsp", "kg", "g", "pt", "pt", "gal", "mL", "L", ""]
+export const Units = ["cup", "tsp", "Tbsp", "lbs", "kg", "g", "mL", "L", "pt", "pt", "gal", ""]
 
 export type RecipeModel = {
   uid: string,

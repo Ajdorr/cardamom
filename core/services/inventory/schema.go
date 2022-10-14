@@ -2,7 +2,10 @@ package inventory
 
 import (
 	"cardamom/core/ext/log_ext"
+	"cardamom/core/models"
 	"strings"
+
+	"github.com/thoas/go-funk"
 )
 
 type AddItemRequest struct {
@@ -20,9 +23,10 @@ func (req *AddItemRequest) Validate() (string, error) {
 }
 
 type UpdateItemRequest struct {
-	Uid     string  `json:"uid"`
-	Item    *string `json:"item,omitempty"`
-	InStock *bool   `json:"in_stock,omitempty"`
+	Uid      string  `json:"uid"`
+	Item     *string `json:"item,omitempty"`
+	InStock  *bool   `json:"in_stock,omitempty"`
+	Category *string `json:"category,omitempty"`
 }
 
 func (req *UpdateItemRequest) Validate() (string, error) {
@@ -37,6 +41,10 @@ func (req *UpdateItemRequest) Validate() (string, error) {
 		if len(*req.Item) == 0 {
 			return log_ext.ReturnBoth("item cannot not be empty")
 		}
+	}
+
+	if req.Category != nil && funk.Contains(models.ValidCategories, *req.Category) {
+		return log_ext.ReturnBoth("invalid category")
 	}
 
 	return "", nil

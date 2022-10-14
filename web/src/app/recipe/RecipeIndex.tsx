@@ -14,6 +14,10 @@ export function RecipeContextMenu() {
         <img alt="Search for recipe" src="/icons/search.svg"
           id="recipe-index-search-btn" className="recipe-list-sub-menu-icon" />
       </Link>
+      <Link to="/recipe/list" >
+        <img alt="Recipe list" src="/icons/book.svg"
+          id="recipe-index-list-btn" className="recipe-list-sub-menu-icon" />
+      </Link>
       <Link to="/recipe/create" >
         <img alt="New recipe" src="/icons/add-note.svg"
           id="recipe-index-create-btn" className="recipe-list-sub-menu-icon" />

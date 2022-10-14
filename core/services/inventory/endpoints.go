@@ -13,6 +13,7 @@ import (
 func AddItem(c *gin.Context, r *AddItemRequest) {
 	claims := auth.GetActiveUserClaims(c)
 
+	// FIXME attempt to guess the category, add to Attrs
 	item := models.InventoryItem{}
 	db := models.DB.Where(&models.InventoryItem{
 		Item:    r.Item,
@@ -61,6 +62,9 @@ func UpdateItem(c *gin.Context, r *UpdateItemRequest) {
 		}
 		if r.InStock != nil {
 			item.InStock = *r.InStock
+		}
+		if r.Category != nil {
+			item.Category = *r.Category
 		}
 
 		if err = models.DB.Save(&item).Error; err != nil {

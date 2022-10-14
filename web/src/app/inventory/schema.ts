@@ -1,3 +1,10 @@
+export const InventoryCategories = new Map<string, string>([
+  ["cooking", "Cooking"],
+  ["spices", "Spices"],
+  ["sauces", "Sauces and Condiments"],
+  ["non-cooking", "Non-Cooking"],
+])
+
 export type InventoryItemModel = {
   uid: string
   created_at: string
@@ -5,5 +12,6 @@ export type InventoryItemModel = {
   user_uid: string
   item: string
   in_stock: boolean
+  category: string
 }
 

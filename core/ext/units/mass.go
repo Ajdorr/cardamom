@@ -28,10 +28,10 @@ var (
 	Grain  = imperialMass("grain", "gr")
 	Drachm = imperialMass("drachm", "dr")
 	Ounce  = imperialMass("ounce", "oz")
-	Pound  = imperialMass("pound", "lb")
+	Pound  = imperialMass("pound", "lbs")
 	Stone  = imperialMass("stone", "st")
 	Ton    = imperialMass("ton", "t")
-	Slug   = imperialMass("slug", "")
+	Slug   = imperialMass("slug", "slug")
 )
 
 func metricMass(name, symbol string) Unit {

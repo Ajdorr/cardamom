@@ -47,8 +47,8 @@ type UpdateRequest = {
 export function GroceryItem(props: GroceryItemProps) {
 
   const [initX, setInitX] = useState(0)
-  const [offsetX, setOffsetX] = useState(0)
-  const translateStyle = (offsetX !== 0) ? `translateX(${offsetX}px)` : ""
+  const [deltaX, setDeltaX] = useState(0)
+  const cssStyle = (deltaX !== 0) ? { transform: `translateX(${deltaX}px)` } : undefined
 
   const onUpdate = (req: UpdateRequest) => {
 
@@ -68,19 +68,19 @@ export function GroceryItem(props: GroceryItemProps) {
     })
   }
 
-  return (<div style={{ transform: translateStyle }} className="grocery-item-root"
+  return (<div style={cssStyle} className="grocery-item-root"
     onTouchStart={e => { setInitX(e.touches[0].clientX) }}
-    onTouchMove={e => { setOffsetX(e.touches[0].clientX - initX); }}
+    onTouchMove={e => { setDeltaX(e.touches[0].clientX - initX); }}
     onTouchEnd={e => {
-      if (Math.abs(offsetX) >= DragToDeleteTolerance) {
+      if (Math.abs(deltaX) >= DragToDeleteTolerance) {
         api.post("grocery/delete", { uid: props.model.uid }).then(rsp => {
           props.onDelete(props.model)
         })
       }
-      setInitX(0); setOffsetX(0)
+      setInitX(0); setDeltaX(0)
     }}
   >
-    <ImageButton className="grocery-item-collect" alt="collect" src="icons/done.svg" onClick={e => collectItem()} />
+    <ImageButton className="grocery-item-collect" alt="collect" src="/icons/done.svg" onClick={e => collectItem()} />
     <InputTextBox value={props.model.item} className="grocery-item-input" onChange={i => onUpdate({ uid: props.model.uid, item: i })} />
     <ModifiableDropDown className="grocery-item-store" value={props.model.store} options={props.stores}
       dropDownButtonOnLeft={true} placeholder="Store"

@@ -93,7 +93,7 @@ class GroceryList extends Component<{}, GroceryState> {
         <div className="grocery-list-collected-divider theme-primary-light">
           <div className="grocery-list-collected-space"><span>Collected Groceries</span></div>
           <ImageButton className="grocery-list-collected-clear-all"
-            src="icons/delete-all.svg" alt="clear" onClick={e => this.clearAll()} />
+            src="/icons/delete-all.svg" alt="clear" onClick={e => this.clearAll()} />
         </div>
 
         <div className="grocery-list-collected-items">
@@ -119,7 +119,7 @@ function CollectedGroceryItem(props: CollectedGroceryItemProps) {
   return (<div className="grocery-list-collected-root">
     <span className="grocery-collected-item">{props.item}</span>
     <span className="grocery-collected-store">{props.store}</span>
-    <ImageButton src="icons/undo.svg" alt="undo" onClick={e => {
+    <ImageButton src="/icons/undo.svg" alt="undo" onClick={e => {
 
       api.post("grocery/collect", { uid: props.uid, is_collected: false }).then(rsp => {
         props.onUndo(rsp.data)

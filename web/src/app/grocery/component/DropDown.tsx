@@ -33,12 +33,12 @@ export function ModifiableDropDown(props: ModifiableDropDownProps) {
           placeholder={props.placeholder ? props.placeholder : "Add or select store"}
           onChange={s => save(s)} />
 
-        <ImageButton alt="expand" src="icons/drop-down.svg" className="modifiable-drop-down-list"
+        <ImageButton alt="expand" src="/icons/drop-down.svg" className="modifiable-drop-down-list"
           onClick={e => setVisible(!isVisible)} />
 
         {
           props.displayClear ? <ImageButton
-            src="icons/backspace.svg" alt="clear selected store" className="modifiable-drop-down-clear"
+            src="/icons/backspace.svg" alt="clear selected store" className="modifiable-drop-down-clear"
             onClick={e => save("")} /> : null
         }
 

@@ -6,7 +6,7 @@ import Account from './auth/Account';
 import { useEffect, useState } from 'react';
 import { redirectIfNotAuthenticated } from './api';
 import GroceryList from './grocery/GroceryList';
-import InventoryList from './inventory/InventoryList';
+import InventoryList, { InventoryMenu as InventoryContextMenu } from './inventory/InventoryList';
 import RecipeIndex, { RecipeContextMenu } from './recipe/RecipeIndex';
 import AuthIndex from './auth/AuthIndex';
 import { ImageButton } from './component/input';
@@ -43,6 +43,8 @@ function WorkspaceHeader() {
       <div className="workspace-menu-bar-context-sensitive">
         <Routes>
           <Route path="recipe/*" element={<RecipeContextMenu />} />
+          <Route path="inventory" element={<InventoryContextMenu />} />
+          <Route path="inventory/:filter" element={<InventoryContextMenu />} />
         </Routes>
 
       </div>
@@ -75,6 +77,7 @@ function Workspace() {
         <Routes>
           <Route path="grocery" element={<GroceryList />} />
           <Route path="inventory" element={<InventoryList />} />
+          <Route path="inventory/:filter" element={<InventoryList />} />
           <Route path="recipe/*" element={<RecipeIndex />} />
           <Route path="account" element={<Account />} />
           <Route path="*" element={<NotFound />} />

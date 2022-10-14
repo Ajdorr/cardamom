@@ -4,6 +4,7 @@ import (
 	"cardamom/core/ext/gin_ext"
 	"cardamom/core/services/auth"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +18,9 @@ func handleRequest(handler func(c *gin.Context), isProtected bool) gin.HandlerFu
 	return func(c *gin.Context) {
 		if isProtected {
 			if err := auth.IsAuthenticated(c); err != nil {
-				c.Error(err)
+				if strings.HasPrefix(c.Request.URL.Path, "/api/auth") {
+					c.Error(err)
+				}
 				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{})
 				return
 			}
@@ -31,7 +34,9 @@ func handlePost[R any, T Request[R]](handler func(c *gin.Context, r T), isProtec
 	return func(c *gin.Context) {
 		if isProtected {
 			if err := auth.IsAuthenticated(c); err != nil {
-				c.Error(err)
+				if strings.HasPrefix(c.Request.URL.Path, "/api/auth") {
+					c.Error(err)
+				}
 				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{})
 				return
 			}
@@ -60,7 +65,10 @@ func handleGet[R any, T Request[R]](handler func(c *gin.Context, r T), isProtect
 	return func(c *gin.Context) {
 		if isProtected {
 			if err := auth.IsAuthenticated(c); err != nil {
-				gin_ext.Abort(c, http.StatusUnauthorized, err)
+				if strings.HasPrefix(c.Request.URL.Path, "/api/auth") {
+					c.Error(err)
+				}
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{})
 				return
 			}
 		}

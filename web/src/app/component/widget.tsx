@@ -16,13 +16,13 @@ export function IntegerInputerWidget(props: IntegerInputWidgetProps) {
   }
 
   if (value <= props.minValue) {
-    return (<ImageButton alt="add" src="icons/plus.svg" 
+    return (<ImageButton alt="add" src="/icons/plus.svg"
       onClick={e => onUpdate(props.minValue + 1)} />)
   }
 
   return (<span className="widget-interget-input-root">
-    <ImageButton alt="add" src="icons/plus.svg" onClick={e => onUpdate(value + 1)} />
-    <InputNumberBox value={props.value} onChange={props.onChange}/>
-    <ImageButton alt="subtract" src="icons/minus.svg" onClick={e => onUpdate(value - 1)} />
+    <ImageButton alt="add" src="/icons/plus.svg" onClick={e => onUpdate(value + 1)} />
+    <InputNumberBox value={props.value} onChange={props.onChange} />
+    <ImageButton alt="subtract" src="/icons/minus.svg" onClick={e => onUpdate(value - 1)} />
   </span>)
 }

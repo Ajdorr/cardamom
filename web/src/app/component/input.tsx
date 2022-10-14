@@ -127,9 +127,9 @@ export class TextButton extends Component<TextButtonProps> {
 }
 
 type ImageButtonProps = {
+  id?: string
   src: string
   alt: string
-  id?: string
   className?: string
   onClick: MouseEventHandler
 }

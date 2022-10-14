@@ -6,7 +6,7 @@ import { InventoryItemModel } from "./schema";
 type InventoryItemProps = {
   model: InventoryItemModel
   onUpdate: (i: InventoryItemModel) => void
-  onRemove: (i: InventoryItemModel) => void
+  onShowMore: (i: InventoryItemModel) => void
 }
 
 function InventoryItem(props: InventoryItemProps) {
@@ -20,12 +20,8 @@ function InventoryItem(props: InventoryItemProps) {
         })
       }} />
 
-    <ImageButton src="icons/delete.svg" className="inventory-item-unstock" alt="unstock"
-      onClick={() => {
-        api.post("inventory/update", { uid: props.model.uid, in_stock: false }).then(rsp => {
-          props.onRemove(rsp.data)
-        })
-      }} />
+    <ImageButton src="/icons/more-vertical.svg" className="inventory-item-show-more" alt="show-more"
+      onClick={() => { props.onShowMore(props.model) }} />
 
   </div>)
 }

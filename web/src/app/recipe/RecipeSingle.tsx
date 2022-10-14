@@ -20,6 +20,10 @@ function RecipeSingle(props: RecipeSingleProps) {
 
   const { recipeUid } = useParams()
   const nav = useNavigate()
+
+  const [ingreNewNdx, setIngreNewNdx] = useState(-1)
+  const [indicatorClass, setIndicatorClass] = useState("theme-indicator-top")
+
   const [recipe, setRecipe] = useState<RecipeModel>({
     uid: "",
     created_at: "",
@@ -44,6 +48,7 @@ function RecipeSingle(props: RecipeSingleProps) {
     if (props.isCreate) {
       setRecipe(r)
     } else {
+      setRecipe(r)
       api.post("recipe/update", UpdateRecipeRequest(r))
         .then(rsp => {
           setRecipe(rsp.data)
@@ -130,8 +135,39 @@ function RecipeSingle(props: RecipeSingleProps) {
     updateRecipe(newRecipe)
   }
 
+  const reorderIngredient = (ndx: number, delta: number) => {
+    if ((ndx === 0 && delta < 0) || (ndx === recipe.ingredients.length - 1 && delta > 0)) {
+      return
+    }
+
+    var newRecipe = { ...recipe }
+    const ingre = recipe.ingredients[ndx]
+    if (delta > 0) {
+      newRecipe.ingredients.splice(ndx + delta + 1, 0, ingre)
+      newRecipe.ingredients.splice(ndx, 1)
+    } else if (delta < 0) {
+      newRecipe.ingredients.splice(ndx, 1)
+      newRecipe.ingredients.splice(ndx + delta, 0, ingre)
+    }
+
+    updateRecipe(newRecipe)
+  }
+
   useEffect(() => {
-    if (!props.isCreate) {
+    if (props.isCreate) {
+      setRecipe({
+        uid: "",
+        created_at: "",
+        updated_at: "",
+        is_trashed: false,
+        user_uid: "",
+        name: "",
+        description: "",
+        meal: "breakfast",
+        instructions: [],
+        ingredients: [],
+      })
+    } else {
       api.post("recipe/read", { uid: recipeUid }).then(rsp => {
         setRecipe(rsp.data)
       }).catch(e => {
@@ -157,11 +193,18 @@ function RecipeSingle(props: RecipeSingleProps) {
       {
         recipe.ingredients.map((ingre, i) => {
           return (<RecipeIngredient key={i} value={ingre.item} quantity={ingre.quantity}
+            className={i === ingreNewNdx ? indicatorClass : undefined}
             unit={ingre.unit ? ingre.unit : ""}
             onQuantityChange={s => setRecipeIngredient(i, { quantity: s })}
             onUnitChange={s => setRecipeIngredient(i, { unit: s })}
             onValueChange={s => setRecipeIngredient(i, { item: s })}
-            onDelete={() => removeRecipeIngredients(i)} />)
+            onReorder={d => { setIngreNewNdx(-1); reorderIngredient(i, d) }}
+            onMove={d => {
+              setIngreNewNdx(d !== 0 ? i + d : -1);
+              setIndicatorClass(d < 0 ? "theme-indicator-top" : "theme-indicator-bottom")
+            }}
+            onDelete={() => removeRecipeIngredients(i)}
+          />)
         })
       }
 
