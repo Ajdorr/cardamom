@@ -143,6 +143,9 @@
   width: var(--format-line-height);
   text-align: center;
   line-height: var(--format-line-height);
+
+  /* disable scroll */
+  touch-action: none;
 }
 
 .recipe-ingredient-marker img {

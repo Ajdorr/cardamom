@@ -42,7 +42,8 @@ function WorkspaceHeader() {
 
       <div className="workspace-menu-bar-context-sensitive">
         <Routes>
-          <Route path="recipe/*" element={<RecipeContextMenu />} />
+          <Route path="recipe" element={<RecipeContextMenu />} />
+          <Route path="recipe/:filter" element={<RecipeContextMenu />} />
           <Route path="inventory" element={<InventoryContextMenu />} />
           <Route path="inventory/:filter" element={<InventoryContextMenu />} />
         </Routes>

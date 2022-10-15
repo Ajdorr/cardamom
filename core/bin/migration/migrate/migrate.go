@@ -8,7 +8,6 @@ import (
 )
 
 func migrate(mg gorm.Migrator) {
-	mg.AddColumn(&md.InventoryItem{}, "category")
 	// Constraints aren't automatically dropped automatically, ensure you add them
 }
 

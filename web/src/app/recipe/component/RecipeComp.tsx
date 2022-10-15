@@ -41,12 +41,16 @@ export function RecipeIngredient(props: IngredientProps) {
     opacity: 0.6
   } : undefined
   const rootClass = (props.className) ? "recipe-ingredient-root " + props.className : "recipe-ingredient-root"
-  return (<div className={rootClass} style={cssStyle} ref={root}
-    onTouchStart={e => { setInitY(e.touches[0].clientY) }}
-    onTouchMove={e => { const dY = e.touches[0].clientY - initY; setDeltaY(dY); props.onMove(getIndexDelta(dY)); }}
-    onTouchEnd={e => { props.onReorder(getIndexDelta(deltaY)); setDeltaY(0); setInitY(0); }}
-  >
-    <span className="recipe-ingredient-marker">
+  return (<div className={rootClass} style={cssStyle} ref={root} >
+    <span className="recipe-ingredient-marker"
+      onTouchStart={e => { setInitY(e.touches[0].clientY) }}
+      onTouchMove={e => {
+        e.preventDefault()
+        const dY = e.touches[0].clientY - initY;
+        setDeltaY(dY);
+        props.onMove(getIndexDelta(dY));
+      }}
+      onTouchEnd={e => { props.onReorder(getIndexDelta(deltaY)); setDeltaY(0); setInitY(0); }} >
       <img alt="draggable" src="/icons/drag-indicator.svg" />
     </span>
 
