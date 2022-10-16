@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import { InputTextBox } from "../component/input";
 import InventoryItem from "./InventoryItem";
 import InventoryModal from "./InventoryModal";
-import { InventoryItemModel } from "./schema";
+import { InventoryCategories, InventoryItemModel } from "./schema";
 
 export function InventoryMenu() {
 
@@ -12,7 +12,7 @@ export function InventoryMenu() {
 
   return (
     <div className="inventory-list-sub-menu">
-      <Link to="/inventory" >
+      <Link to="/inventory">
         <img alt="All inventory" src="/icons/inventory.svg" id="inventory-list-inventory-btn"
           className={"inventory-list-sub-menu-icon" + (filter === undefined ? " theme-primary-light" : "")} />
       </Link>
@@ -39,6 +39,7 @@ export function InventoryMenu() {
 function InventoryList() {
 
   const { filter } = useParams()
+  const nav = useNavigate()
   const [items, setItems] = useState<InventoryItemModel[]>([])
   const [currentItem, setCurrentItem] = useState<InventoryItemModel | null>(null)
 
@@ -66,7 +67,12 @@ function InventoryList() {
     })
   }
 
-  useEffect(() => { refresh() }, [])
+  useEffect(() => {
+    refresh()
+    if (filter && !InventoryCategories.has(filter)) {
+      nav("/inventory")
+    }
+  }, [])
 
   return (<div className="inventory-list-root">
 
@@ -78,7 +84,7 @@ function InventoryList() {
             return
           }
 
-          api.post("inventory/create", { item: s }).then(rsp => {
+          api.post("inventory/create", { item: s, category: filter }).then(rsp => {
             updateInventoryList([...items, rsp.data])
           })
         }} />

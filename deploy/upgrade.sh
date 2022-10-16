@@ -23,7 +23,7 @@ fi
 git tag versions/$version -f
 git push --tags -f
 
-if [[ $upgrade_web ~= ^[Yy]([Ee][Ss])?$ ]]; then
+if [[ $upgrade_web =~ ^[Yy]([Ee][Ss])?$ ]]; then
   # Upgrade web
   cd ~/repos/Cardamom/web
   rm -r build/ || echo "No build folder found"
@@ -38,13 +38,13 @@ fi
 # Upgrade API
 cd ~/repos/Cardamom/core
 
-if [[ $upgrade_database ~= ^[Yy]([Ee][Ss])?$ ]]; then
+if [[ $upgrade_database =~ ^[Yy]([Ee][Ss])?$ ]]; then
   # Database Migrate
   echo "Migrating database"
   go run bin/migration/migrate/migrate.go
 fi
 
-if [[ $upgrade_api ~= ^[Yy]([Ee][Ss])?$ ]]; then
+if [[ $upgrade_api =~ ^[Yy]([Ee][Ss])?$ ]]; then
   # Create the server binary
   echo "Upgrading API"
   go build bin/server/server.go

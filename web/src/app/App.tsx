@@ -14,8 +14,10 @@ import { ImageButton } from './component/input';
 function Home() {
   return (
     <div className="home-root">
-      <div>Welcome to Cardamom!</div>
-      <Link to="/auth/login" className="home-login-link"><div>Login</div></Link>
+      <div className="home-greeting theme-primary">Welcome to Cardamom!</div>
+      <Link to="/auth/login" className="home-login-link theme-primary">
+        <div>Login or Sign Up</div>
+      </Link>
     </div>
   );
 }
@@ -57,7 +59,9 @@ function WorkspaceHeader() {
         <ImageButton id="workspace-menu-link-inventory" alt="Go to inventory list" src="/icons/inventory.svg"
           onClick={e => { setShowMenu(false); nav("/inventory") }} />
         <ImageButton id="workspace-menu-link-recipe" alt="Go to recipe list" src="/icons/book.svg"
-          onClick={e => { setShowMenu(false); nav("/recipe") }} />
+          onClick={e => { setShowMenu(false); nav("/recipe/list") }} />
+        <ImageButton id="workspace-menu-link-account" alt="Go to account settings" src="/icons/settings.svg"
+          onClick={e => { setShowMenu(false); nav("/account") }} />
 
       </div>
     </div>

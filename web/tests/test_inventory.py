@@ -8,6 +8,8 @@ inventory_items = [
     "potato", "taco", "rice", "chicken", "cumin"
 ]
 
+inv_item_xpath = "//div[contains(@class,'inventory-item-input')]/input[@value='%s']"
+
 
 def test_required_data():
   d, w = login()
@@ -40,9 +42,8 @@ def test_basic_usage():
   d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-inventory img").click()
 
   # Cleanup previous runs
-  inv_item = "//div[contains(@class,'inventory-item-input')]/input[@value='%s']"
-  del_eles = d.find_elements(By.XPATH, inv_item % "pasta") + \
-      d.find_elements(By.XPATH, inv_item % "strawberries")
+  del_eles = d.find_elements(By.XPATH, inv_item_xpath % "pasta") + \
+      d.find_elements(By.XPATH, inv_item_xpath % "strawberries")
   for ele in del_eles:
     ele.find_element(
         By.XPATH, "../../div[contains(@class,'inventory-item-show-more')]/img").click()
@@ -60,54 +61,90 @@ def test_basic_usage():
   add_item.send_keys("BaCon")
   add_item.send_keys(Keys.TAB)
 
-  assert len(d.find_elements(By.XPATH, inv_item % "pepperoni")) == 1
-  assert len(d.find_elements(By.XPATH, inv_item % "cauliflower")) == 1
-  assert len(d.find_elements(By.XPATH, inv_item % "bacon")) == 1
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "pepperoni")) == 1
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "cauliflower")) == 1
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "bacon")) == 1
 
-  item_ele = d.find_element(By.XPATH, inv_item % "bacon")
+  item_ele = d.find_element(By.XPATH, inv_item_xpath % "bacon")
   clear(d, item_ele)
   item_ele.send_keys("pasta")
   item_ele.send_keys(Keys.TAB)
   assert len(w.until(lambda x: x.find_elements(
-      By.XPATH, inv_item % "pasta"))) == 1
-  assert len(d.find_elements(By.XPATH, inv_item % "bacon")) == 0
+      By.XPATH, inv_item_xpath % "pasta"))) == 1
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "bacon")) == 0
 
-  item_ele = d.find_element(By.XPATH, inv_item % "cauliflower")
+  item_ele = d.find_element(By.XPATH, inv_item_xpath % "cauliflower")
   clear(d, item_ele)
   item_ele.send_keys("strawberries")
   item_ele.send_keys(Keys.TAB)
   assert len(w.until(lambda x: x.find_elements(
-      By.XPATH, inv_item % "strawberries"))) == 1
-  assert len(d.find_elements(By.XPATH, inv_item % "cauliflower")) == 0
+      By.XPATH, inv_item_xpath % "strawberries"))) == 1
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "cauliflower")) == 0
 
   d.find_element(
-      By.XPATH, (inv_item % "pepperoni") +
+      By.XPATH, (inv_item_xpath % "pepperoni") +
       "/../../div[contains(@class,'inventory-item-show-more')]/img").click()
   d.find_element(By.CSS_SELECTOR, ".inventory-modal-delete-btn img").click()
 
   d.find_element(
-      By.XPATH, (inv_item % "pasta") +
+      By.XPATH, (inv_item_xpath % "pasta") +
       "/../../div[contains(@class,'inventory-item-show-more')]/img").click()
   d.find_element(By.CSS_SELECTOR, ".inventory-modal-delete-btn img").click()
 
   d.find_element(
-      By.XPATH, (inv_item % "strawberries") +
+      By.XPATH, (inv_item_xpath % "strawberries") +
       "/../../div[contains(@class,'inventory-item-show-more')]/img").click()
   d.find_element(By.CSS_SELECTOR, ".inventory-modal-delete-btn img").click()
 
-  assert len(d.find_elements(By.XPATH, inv_item % "pepperoni")) == 0
-  assert len(d.find_elements(By.XPATH, inv_item % "pasta")) == 0
-  assert len(d.find_elements(By.XPATH, inv_item % "strawberries")) == 0
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "pepperoni")) == 0
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "pasta")) == 0
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "strawberries")) == 0
 
   d.refresh()
   add_item = w.until(lambda x: x.find_element(
       By.CSS_SELECTOR, ".inventory-list-add-item-input input"))
-  assert len(d.find_elements(By.XPATH, inv_item % "pepperoni")) == 0
-  assert len(d.find_elements(By.XPATH, inv_item % "pasta")) == 0
-  assert len(d.find_elements(By.XPATH, inv_item % "strawberries")) == 0
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "pepperoni")) == 0
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "pasta")) == 0
+  assert len(d.find_elements(By.XPATH, inv_item_xpath % "strawberries")) == 0
 
 
-def test_inventory_categories():
+def test_category_add():
+  d, w = login()
+
+  # Go to inventory list screen
+  w.until(lambda x: x.find_element(
+      By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img")).click()
+  d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-inventory img").click()
+
+  add_item = d.find_element(
+      By.CSS_SELECTOR, ".inventory-list-add-item-input input")
+
+  add_item.send_keys("white wine")
+  add_item.send_keys(Keys.ENTER)
+  w.until(lambda x: x.find_element(By.XPATH, inv_item_xpath % "white wine"))
+
+  d.find_element(By.ID, "inventory-list-cooking-btn").click()
+  add_item.send_keys("zucchini")
+  add_item.send_keys(Keys.ENTER)
+  w.until(lambda x: x.find_element(By.XPATH, inv_item_xpath % "zucchini"))
+
+  d.find_element(By.ID, "inventory-list-spices-btn").click()
+  add_item.send_keys("cinnamon")
+  add_item.send_keys(Keys.ENTER)
+  w.until(lambda x: x.find_element(By.XPATH, inv_item_xpath % "cinnamon"))
+
+  d.find_element(By.ID, "inventory-list-sauces-btn").click()
+  add_item.send_keys("sriracha")
+  add_item.send_keys(Keys.ENTER)
+  w.until(lambda x: x.find_element(By.XPATH, inv_item_xpath % "sriracha"))
+
+  d.find_element(By.ID, "inventory-list-non-cooking-btn").click()
+  add_item.send_keys("ice cream")
+  add_item.send_keys(Keys.ENTER)
+  w.until(lambda x: x.find_element(By.XPATH, inv_item_xpath % "ice cream"))
+
+
+def test_category_update():
   d, w = login()
 
   # Go to inventory list screen

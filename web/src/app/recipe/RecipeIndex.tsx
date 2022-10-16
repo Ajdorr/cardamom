@@ -42,7 +42,6 @@ class RecipeIndex extends Component {
     return (<div className="recipe-index-root">
 
       <Routes>
-        <Route path="/" element={<RecipeList />} />
         <Route path="list" element={<RecipeList />} />
         <Route path="create" element={<RecipeSingle isCreate={true} />} />
         <Route path="available" element={<RecipeShuffle />} />

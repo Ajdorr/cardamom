@@ -15,23 +15,30 @@ function OAuthReturn() {
   useEffect(() => {
     if (source && code && state) {
       if (!completeOAuthLogin(nav, source, code, state)) {
-        setDisplayText("Something went wrong, please try again later.")
+        setDisplayText("Something went wrong, please try again later")
       }
     } else {
-      setDisplayText("Something went wrong, please try again later.")
+      setDisplayText("Something went wrong, please try again later")
     } // eslint-disable-next-line
   }, [])
 
-  return <div>{displayText}</div>
+  return <div className="auth-oauth-return-root">{displayText}</div>
 }
 
 function AuthIndex() {
   return (
-    <div className="auth-index-root">
-      <Routes>
-        <Route path="login" element={<Login />} />
-        <Route path="oauth-return/:source" element={<OAuthReturn />} />
-      </Routes>
+    <div className="auth-index-root theme-background">
+      <div className="auth-index-workspace theme-focus">
+        <div className="auth-index-branding">
+          <img alt="logo" src="/img/logo/logo_300.png" className="auth-index-branding-img" />
+          <div className="auth-index-branding-title format-font-heading-medium">Cardamom</div>
+          <div className="auth-index-branding-tagline format-font-small">Grocery lists and recipe books, redesigned</div>
+        </div>
+        <Routes>
+          <Route path="login" element={<Login />} />
+          <Route path="oauth-return/:source" element={<OAuthReturn />} />
+        </Routes>
+      </div>
     </div>
   )
 }

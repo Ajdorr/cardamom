@@ -9,7 +9,8 @@ import (
 )
 
 type AddItemRequest struct {
-	Item string `json:"item"`
+	Item     string                    `json:"item"`
+	Category *models.InventoryCategory `json:"category"`
 }
 
 func (req *AddItemRequest) Validate() (string, error) {
@@ -19,14 +20,18 @@ func (req *AddItemRequest) Validate() (string, error) {
 		return log_ext.ReturnBoth("item must not be empty")
 	}
 
+	if req.Category != nil && !funk.Contains(models.ValidCategories, *req.Category) {
+		return log_ext.ReturnBoth("invalid category")
+	}
+
 	return "", nil
 }
 
 type UpdateItemRequest struct {
-	Uid      string  `json:"uid"`
-	Item     *string `json:"item,omitempty"`
-	InStock  *bool   `json:"in_stock,omitempty"`
-	Category *string `json:"category,omitempty"`
+	Uid      string                    `json:"uid"`
+	Item     *string                   `json:"item,omitempty"`
+	InStock  *bool                     `json:"in_stock,omitempty"`
+	Category *models.InventoryCategory `json:"category,omitempty"`
 }
 
 func (req *UpdateItemRequest) Validate() (string, error) {
@@ -43,7 +48,7 @@ func (req *UpdateItemRequest) Validate() (string, error) {
 		}
 	}
 
-	if req.Category != nil && funk.Contains(models.ValidCategories, *req.Category) {
+	if req.Category != nil && !funk.Contains(models.ValidCategories, *req.Category) {
 		return log_ext.ReturnBoth("invalid category")
 	}
 

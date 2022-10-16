@@ -14,12 +14,28 @@ body, input, textarea {
   height: 100vh;
 }
 
+/* Home */
 .home-root {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+.home-greeting {
+  width: 100%;
+  padding: 5px 0px;
+
+  text-align: center;
+}
+
+.home-login-link {
+  padding: 10px;
+  margin: 15px;
+
+  border-radius: 5px;
+}
+
+/* Workspace */
 .workspace-root {
   height: 100%;
   display: flex;

@@ -1,8 +1,74 @@
-.auth-login-root, .auth-account-root {
+.auth-index-root {
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.auth-index-workspace,
+.auth-index-branding,
+.auth-login-root,
+.auth-login-traditional-root,
+.auth-account-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-index-branding-tagline {
+  text-align: center;
+  padding: 5px 10px;
+}
+
+.auth-index-branding-img {
+  width: 30%;
+  padding: 5px;
+}
+
+.auth-login-root {
+  padding: 10px;
+  border-radius: 10px;
+  row-gap: 10px;
+}
+
+.auth-login-btn-root {
+  width: 210px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+
+  padding: 5px;
+  border: 1px solid var(--theme-background-color);
+
+  border-radius: 5px;
+}
+
+.auth-login-btn-logo {
+  width: 24px;
+  padding: 2px;
+}
+
+.auth-login-btn-label {
+  display: flex;
+  align-items: center;
+  padding: 0px 3px;
+}
+
+.auth-login-traditional-root {
+  padding: 5px;
+  border: 1px solid var(--theme-background-color);
+  border-radius: 5px;
+}
+
+.auth-oauth-return-root {
+  padding: 10px;
+  max-width: 200px;
+  text-align: center;
+}
+
+/* Account  */
+.auth-account-root {
+  height: 100%;
 }
 
 .auth-account-logout {

@@ -14,6 +14,7 @@
 
 .format-font-small {
   font-size: var(--format-font-size-small);
+  line-height: var(--format-font-size-small);
 }
 
 .format-font-medium {
@@ -22,4 +23,16 @@
 
 .format-font-large {
   font-size: var(--format-font-size-large);
+}
+
+.format-font-heading-small {
+  font-size: var(--format-font-size-heading-small);
+}
+
+.format-font-heading-medium {
+  font-size: var(--format-font-size-heading-medium);
+}
+
+.format-font-heading-large {
+  font-size: var(--format-font-size-heading-large);
 }

@@ -26,11 +26,11 @@ var ValidCategories = []InventoryCategory{
 }
 
 type InventoryItem struct {
-	Uid       string    `gorm:"primaryKey;not null;default:null" json:"uid"`
-	UpdatedAt time.Time `json:"updated_at"`
-	CreatedAt time.Time `json:"created_at"`
-	UserUid   string    `gorm:"index" json:"user_uid"`
-	Item      string    `json:"item"`
-	InStock   bool      `json:"in_stock"`
-	Category  string    `gorm:"default:cooking" json:"category"`
+	Uid       string            `gorm:"primaryKey;not null;default:null" json:"uid"`
+	UpdatedAt time.Time         `json:"updated_at"`
+	CreatedAt time.Time         `json:"created_at"`
+	UserUid   string            `gorm:"index" json:"user_uid"`
+	Item      string            `json:"item"`
+	InStock   bool              `json:"in_stock"`
+	Category  InventoryCategory `gorm:"default:cooking" json:"category"`
 }

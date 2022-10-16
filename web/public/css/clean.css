@@ -10,3 +10,7 @@ textarea {
   border: none;
   resize: none;
 }
+
+a {
+  text-decoration: none;
+}

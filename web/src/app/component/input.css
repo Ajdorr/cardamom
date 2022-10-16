@@ -13,7 +13,7 @@
 
 .input-text-button {
   padding: 10px 15px;
-  border: 1px solid grey;
+  border: 1px solid var(--theme-background-color);
   border-radius: 5px;
   font: inherit;
 }

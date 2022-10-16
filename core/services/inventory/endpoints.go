@@ -13,12 +13,19 @@ import (
 func AddItem(c *gin.Context, r *AddItemRequest) {
 	claims := auth.GetActiveUserClaims(c)
 
-	// FIXME attempt to guess the category, add to Attrs
+	var category models.InventoryCategory
+	if r.Category != nil {
+		category = *r.Category
+	} else {
+		// FIXME attempt to guess the category, add to Attrs
+		category = models.COOKING
+	}
+
 	item := models.InventoryItem{}
 	db := models.DB.Where(&models.InventoryItem{
 		Item:    r.Item,
 		UserUid: claims.Uid,
-	}).Attrs(&models.GroceryItem{Uid: generateUid()}).
+	}).Attrs(&models.InventoryItem{Uid: generateUid(), Category: category}).
 		FirstOrCreate(&item)
 
 	if db.Error != nil {
@@ -27,6 +34,7 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 	}
 
 	item.InStock = true
+	item.Category = category
 
 	if err := models.DB.Save(&item).Error; err != nil {
 		gin_ext.ServerError(c, log_ext.Errorf("updating quantity to database -- %w", err))
