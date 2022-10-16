@@ -59,11 +59,10 @@ def create_flow(d: WebDriver, w: WebDriverWait, info: dict[Any, Any]):
     ingres[i].find_element(
         By.CSS_SELECTOR, ".recipe-ingredient-item input").send_keys(ingre["item"])
 
-  add_instr = d.find_element(
-      By.CSS_SELECTOR, ".recipe-instruction-input input")
-  for instr in info["instr"]:
-    add_instr.send_keys(instr)
-    add_instr.send_keys(Keys.ENTER)
+  d.find_element(By.CSS_SELECTOR, "ol.recipe-instruction-list").click()
+  instr = d.find_element(By.CSS_SELECTOR, ".recipe-instruction-list textarea")
+  instr.send_keys(info["instr"])
+  instr.send_keys(Keys.TAB)  # Unfocus for verify
 
   verify(d, info)
   # Save

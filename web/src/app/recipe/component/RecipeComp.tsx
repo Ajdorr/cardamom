@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ImageButton, InputTextBox } from "../../component/input"
 import { Units } from "../schema"
 
@@ -79,31 +79,48 @@ export function RecipeIngredient(props: IngredientProps) {
 }
 
 type InstructionProps = {
-  order: string
   value: string
-  placeholder?: string
-  clearOnChange: boolean
   onChange: (s: string) => void
-  onDelete?: () => void
 }
 
 export function RecipeInstruction(props: InstructionProps) {
 
-  const save = function (newValue: string) {
-    if (newValue.length > 0 && !/^\s+$/.test(newValue)) {
-      props.onChange(newValue)
+  const onChangeTimer = useRef<number | null>(null)
+  const inputElement = useRef<HTMLTextAreaElement>(null)
+  const [isEditMode, setEditMode] = useState(false)
+  const [value, setValue] = useState("")
+  const displayValue = isEditMode ? value : props.value
+
+  useEffect(() => {
+    if (isEditMode) {
+      if (inputElement.current) { inputElement.current.focus() }
     }
-  }
+  }, [isEditMode])
+
+  const checkClearTimer = () => { if (onChangeTimer.current) window.clearTimeout(onChangeTimer.current) }
+  useEffect(() => { return checkClearTimer }, [])
+  const changeTimer = () => { if (props.value !== value) { props.onChange(value) } }
 
   return (<div className="recipe-instruction-root">
-    <span className="recipe-instruction-marker">{props.order}</span>
-    <InputTextBox
-      value={props.value} className="recipe-instruction-input" placeholder={props.placeholder}
-      clearOnChange={props.clearOnChange} onChange={s => { save(s) }}
-    />
-    {!props.onDelete ? null :
-      <ImageButton alt="Delete instruction" src="/icons/delete.svg"
-        className="recipe-instruction-delete" onClick={props.onDelete} />}
-  </div>
+    <ol style={{ visibility: isEditMode ? "hidden" : "visible" }} className="recipe-instruction-list"
+      onClick={e => { setEditMode(true); setValue(props.value) }}>{
+        displayValue.split("\n").map((v, i) => { return (<li key={i}>{v}</li>) })
+      }</ol>
+    <div style={{ visibility: isEditMode ? "visible" : "hidden" }} className="recipe-instruction-list" >
+      <textarea ref={inputElement} value={value}
+        onBlur={e => {
+          if (props.value !== value) {
+            checkClearTimer();
+            props.onChange(e.target.value.trim());
+          }
+          setEditMode(false)
+        }}
+        onChange={e => {
+          checkClearTimer();
+          setValue(e.target.value);
+          onChangeTimer.current = window.setTimeout(changeTimer, 5000)
+        }} />
+    </div>
+  </div >
   )
 }

@@ -19,7 +19,7 @@ type CreateRecipeRequest struct {
 	Description  string           `json:"description,omitempty"`
 	Meal         models.MealType  `json:"meal"`
 	Ingredients  []IngredientPart `json:"ingredients"`
-	Instructions []string         `json:"instructions"`
+	Instructions string           `json:"instructions"`
 }
 
 func (req *CreateRecipeRequest) Validate() (string, error) {
@@ -47,7 +47,7 @@ type UpdateRecipeRequest struct {
 	Description  *string          `json:"description,omitempty"`
 	Meal         *models.MealType `json:"meal,omitempty"`
 	Ingredients  []IngredientPart `json:"ingredients,omitempty"`
-	Instructions []string         `json:"instructions,omitempty"`
+	Instructions *string          `json:"instructions,omitempty"`
 }
 
 func (req *UpdateRecipeRequest) Validate() (string, error) {

@@ -14,6 +14,7 @@ interface UpdateRecipe {
   name?: string
   meal?: string
   description?: string
+  instructions?: string
 }
 
 function RecipeSingle(props: RecipeSingleProps) {
@@ -33,7 +34,7 @@ function RecipeSingle(props: RecipeSingleProps) {
     name: "",
     description: "",
     meal: "breakfast",
-    instructions: [],
+    instructions: "",
     ingredients: [],
   })
 
@@ -49,52 +50,21 @@ function RecipeSingle(props: RecipeSingleProps) {
       setRecipe(r)
     } else {
       setRecipe(r)
-      api.post("recipe/update", UpdateRecipeRequest(r))
-        .then(rsp => {
-          setRecipe(rsp.data)
-        }).catch(console.log)
+      api.post("recipe/update", UpdateRecipeRequest(r)).then(rsp => {
+        setRecipe(rsp.data)
+      })
     }
   }
 
-  const setRecipeState = ({ name, meal, description }: UpdateRecipe) => {
+  const setRecipeState = ({ name, meal, description, instructions }: UpdateRecipe) => {
 
     var newRecipe = { ...recipe }
 
     if (name) newRecipe.name = name
     if (meal) newRecipe.meal = meal
-    if (description !== undefined && description !== null) {
-      newRecipe.description = description
-    }
+    if (description !== undefined && description !== null) { newRecipe.description = description }
+    if (instructions) newRecipe.instructions = instructions
 
-    updateRecipe(newRecipe)
-  }
-
-  const addRecipeInstruction = (value: string) => {
-    var newRecipe = { ...recipe }
-    newRecipe.instructions = [...newRecipe.instructions, {
-      uid: "",
-      created_at: "",
-      updated_at: "",
-      user_uid: "",
-      recipe_uid: "",
-      order: newRecipe.instructions.length + 1,
-      meal: "",
-      text: value,
-
-    }]
-    updateRecipe(newRecipe)
-  }
-
-  const setRecipeInstruction = (ndx: number, value: string) => {
-    var newRecipe = { ...recipe }
-    newRecipe.instructions[ndx].text = value
-    updateRecipe(newRecipe)
-  }
-
-  const removeRecipeInstruction = (ndx: number) => {
-    var newRecipe = { ...recipe }
-    newRecipe.instructions = newRecipe.instructions.filter((_, i) => { return i !== ndx })
-    newRecipe.instructions.forEach((v, i) => v.order = i + 1)
     updateRecipe(newRecipe)
   }
 
@@ -164,7 +134,7 @@ function RecipeSingle(props: RecipeSingleProps) {
         name: "",
         description: "",
         meal: "breakfast",
-        instructions: [],
+        instructions: "",
         ingredients: [],
       })
     } else {
@@ -214,14 +184,7 @@ function RecipeSingle(props: RecipeSingleProps) {
 
     <div className="recipe-single-instruction-list theme-focus">
       <div className="format-font-small">Instructions</div>
-      {
-        recipe.instructions.map((instr, i) => {
-          return (<RecipeInstruction key={i} clearOnChange={false} order={(i + 1).toString()}
-            value={instr.text} onChange={s => setRecipeInstruction(i, s)} onDelete={() => removeRecipeInstruction(i)} />)
-        })
-      }
-      <RecipeInstruction value="" order="*" clearOnChange={true} placeholder="Add new instruction"
-        onChange={s => addRecipeInstruction(s)} />
+      <RecipeInstruction value={recipe.instructions} onChange={s => setRecipeState({ instructions: s })} />
     </div>
 
     {props.isCreate ?

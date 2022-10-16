@@ -30,44 +30,6 @@ func filterRecipesByIngredients(
 	).([]m.Recipe)
 }
 
-func resizeInstructions(user_uid string, instructions []string, recipe *m.Recipe) error {
-
-	// resize instructions
-	if len(instructions) < len(recipe.Instructions) {
-		for i := len(instructions); i < len(recipe.Instructions); i++ {
-			if err := m.DB.Delete(recipe.Instructions[i]).Error; err != nil {
-				return log_ext.Errorf("deleting instructions -- %w", err)
-			}
-		}
-
-		recipe.Instructions = recipe.Instructions[:len(instructions)]
-	}
-
-	// Copy, reorder and extend
-	for i, instr := range instructions {
-		if i >= len(recipe.Instructions) {
-			recipe.Instructions = append(recipe.Instructions, m.RecipeInstruction{
-				Uid:       generateInstrUid(),
-				UserUid:   user_uid,
-				RecipeUid: recipe.Uid,
-				Meal:      recipe.Meal,
-				SortOrder: i,
-				Text:      instr,
-			})
-		} else {
-			recipe.Instructions[i].Meal = recipe.Meal
-			recipe.Instructions[i].Text = instr
-			recipe.Instructions[i].SortOrder = i
-		}
-
-		if err := m.DB.Save(&recipe.Instructions[i]).Error; err != nil {
-			return log_ext.Errorf("updating instruction(%d) -- %w", i, err)
-		}
-	}
-
-	return nil
-}
-
 func resizeIngredients(user_uid string, ingredients []IngredientPart, recipe *m.Recipe) error {
 
 	// Reize ingredients

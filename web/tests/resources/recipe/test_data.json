@@ -20,11 +20,7 @@
         "item": "water"
       }
     ],
-    "instr": [
-      "Combine pancake mix and water, whisk until lumps are gone",
-      "grease pan and pour approx 1 Tbsp per pancake",
-      "flip after approximately 5 minutes, then for an additional 3 minutes or until golden brown"
-    ]
+    "instr": "Combine pancake mix and water, whisk until lumps are gone\ngrease pan and pour approx 1 Tbsp per pancake\nflip after approximately 5 minutes, then for an additional 3 minutes or until golden brown"
   },
   {
     "name": "Arroz con Pollo",
@@ -47,11 +43,7 @@
         "item": "cumin"
       }
     ],
-    "instr": [
-      "Pan fry chicken",
-      "cook rice in rice cooker",
-      "combine"
-    ]
+    "instr": "Pan fry chicken\ncook rice in rice cooker\ncombine"
   },
   {
     "name": "Chicken tacos",
@@ -74,11 +66,7 @@
         "item": "taco"
       }
     ],
-    "instr": [
-      "Pan fry chicken",
-      "cook rice in rice cooker",
-      "combine and serve"
-    ]
+    "instr": "Pan fry chicken\ncook rice in rice cooker\ncombine and serve"
   },
   {
     "name": "Mashed potatos",
@@ -91,10 +79,7 @@
         "item": "potato"
       }
     ],
-    "instr": [
-      "Boil potatoes",
-      "mash"
-    ]
+    "instr": "Boil potatoes\nmash"
   },
   {
     "name": "Butter chicken",
@@ -152,11 +137,6 @@
         "item": "cinnamon"
       }
     ],
-    "instr": [
-      "In a medium size bowl, marinate the chicken, tumeric and cayenne pepper for 10 mins",
-      "cook rice in a rice cooker",
-      "Add chicken to medium pot, and fry medium for 10-15 minutes",
-      "Add tomato sauce and cream, let simmer and turn the head down to low for 5 mins"
-    ]
+    "instr": "In a medium size bowl, marinate the chicken, tumeric and cayenne pepper for 10 mins\ncook rice in a rice cooker\nAdd chicken to medium pot, and fry medium for 10-15 minutes\nAdd tomato sauce and cream, let simmer and turn the head down to low for 5 mins"
   }
 ]

@@ -35,11 +35,8 @@ info = {
             "item": "milk"
         }
     ],
-    "instr": [
-        "Combine pancake mix and water, whisk until lumps are gone",
-        "grease pan and pour approx 1 Tbsp per pancake",
-        "flip after approximately 5 minutes, then for an additional 3 minutes or until golden brown"
-    ]
+    "instr": "Combine pancake mix and water, whisk until lumps are gone\ngrease pan and pour approx 1 Tbsp per pancake\nflip after approximately 5 minutes, then for an additional 3 minutes or until golden brown"
+
 }
 
 
@@ -93,17 +90,12 @@ def test_complex():
     clear(d, item)
     item.send_keys(info["ingre"][i]["item"])
 
-  add_instr = d.find_element(
-      By.CSS_SELECTOR, ".recipe-instruction-input input")
-  for _ in info["instr"]:
-    add_instr.send_keys("test")
-    add_instr.send_keys(Keys.ENTER)
-
-  instr_input = d.find_elements(
-      By.CSS_SELECTOR, ".recipe-instruction-root input")
-  for i, instr in enumerate(info["instr"]):
-    clear(d, instr_input[i])
-    instr_input[i].send_keys(instr)
+  d.find_element(By.CSS_SELECTOR, "ol.recipe-instruction-list").click()
+  instr = d.find_element(By.CSS_SELECTOR, ".recipe-instruction-list textarea")
+  instr.send_keys("test data")
+  clear(d, instr)
+  instr.send_keys(info["instr"])
+  instr.send_keys(Keys.TAB)
 
   verify(d, info)
   # Save

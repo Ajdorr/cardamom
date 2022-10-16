@@ -32,8 +32,5 @@ def verify(d: WebDriver, info: dict):
     assert len(d.find_elements(By.XPATH, quantity %
                (i, ingre["quantity"]))) == 1
 
-  instr = list(map(
-      lambda e: e.get_attribute("value"),
-      d.find_elements(By.CSS_SELECTOR, ".recipe-instruction-input input")
-  ))
-  assert instr[:-1] == info["instr"]
+  instrs = d.find_elements(By.CSS_SELECTOR, ".recipe-instruction-list li")
+  assert [i.text for i in instrs] == info["instr"].split("\n")

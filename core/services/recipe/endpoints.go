@@ -17,33 +17,17 @@ import (
 func CreateRecipe(c *gin.Context, r *CreateRecipeRequest) {
 	user := auth.GetActiveUserClaims(c)
 	recipe := m.Recipe{
-		Uid:         generateRecipeUid(),
-		UserUid:     user.Uid,
-		Name:        r.Name,
-		Description: r.Description,
-		Meal:        r.Meal,
+		Uid:          generateRecipeUid(),
+		UserUid:      user.Uid,
+		Name:         r.Name,
+		Description:  r.Description,
+		Meal:         r.Meal,
+		Instructions: r.Instructions,
 	}
 
 	if err := m.DB.Create(&recipe).Error; err != nil {
 		gin_ext.ServerError(c, log_ext.Errorf("unable to create recipe -- %w", err))
 		return
-	}
-
-	recipe.Instructions = make([]m.RecipeInstruction, len(r.Instructions))
-	for i, instr := range r.Instructions {
-		recipe.Instructions[i] = m.RecipeInstruction{
-			Uid:       generateInstrUid(),
-			UserUid:   user.Uid,
-			RecipeUid: recipe.Uid,
-			Meal:      r.Meal,
-			SortOrder: i,
-			Text:      instr,
-		}
-		err := m.DB.Create(&recipe.Instructions[i]).Error
-		if err != nil {
-			gin_ext.ServerError(c, log_ext.Errorf("unable to create instruction -- %w", err))
-			return
-		}
 	}
 
 	recipe.Ingredients = make([]m.RecipeIngredient, len(r.Ingredients))
@@ -72,7 +56,7 @@ func UpdateRecipe(c *gin.Context, r *UpdateRecipeRequest) {
 	user := auth.GetActiveUserClaims(c)
 	recipe := m.Recipe{}
 	err := m.DB.Where(&m.Recipe{UserUid: user.Uid, Uid: r.Uid}).
-		Preload("Instructions").Preload("Ingredients").First(&recipe).Error
+		Preload("Ingredients").First(&recipe).Error
 	if err != nil {
 		gin_ext.AbortNotFound(c, log_ext.Errorf("finding recipe -- %w", err))
 		return
@@ -92,23 +76,17 @@ func UpdateRecipe(c *gin.Context, r *UpdateRecipeRequest) {
 	if r.Meal != nil {
 		recipe.Meal = *r.Meal
 	}
+	if r.Instructions != nil {
+		recipe.Instructions = *r.Instructions
+	}
 	if err = m.DB.Save(&recipe).Error; err != nil {
 		gin_ext.ServerError(c, log_ext.Errorf("saving recipe -- %w", err))
 		return
 	}
-	sort.Slice(recipe.Instructions, func(i, j int) bool {
-		return recipe.Instructions[i].SortOrder < recipe.Instructions[j].SortOrder
-	})
+
 	sort.Slice(recipe.Ingredients, func(i, j int) bool {
 		return recipe.Ingredients[i].SortOrder < recipe.Ingredients[j].SortOrder
 	})
-
-	if len(r.Instructions) > 0 {
-		if err = resizeInstructions(user.Uid, r.Instructions, &recipe); err != nil {
-			gin_ext.ServerError(c, err)
-			return
-		}
-	}
 
 	if len(r.Ingredients) > 0 {
 		if err = resizeIngredients(user.Uid, r.Ingredients, &recipe); err != nil {
@@ -124,7 +102,7 @@ func ReadRecipe(c *gin.Context, r *services.ReadRequest) {
 	user := auth.GetActiveUserClaims(c)
 	recipe := m.Recipe{}
 	err := m.DB.Where(&m.Recipe{Uid: r.Uid, UserUid: user.Uid}).
-		Preload("Instructions").Preload("Ingredients").First(&recipe).Error
+		Preload("Ingredients").First(&recipe).Error
 	if err != nil {
 		gin_ext.ServerError(c, log_ext.Errorf("listing recipes -- %w", err))
 		return
@@ -171,8 +149,7 @@ func GetAvailableRecipes(c *gin.Context) {
 	// Get all recipes that belong to this user
 	var recipes []m.Recipe
 	err = m.DB.Where("user_uid = ? and is_trashed = false", user.Uid).
-		Preload("Instructions").Preload("Ingredients").
-		Find(&recipes).Error
+		Preload("Ingredients").Find(&recipes).Error
 	if err != nil {
 		gin_ext.ServerError(c, log_ext.Errorf("getting recipes -- %w", err))
 		return

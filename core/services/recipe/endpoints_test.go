@@ -16,7 +16,7 @@ var createRecipes = []string{
       {"quantity": 2, "unit": null, "item": "eggs"},
       {"quantity": "1/4", "unit": "tsp", "item": "cloves"}
     ],
-    "instructions": ["In a large bowl, whisk eggs with cloves", "soak bread in egg mixture", "grill bread in skillet"]
+    "instructions": "In a large bowl, whisk eggs with cloves\nsoak bread in egg mixture\ngrill bread in skillet"
    }`,
 	`{
     "name": "Bangers and Mash", "description": "Traditional Irish dinner", "meal": "dinner",
@@ -26,16 +26,17 @@ var createRecipes = []string{
       {"quantity": "1 1/2", "unit": "tsp", "item": "black pepper"},
       {"quantity": "1 1/2", "unit": "tsp", "item": "salt"}
     ],
-    "instructions": ["boil potatoes", "fry sausage in skillet", "mash potato with salt and pepper", "combine"]
+    "instructions": "boil potatoes\nfry sausage in skillet\nmash potato with salt and pepper\ncombine"
    }`,
 	`{
     "name": "Bolonese", "description": "Italian meat sauce pasta", "meal": "dinner",
     "ingredients": [
       {"quantity": 200, "unit": "g", "item": "chicken"},
       {"quantity": "2 1/2", "unit": "cup", "item": "rice"},
+      {"quantity": "1/2", "unit": "cup", "item": "tomato sauce"},
       {"quantity": "1/2", "unit": "tsp", "item": "cumin"}
     ],
-    "instructions": ["Grill chicken with cumin", "Cook rice", "Combine"]
+    "instructions": "Grill chicken with cumin\nBoil pasta\nCombine"
    }`,
 }
 
@@ -68,7 +69,7 @@ var searchRecipes = []string{
       {"quantity": 2, "unit": "cup", "item": "flour"},
       {"quantity": 1, "unit": "tsp", "item": "yeast"}
     ],
-    "instructions": ["With flour, yeast and butter make puff pastry", "flatten then cut into triangles, then roll", "bake at 350F for 15 minutes"]
+    "instructions": "With flour, yeast and butter make puff pastry\nflatten then cut into triangles, then roll\nbake at 350F for 15 minutes"
    }`,
 	`{
     "name": "French Onion Soup", "description": "French classic food", "meal": "lunch",
@@ -78,7 +79,7 @@ var searchRecipes = []string{
       {"quantity": "1", "unit": "cup", "item": "onion"},
       {"quantity": "1", "unit": "cup", "item": "cheese"}
     ],
-    "instructions": ["Boil water, slice onions", "Combine"]
+    "instructions": "Boil water, slice onions\nCombine"
    }`,
 	`{
     "name": "Escargot", "description": "French delicacy", "meal": "dinner",
@@ -88,7 +89,7 @@ var searchRecipes = []string{
       {"quantity": 1, "unit": "Tbsp", "item": "parsely"},
       {"quantity": 1, "unit": "tsp", "item": "salt"}
     ],
-    "instructions": ["Fry snails, then combine"]
+    "instructions": "Fry snails, then combine"
    }`,
 	`{
     "name": "Chicken Confit", "description": "French oven roasted chicken", "meal": "dinner",
@@ -98,7 +99,7 @@ var searchRecipes = []string{
       {"quantity": 1, "unit": "Tbsp", "item": "garlic"},
       {"quantity": "1 1/2", "unit": "Tbsp", "item": "lemon juice"}
     ],
-    "instructions": ["Marinate chicken", "Cook in oven for 25 minutes"]
+    "instructions": "Marinate chicken\nCook in oven for 25 minutes"
    }`,
 	`{
     "name": "Beef Bourguignon", "description": "French beef stew", "meal": "dinner",
@@ -109,7 +110,7 @@ var searchRecipes = []string{
       {"quantity": 1, "unit": "Tbsp", "item": "butter"},
       {"quantity": "1/4", "unit": "cup", "item": "red wine"}
     ],
-    "instructions": ["Grease heavy based pot with butter", "Cook onions until golden brown", "Add beef, carrots and red wine", "stew for at least 30 minutes"]
+    "instructions": "Grease heavy based pot with butter\nCook onions until golden brown\nAdd beef, carrots and red wine\nstew for at least 30 minutes"
    }`,
 }
 
@@ -183,8 +184,7 @@ func ensureSearchData(t *testing.T) {
 
 		var resultRecipe []models.Recipe
 		if err := models.DB.Where(&models.Recipe{Name: recipe["name"].(string), UserUid: user.Uid}).
-			Preload("Instructions").Preload("Ingredients").
-			Find(&resultRecipe).Error; err != nil {
+			Preload("Ingredients").Find(&resultRecipe).Error; err != nil {
 			panic(err)
 		}
 

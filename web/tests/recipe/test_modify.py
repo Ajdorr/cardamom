@@ -30,11 +30,8 @@ before_img = {
             "item": "cheese"
         },
     ],
-    "instr": [
-        "spread ketchup on bread",
-        "add cheese and ham",
-        "combine slices and serve"
-    ]
+    "instr": "spread ketchup on bread\nadd cheese and ham"
+
 }
 after_img = {
     "name": "Gourmet ham and cheese sandwich",
@@ -72,11 +69,7 @@ after_img = {
             "item": "cheese"
         },
     ],
-    "instr": [
-        "spread ketchup on bread",
-        "add cheese and ham",
-        "combine slices and serve"
-    ]
+    "instr":  "spread ketchup on bread\nadd cheese and ham\ncombine slices and serve"
 }
 
 
@@ -132,22 +125,9 @@ def test_modify():
     item.send_keys(ingre["item"])
     item.send_keys(Keys.ENTER)
 
-  add_instr = d.find_element(
-      By.CSS_SELECTOR, ".recipe-instruction-input input")
-  for _ in before_img["instr"]:
-    add_instr.send_keys("test")
-    add_instr.send_keys(Keys.ENTER)
-
-  # Delete an instruction
-  d.find_elements(
-      By.CSS_SELECTOR, ".recipe-instruction-delete img")[1].click()
-
-  # Update instructions
-  for i, instr in enumerate(before_img["instr"]):
-    instr_input = d.find_elements(
-        By.CSS_SELECTOR, ".recipe-instruction-root input")
-    clear(d, instr_input[i])
-    instr_input[i].send_keys(instr)
-    instr_input[i].send_keys(Keys.ENTER)
+  d.find_element(By.CSS_SELECTOR, "ol.recipe-instruction-list").click()
+  instr = d.find_element(By.CSS_SELECTOR, ".recipe-instruction-list textarea")
+  instr.send_keys("\ncombine slices and serve")
+  instr.send_keys(Keys.TAB)
 
   verify(d, after_img)

@@ -11,10 +11,6 @@
   -moz-appearance: textfield;
 }
 
-.input-box:focus-visible,  .input-number-box:focus-visible, .input-password-box:focus-visible {
-  outline: none;
-}
-
 .input-text-button {
   padding: 10px 15px;
   border: 1px solid grey;

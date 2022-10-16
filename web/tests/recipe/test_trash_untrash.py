@@ -19,10 +19,8 @@ info = {
             "item": "rice"
         }
     ],
-    "instr": [
-        "Grease wok",
-        "fry rice"
-    ]
+    "instr": "Grease wok\nfry rice"
+
 }
 
 

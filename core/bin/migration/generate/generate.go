@@ -31,7 +31,7 @@ func main() {
 func Generate() {
 	changes, err := gorm_ext.GenerateMigration(
 		m.User{}, m.GroceryItem{}, m.InventoryItem{}, m.OAuthState{},
-		m.Recipe{}, m.RecipeIngredient{}, m.RecipeInstruction{},
+		m.Recipe{}, m.RecipeIngredient{},
 	)
 	if err != nil {
 		panic(err)

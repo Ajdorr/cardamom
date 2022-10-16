@@ -9,7 +9,7 @@ export type RecipeModel = {
   name: string,
   description: string,
   meal: string,
-  instructions: InstructionModel[],
+  instructions: string,
   ingredients: IngredientModel[],
 }
 
@@ -26,17 +26,6 @@ export type IngredientModel = {
   item: string,
 }
 
-export type InstructionModel = {
-  uid: string,
-  user_uid: string,
-  recipe_uid: string,
-  created_at: string,
-  updated_at: string,
-  meal: string,
-  order: number,
-  text: string,
-}
-
 export const MealTypes = new Map<string, string>([
   ["breakfast", "Breakfast"],
   ["lunch", "Lunch"],
@@ -49,7 +38,7 @@ export function CreateRecipeRequest(model: RecipeModel): any {
     name: model.name,
     description: model.description,
     meal: model.meal,
-    instructions: model.instructions.map(i => i.text),
+    instructions: model.instructions,
     ingredients: model.ingredients.map(i => { return { quantity: i.quantity, unit: i.unit, item: i.item } }),
   }
 }
@@ -62,7 +51,7 @@ export function UpdateRecipeRequest(model: RecipeModel): any {
     description: model.description,
     meal: model.meal,
     ingredients: model.ingredients.map(i => { return { quantity: i.quantity, unit: i.unit, item: i.item } }),
-    instructions: model.instructions.map(i => i.text),
+    instructions: model.instructions,
   }
 }
 
