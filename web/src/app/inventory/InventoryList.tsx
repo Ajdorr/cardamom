@@ -67,12 +67,12 @@ function InventoryList() {
     })
   }
 
+  useEffect(() => { refresh() }, [])
   useEffect(() => {
-    refresh()
     if (filter && !InventoryCategories.has(filter)) {
       nav("/inventory")
     }
-  }, [])
+  }, [filter, nav])
 
   return (<div className="inventory-list-root">
 

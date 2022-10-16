@@ -31,7 +31,7 @@ function AuthIndex() {
       <div className="auth-index-workspace theme-focus">
         <div className="auth-index-branding">
           <img alt="logo" src="/img/logo/logo_300.png" className="auth-index-branding-img" />
-          <div className="auth-index-branding-title format-font-heading-medium">Cardamom</div>
+          <div className="auth-index-branding-title format-font-header-medium">Cardamom</div>
           <div className="auth-index-branding-tagline format-font-small">Grocery lists and recipe books, redesigned</div>
         </div>
         <Routes>

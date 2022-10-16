@@ -9,6 +9,7 @@ import (
 	"cardamom/core/services/inventory"
 	"net/http"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -40,7 +41,7 @@ func CreateRecipe(c *gin.Context, r *CreateRecipeRequest) {
 			SortOrder: i,
 			Quantity:  ingre.Quantity,
 			Unit:      ingre.Unit,
-			Item:      ingre.Item,
+			Item:      strings.ToLower(ingre.Item),
 		}
 		err := m.DB.Create(&recipe.Ingredients[i]).Error
 		if err != nil {
@@ -135,29 +136,6 @@ func ListTrashedRecipes(c *gin.Context) {
 	c.JSON(http.StatusOK, recipes)
 }
 
-func GetAvailableRecipes(c *gin.Context) {
-
-	user := auth.GetActiveUserClaims(c)
-
-	// Get inventory
-	inventory, err := inventory.GetInventory(user.Uid)
-	if err != nil {
-		gin_ext.ServerError(c, log_ext.Errorf("getting groceries -- %w", err))
-		return
-	}
-
-	// Get all recipes that belong to this user
-	var recipes []m.Recipe
-	err = m.DB.Where("user_uid = ? and is_trashed = false", user.Uid).
-		Preload("Ingredients").Find(&recipes).Error
-	if err != nil {
-		gin_ext.ServerError(c, log_ext.Errorf("getting recipes -- %w", err))
-		return
-	}
-
-	c.JSON(http.StatusOK, filterRecipesByIngredients(inventory, recipes))
-}
-
 func SearchRecipe(c *gin.Context, r *SearchRecipeRequest) {
 	user := auth.GetActiveUserClaims(c)
 	var recipes []m.Recipe
@@ -186,4 +164,31 @@ func SearchRecipe(c *gin.Context, r *SearchRecipeRequest) {
 	}
 
 	c.JSON(http.StatusOK, &recipes)
+}
+
+func GetAvailableRecipes(c *gin.Context, r *GetAvailableRecipeRequest) {
+
+	user := auth.GetActiveUserClaims(c)
+
+	// Get inventory
+	inventory, err := inventory.GetInventory(user.Uid)
+	if err != nil {
+		gin_ext.ServerError(c, log_ext.Errorf("getting groceries -- %w", err))
+		return
+	}
+
+	// Get all recipes that belong to this user
+	var recipes []m.Recipe
+	db := m.DB.Where("user_uid = ? and is_trashed = false", user.Uid)
+	if r.Meal != nil {
+		db.Where(m.Recipe{Meal: *r.Meal})
+	}
+
+	db.Preload("Ingredients").Find(&recipes)
+	if db.Error != nil {
+		gin_ext.ServerError(c, log_ext.Errorf("getting recipes -- %w", err))
+		return
+	}
+
+	c.JSON(http.StatusOK, filterRecipesByIngredients(inventory, recipes))
 }

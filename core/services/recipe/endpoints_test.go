@@ -170,6 +170,20 @@ func TestSearch(t *testing.T) {
 	}
 }
 
+func TestGetAvailableRecipes(t *testing.T) {
+
+	ensureSearchData(t)
+	results := []models.Recipe{}
+	testCase := &t_ext.APITestCase{
+		T:                    t,
+		Method:               "POST",
+		Endpoint:             "/api/recipe/search",
+		ResponseBody:         &results,
+		ExpectedResponseCode: http.StatusOK,
+	}
+	t_ext.AuthorizeTestCase(t, testCase)
+}
+
 func ensureSearchData(t *testing.T) {
 
 	user := t_ext.GetTestUser()

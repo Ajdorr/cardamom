@@ -15,6 +15,8 @@ const (
 	DESSERT   MealType = "desser"
 )
 
+var ValidMeals = []MealType{BREAKFAST, LUNCH, DINNER, DESSERT}
+
 type Recipe struct {
 	Uid          string             `gorm:"primaryKey;not null;default:null" json:"uid"`
 	CreatedAt    time.Time          `json:"created_at"`

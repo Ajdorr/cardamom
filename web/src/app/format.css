@@ -25,14 +25,14 @@
   font-size: var(--format-font-size-large);
 }
 
-.format-font-heading-small {
+.format-font-header-small {
   font-size: var(--format-font-size-heading-small);
 }
 
-.format-font-heading-medium {
+.format-font-header-medium {
   font-size: var(--format-font-size-heading-medium);
 }
 
-.format-font-heading-large {
+.format-font-header-large {
   font-size: var(--format-font-size-heading-large);
 }

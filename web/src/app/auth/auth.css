@@ -15,6 +15,10 @@
   align-items: center;
 }
 
+.auth-index-workspace {
+  overflow-y: scroll;
+}
+
 .auth-index-branding-tagline {
   text-align: center;
   padding: 5px 10px;

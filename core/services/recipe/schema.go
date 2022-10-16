@@ -6,6 +6,8 @@ import (
 	u "cardamom/core/ext/units"
 	"cardamom/core/models"
 	"strings"
+
+	"github.com/thoas/go-funk"
 )
 
 type IngredientPart struct {
@@ -77,16 +79,29 @@ type UpdateRecipeResponse struct {
 }
 
 type SearchRecipeRequest struct {
-	Name        *string `json:"name,omitempty"`
-	Description *string `json:"description,omitempty"`
-	Meal        *string `json:"meal,omitempty"`
-	Ingredient  *string `json:"ingredient,omitempty"`
+	Name        *string          `json:"name,omitempty"`
+	Description *string          `json:"description,omitempty"`
+	Meal        *models.MealType `json:"meal,omitempty"`
+	Ingredient  *string          `json:"ingredient,omitempty"`
 }
 
 func (req *SearchRecipeRequest) Validate() (string, error) {
 
 	if req.Name == nil && req.Description == nil && req.Meal == nil && req.Ingredient == nil {
 		return log_ext.ReturnBoth("must have at least one search criteria")
+	}
+
+	return "", nil
+}
+
+type GetAvailableRecipeRequest struct {
+	Meal *models.MealType `json:"meal,omitempty"`
+}
+
+func (req *GetAvailableRecipeRequest) Validate() (string, error) {
+
+	if req.Meal != nil && !funk.Contains(models.ValidMeals, *req.Meal) {
+		return log_ext.ReturnBoth("invalid meal type")
 	}
 
 	return "", nil

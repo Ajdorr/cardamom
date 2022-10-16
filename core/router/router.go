@@ -59,7 +59,7 @@ func RegisterEndpoints(r *gin.Engine) {
 		g.POST("/list", handleRequest(recipe.ListRecipes, true))
 		g.POST("/search", handlePost(recipe.SearchRecipe, true))
 		g.POST("/trash", handleRequest(recipe.ListTrashedRecipes, true))
-		g.POST("/available", handleRequest(recipe.GetAvailableRecipes, true))
+		g.POST("/available", handlePost(recipe.GetAvailableRecipes, true))
 	}
 
 }

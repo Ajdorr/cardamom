@@ -225,12 +225,34 @@
 /* Recipe Shuffle */
 .recipe-shuffle-root {
   height: 100%;
-  padding: 5px 15px 0px 15px;
+  padding: 5px 15px 50px 15px;
   box-sizing: border-box;
 }
 
-.recipe-shuffle-root-grid {
-  display: grid;
+.recipe-shuffle-list {
+  display: flex;
+  row-gap: 15px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recipe-shuffle-recipe,
+.recipe-shuffle-action,
+.recipe-shuffle-form {
+  width: 95%;
+  border-radius: 5px;
+}
+
+.recipe-shuffle-form {
+  flex: 0 0 max-content;
+}
+
+.recipe-shuffle-recipe {
+  display: flex;
+  flex-direction: column;
+
+  padding: 10px;
+
   grid-template-columns: 3fr 1fr;
   grid-template-rows:
     max-content
@@ -241,47 +263,57 @@
   row-gap: 15px;
 
   grid-template-areas:
-  "action action"
-  "name meal"
+  "name name"
   "desc desc"
   "ingre ingre"
   ;
+
+  box-sizing: border-box;
+  flex: 1 1 max-content;
+  overflow-y: scroll;
 }
 
-.recipe-shuffle-root > *{
+.recipe-shuffle-action {
+  display: flex;
+  flex-direction: row;
+
+  padding: 15px;
+
+  column-gap: 5px;
+  box-sizing: border-box;
+  flex: 0 0 max-content;
+  justify-content: space-between;
+}
+
+.recipe-shuffle-root-grid > *{
   padding: 5px;
   box-sizing: border-box;
   border-radius: 5px;
 }
 
 .recipe-shuffle-name {
-  grid-area: name;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
-
-.recipe-shuffle-meal {
-  grid-area: meal;
-  display: flex;
-  align-items: center;
-}
-
-.recipe-shuffle-desc { grid-area: desc; }
 
 .recipe-shuffle-ingredient-list {
-  grid-area: ingre;
   display: grid;
+  column-gap: 5px;
   grid-template-columns: 45px 35px 1fr;
 }
 
 .recipe-shuffle-ingredient-list > * { display: contents; }
 
-.recipe-shuffle-ingredient-list>*:nth-child(even)>* {
-  background-color: var(--theme-surface-color);
+.recipe-shuffle-ingredient-quantity {
+  border-radius: 5px;
+}
+
+.recipe-shuffle-ingredient-quantity {
+  text-align: right;
 }
 
 .recipe-shuffle-action-panel {
-  grid-area: action;
   display: flex;
   flex-direction: row;
 }

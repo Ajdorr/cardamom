@@ -3,6 +3,7 @@ package recipe
 import (
 	"cardamom/core/ext/log_ext"
 	m "cardamom/core/models"
+	"strings"
 
 	"github.com/thoas/go-funk"
 )
@@ -53,13 +54,13 @@ func resizeIngredients(user_uid string, ingredients []IngredientPart, recipe *m.
 				SortOrder: i,
 				Quantity:  ingre.Quantity,
 				Unit:      ingre.Unit,
-				Item:      ingre.Item,
+				Item:      strings.ToLower(ingre.Item),
 			})
 		} else {
 			recipe.Ingredients[i].Meal = recipe.Meal
 			recipe.Ingredients[i].Quantity = ingre.Quantity
 			recipe.Ingredients[i].Unit = ingre.Unit
-			recipe.Ingredients[i].Item = ingre.Item
+			recipe.Ingredients[i].Item = strings.ToLower(ingre.Item)
 			recipe.Ingredients[i].SortOrder = i
 		}
 
