@@ -45,19 +45,25 @@ def create_flow(d: WebDriver, w: WebDriverWait, info: dict[Any, Any]):
   # Add ingredient
   add_ingredient = d.find_element(
       By.CSS_SELECTOR, ".recipe-single-ingredient-add img")
-  for _ in info["ingre"]:
-    add_ingredient.click()
 
-  ingres = d.find_elements(By.CLASS_NAME, "recipe-ingredient-root")
   for i, ingre in enumerate(info["ingre"]):
+    add_ingredient.click()
+    w.until(lambda x: len(x.find_elements(
+        By.CLASS_NAME, "recipe-ingredient-root")) > i)
+    ingre_ele = d.find_elements(By.CLASS_NAME, "recipe-ingredient-root")[i]
     # Add ingredients
-    ingres[i].find_element(
+    ingre_ele.find_element(
         By.CSS_SELECTOR,
         ".recipe-ingredient-quantity input").send_keys(Keys.BACKSPACE + ingre["quantity"])
-    ingres[i].find_element(
+    ingre_ele.find_element(
         By.CSS_SELECTOR, ".recipe-ingredient-unit").send_keys(ingre["unit"])
-    ingres[i].find_element(
-        By.CSS_SELECTOR, ".recipe-ingredient-item input").send_keys(ingre["item"])
+    item = ", ".join([ingre["item"], ingre["modifier"]]
+                     ) if "modifier" in ingre else ingre["item"]
+    ingre_ele.find_element(
+        By.CSS_SELECTOR, ".recipe-ingredient-item input").send_keys(item)
+    if ingre.get("optional", False):
+      ingre_ele.find_element(
+          By.CSS_SELECTOR, ".recipe-ingredient-optional input").click()
 
   d.find_element(By.CSS_SELECTOR, "ol.recipe-instruction-list").click()
   instr = d.find_element(By.CSS_SELECTOR, ".recipe-instruction-list textarea")

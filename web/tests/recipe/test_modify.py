@@ -12,12 +12,14 @@ before_img = {
         {
             "quantity": "2",
             "unit": "none",
-            "item": "bread"
+            "item": "bread",
+            "modifier": "slices"
         },
         {
             "quantity": "50",
             "unit": "mL",
-            "item": "ketchup"
+            "item": "ketchup",
+            "optional": True
         },
         {
             "quantity": "150",
@@ -41,7 +43,8 @@ after_img = {
         {
             "quantity": "2",
             "unit": "none",
-            "item": "bread"
+            "item": "bread",
+            "modifier": "sliced"
         },
         {
             "quantity": "50",
@@ -51,12 +54,15 @@ after_img = {
         {
             "quantity": "50",
             "unit": "mL",
-            "item": "mayonaise"
+            "item": "mayonaise",
+            "modifier": "white"
         },
         {
             "quantity": "50",
             "unit": "mL",
-            "item": "mustard"
+            "item": "mustard",
+            "modifier": "dijon",
+            "optional": True
         },
         {
             "quantity": "150",
@@ -97,10 +103,6 @@ def test_modify():
   desc_ele.send_keys(after_img["desc"])
   desc_ele.send_keys(Keys.TAB)
 
-  # Delete ingredient
-  d.find_elements(
-      By.CSS_SELECTOR, ".recipe-ingredient-delete img")[1].click()
-
   for i, ingre in enumerate(after_img["ingre"]):
     ingres = d.find_elements(By.CLASS_NAME, "recipe-ingredient-root")
     if i < len(ingres):
@@ -117,13 +119,21 @@ def test_modify():
     unit = ingre_ele.find_element(By.CSS_SELECTOR, ".recipe-ingredient-unit")
     item = ingre_ele.find_element(
         By.CSS_SELECTOR, ".recipe-ingredient-item input")
+    optional = ingre_ele.find_element(
+        By.CSS_SELECTOR, ".recipe-ingredient-optional input")
 
     unit.send_keys(ingre["unit"])
     clear(d, quantity)
     quantity.send_keys(ingre["quantity"])
     clear(d, item)
-    item.send_keys(ingre["item"])
+    item_value = ", ".join(
+        [ingre["item"], ingre["modifier"]]) if "modifier" in ingre else ingre["item"]
+    item.send_keys(item_value)
     item.send_keys(Keys.ENTER)
+
+    if (optional.get_attribute("checked") != None) != ingre.get("optional", False):
+      ingre_ele.find_element(
+          By.CSS_SELECTOR, ".recipe-ingredient-optional input").click()
 
   d.find_element(By.CSS_SELECTOR, "ol.recipe-instruction-list").click()
   instr = d.find_element(By.CSS_SELECTOR, ".recipe-instruction-list textarea")

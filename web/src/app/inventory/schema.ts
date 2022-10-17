@@ -2,6 +2,7 @@ export const InventoryCategories = new Map<string, string>([
   ["cooking", "Cooking"],
   ["spices", "Spices"],
   ["sauces", "Sauces and Condiments"],
+  ["non-perishables", "Non-Perishables"],
   ["non-cooking", "Non-Cooking"],
 ])
 

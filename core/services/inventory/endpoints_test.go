@@ -79,6 +79,15 @@ func TestCategoryCreates(t *testing.T) {
 		t.Errorf("mismatch between request and response category(%s::sauces)", rspBody.Category)
 	}
 
+	testCase.RequestBody = `{"item": "coffee", "category": "non-perishables"}`
+	t_ext.API_Test(testCase)
+	if rspBody.Item != "coffee" {
+		t.Errorf("mismatch between request and response item(%s::coffee)", rspBody.Item)
+	}
+	if rspBody.Category != "non-perishables" {
+		t.Errorf("mismatch between request and response category(%s::non-perishables)", rspBody.Category)
+	}
+
 	testCase.RequestBody = `{"item": "froot loops", "category": "non-cooking"}`
 	t_ext.API_Test(testCase)
 	if rspBody.Item != "froot loops" {

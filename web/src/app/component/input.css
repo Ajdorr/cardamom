@@ -18,3 +18,9 @@
   font: inherit;
 }
 
+.input-single-checkbox-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

@@ -140,9 +140,8 @@
   height: var(--format-line-height);
   width: var(--format-line-height);
   text-align: center;
-  line-height: var(--format-line-height);
 
-  /* disable scroll */
+  /* disable scroll on touch */
   touch-action: none;
 }
 
@@ -173,7 +172,7 @@
   height: var(--format-line-height);
 }
 
-.recipe-ingredient-delete {
+.recipe-ingredient-optional {
   flex: 0 0 var(--format-line-height);
   height: var(--format-line-height);
 }
@@ -194,6 +193,16 @@
 
 .recipe-single-ingredient-add > img{
   width: var(--format-line-height);
+}
+
+.recipe-ingredient-delete-indicator {
+  position: absolute;
+  height: var(--format-line-height);
+  background-color: red;
+}
+
+.recipe-ingredient-delete-indicator > img {
+  height: var(--format-line-height);
 }
 
 /* Recipe Instruction */

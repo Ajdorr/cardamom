@@ -1,8 +1,6 @@
 Next release
++ Change recipe endpoint to allow for more granular changes
 + Add prep and cook times
-+ Add ingredient annotations (chopped, sliced, diced, melted, chilled)
-+ Optional ingredients
-+ Create spice rack BE, inventory categories
 + Add recipe tags
 
 Backlog

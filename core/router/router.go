@@ -55,8 +55,12 @@ func RegisterEndpoints(r *gin.Engine) {
 	{
 		g.POST("/create", handlePost(recipe.CreateRecipe, true))
 		g.POST("/read", handlePost(recipe.ReadRecipe, true))
-		g.POST("/update", handlePost(recipe.UpdateRecipe, true))
 		g.POST("/list", handleRequest(recipe.ListRecipes, true))
+		g.POST("/update", handlePost(recipe.UpdateRecipe, true))
+		g.POST("/ingredient/create", handlePost(recipe.CreateRecipeIngredient, true))
+		g.POST("/ingredient/update", handlePost(recipe.UpdateRecipeIngredient, true))
+		g.POST("/ingredient/reorder", handlePost(recipe.ReorderRecipeIngredients, true))
+		g.POST("/ingredient/delete", handlePost(recipe.DeleteRecipeIngredient, true))
 		g.POST("/search", handlePost(recipe.SearchRecipe, true))
 		g.POST("/trash", handleRequest(recipe.ListTrashedRecipes, true))
 		g.POST("/available", handlePost(recipe.GetAvailableRecipes, true))

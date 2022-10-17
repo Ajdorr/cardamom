@@ -5,7 +5,7 @@
     "meal": "Breakfast",
     "ingre": [
       {
-        "quantity": "1",
+        "quantity": "1 1/4",
         "unit": "cup",
         "item": "flour"
       },
@@ -13,6 +13,12 @@
         "quantity": "1",
         "unit": "none",
         "item": "egg"
+      },
+      {
+        "quantity": "1",
+        "unit": "tsp",
+        "item": "vanilla extract",
+        "optional": true
       },
       {
         "quantity": "3/4",
@@ -53,7 +59,8 @@
       {
         "quantity": "200",
         "unit": "g",
-        "item": "chicken"
+        "item": "chicken",
+        "modifier": "chopped"
       },
       {
         "quantity": "1 1/2",
@@ -76,7 +83,8 @@
       {
         "quantity": "750",
         "unit": "g",
-        "item": "potato"
+        "item": "potato",
+        "modifier": "boiled"
       }
     ],
     "instr": "Boil potatoes\nmash"

@@ -4,12 +4,18 @@
   --format-heading-medium-height: 60px;
   --format-heading-large-height: 80px;
 
+  --format-font-size-subscript: 8px;
   --format-font-size-small: 16px;
   --format-font-size-medium: 20px;
   --format-font-size-large: 24px;
   --format-font-size-heading-small: 28px;
   --format-font-size-heading-medium: 32px;
   --format-font-size-heading-large: 48px;
+}
+
+.format-font-subscript {
+  font-size: var(--format-font-size-subscript);
+  line-height: var(--format-font-size-subscript);
 }
 
 .format-font-small {

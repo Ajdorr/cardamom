@@ -21,6 +21,7 @@ def verify(d: WebDriver, info: dict):
   quantity = "(//div[contains(@class,'recipe-ingredient-quantity')])[%d]/input[@value='%s']"
   unit = "(//select[contains(@class,'recipe-ingredient-unit')])[%d]"
   item = "(//div[contains(@class,'recipe-ingredient-item')])[%d]/input[@value='%s']"
+  optional = "(//div[contains(@class,'recipe-ingredient-optional')])[%d]/input"
 
   assert len(d.find_elements(By.CSS_SELECTOR,
              ".recipe-ingredient-root")) == len(info["ingre"])
@@ -28,9 +29,14 @@ def verify(d: WebDriver, info: dict):
   for i, ingre in enumerate(info["ingre"], 1):
     u = Select(d.find_element(By.XPATH, unit % i)).first_selected_option
     assert u.text == ingre["unit"]
-    assert len(d.find_elements(By.XPATH, item % (i, ingre["item"]))) == 1
+    item_value = ", ".join(
+        [ingre["item"], ingre["modifier"]]) if "modifier" in ingre else ingre["item"]
+    assert len(d.find_elements(By.XPATH, item % (i, item_value))) == 1
     assert len(d.find_elements(By.XPATH, quantity %
                (i, ingre["quantity"]))) == 1
+    is_optional = d.find_element(
+        By.XPATH, optional % i).get_attribute("checked") != None
+    assert is_optional == ingre.get("optional", False)
 
   instrs = d.find_elements(By.CSS_SELECTOR, ".recipe-instruction-list li")
   assert [i.text for i in instrs] == info["instr"].split("\n")

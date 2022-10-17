@@ -28,6 +28,10 @@ export function InventoryMenu() {
         <img alt="Sauces and Condiments inventory" src="/icons/sauces.svg" id="inventory-list-sauces-btn"
           className={"inventory-list-sub-menu-icon" + (filter === "sauces" ? " theme-primary-light" : "")} />
       </Link>
+      <Link to="/inventory/non-perishables" >
+        <img alt="Non-perishables inventory" src="/icons/non-perishables.svg" id="inventory-list-non-perishables-btn"
+          className={"inventory-list-sub-menu-icon" + (filter === "non-perishables" ? " theme-primary-light" : "")} />
+      </Link>
       <Link to="/inventory/non-cooking" >
         <img alt="Non-cooking inventory" src="/icons/non-cooking.svg" id="inventory-list-non-cooking-btn"
           className={"inventory-list-sub-menu-icon" + (filter === "non-cooking" ? " theme-primary-light" : "")} />

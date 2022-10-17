@@ -37,7 +37,7 @@ function WorkspaceHeader() {
   const nav = useNavigate()
 
   return (
-    <div className="workspace-menu-bar theme-primary">
+    <div className="workspace-menu-bar theme-primary" onMouseLeave={e => { if (showMenu) setShowMenu(false) }}>
 
       <ImageButton alt="Show menu" src="/icons/menu.svg" className="workspace-menu-bar-show-btn"
         onClick={e => { setShowMenu(!showMenu) }} />
@@ -52,7 +52,7 @@ function WorkspaceHeader() {
 
       </div>
 
-      <div style={{ display: showMenu ? "flex" : "none" }} className="workspace-menu-bar-overlay theme-primary">
+      <div style={{ display: showMenu ? "flex" : "none" }} className="workspace-menu-bar-overlay theme-primary" >
 
         <ImageButton id="workspace-menu-link-grocery" alt="Go to grocery list" src="/icons/cart.svg"
           onClick={e => { setShowMenu(false); nav("/grocery") }} />

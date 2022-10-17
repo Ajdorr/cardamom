@@ -24,6 +24,8 @@ const (
 	MASS   = "Mass"
 )
 
+var None = New("none", "", "", "")
+
 type Unit struct {
 	name   string
 	symbol string
@@ -75,8 +77,10 @@ func (u *Unit) MarshalJSON() ([]byte, error) {
 }
 
 func (u *Unit) UnmarshalJSON(data []byte) error {
-	if data == nil || len(data) <= 2 {
-		return log_ext.Errorf("json cannot be empty")
+	if data == nil {
+		return log_ext.Errorf("unit json cannot be empty")
+	} else if data[0] != byte('"') || data[len(data)-1] != byte('"') {
+		return log_ext.Errorf("unit json must be string")
 	}
 
 	if unit, ok := unitMap[string(data[1:len(data)-1])]; !ok {

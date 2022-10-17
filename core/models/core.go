@@ -15,14 +15,15 @@ type GroceryItem struct {
 type InventoryCategory string
 
 const (
-	COOKING     InventoryCategory = "cooking"
-	SPICES      InventoryCategory = "spices"
-	SAUCES      InventoryCategory = "sauces" // and condiments
-	NON_COOKING InventoryCategory = "non-cooking"
+	COOKING         InventoryCategory = "cooking"
+	SPICES          InventoryCategory = "spices"
+	SAUCES          InventoryCategory = "sauces" // and condiments
+	NON_PERISHABLES InventoryCategory = "non-perishables"
+	NON_COOKING     InventoryCategory = "non-cooking"
 )
 
 var ValidCategories = []InventoryCategory{
-	COOKING, SPICES, SAUCES, NON_COOKING,
+	COOKING, SPICES, SAUCES, NON_PERISHABLES, NON_COOKING,
 }
 
 type InventoryItem struct {

@@ -1,29 +1,28 @@
 import { useEffect, useRef, useState } from "react"
-import { ImageButton, InputTextBox } from "../../component/input"
-import { Units } from "../schema"
+import { InputTextBox } from "../../component/input"
+import { IngredientModel, ModifierDividerRegex, Units, UpdateIngredient } from "../schema"
 
 type IngredientProps = {
   className?: string
-  quantity: number | string
-  unit: string
-  value: string
+  model: IngredientModel
   placeholder?: string
-  onQuantityChange: (s: string) => void
-  onUnitChange: (s: string) => void
-  onValueChange: (s: string) => void
-  onMove: (s: number) => void
-  onReorder: (s: number) => void
-  onDelete?: () => void
+  onChange: (v: UpdateIngredient) => void
+  onReorderMove: (s: number) => void
+  onReorderComplete: (s: number) => void
+  onDelete: () => void
 }
 
 export function RecipeIngredient(props: IngredientProps) {
 
+  const [initX, setInitX] = useState(0)
   const [initY, setInitY] = useState(0)
+  const [deltaX, setDeltaX] = useState(0)
   const [deltaY, setDeltaY] = useState(0)
+
   const root = useRef<HTMLDivElement>(null)
 
   const [quantityError, setQuantityError] = useState(false)
-  const quantity = (typeof props.quantity === "number") ? String(props.quantity) : props.quantity
+  const quantity = (typeof props.model.quantity === "number") ? String(props.model.quantity) : props.model.quantity
   const quantityClass = quantityError ? "recipe-ingredient-quantity recipe-ingredient-quantity-error" :
     "recipe-ingredient-quantity"
 
@@ -36,44 +35,73 @@ export function RecipeIngredient(props: IngredientProps) {
     }
   }
 
-  const cssStyle = (deltaY !== 0) ? {
-    transform: `translateY(${deltaY}px)`,
-    opacity: 0.6
-  } : undefined
+  var rootStyle = undefined
+  if (deltaX !== 0) {
+    rootStyle = { transform: `translateX(${deltaX}px)` }
+  } else if (deltaY !== 0) {
+    rootStyle = { transform: `translateY(${deltaY}px)`, opacity: 0.6 }
+  }
   const rootClass = (props.className) ? "recipe-ingredient-root " + props.className : "recipe-ingredient-root"
-  return (<div className={rootClass} style={cssStyle} ref={root} >
+  return (<div ref={root} className={rootClass} style={rootStyle}>
+    {deltaX > 0 ?
+      <div style={{ width: `${deltaX}px`, transform: `translateX(-${deltaX}px)` }} className="recipe-ingredient-delete-indicator">
+        {deltaX > 40 ? <img alt="delete indicator" src="/icons/delete.svg" /> : null}
+      </div> : null
+    }
     <span className="recipe-ingredient-marker"
-      onTouchStart={e => { setInitY(e.touches[0].clientY) }}
+      onTouchStart={e => { setInitX(e.touches[0].clientX); setInitY(e.touches[0].clientY) }}
       onTouchMove={e => {
-        e.preventDefault()
         const dY = e.touches[0].clientY - initY;
-        setDeltaY(dY);
-        props.onMove(getIndexDelta(dY));
+        const dX = e.touches[0].clientX - initX;
+
+        if (Math.abs(dY) > Math.abs(dX)) {
+          setDeltaX(0); setDeltaY(dY);
+          props.onReorderMove(getIndexDelta(dY));
+        } else if (dX > 0) {
+          setDeltaX(dX); setDeltaY(0);
+        }
       }}
-      onTouchEnd={e => { props.onReorder(getIndexDelta(deltaY)); setDeltaY(0); setInitY(0); }} >
+      onTouchEnd={e => {
+        if (Math.abs(deltaY) > Math.abs(deltaX)) {
+          props.onReorderComplete(getIndexDelta(deltaY));
+        } else if (Math.abs(deltaX) > 50) {
+          props.onDelete()
+        }
+        setInitX(0); setDeltaX(0);
+        setInitY(0); setDeltaY(0);
+      }}
+    >
       <img alt="draggable" src="/icons/drag-indicator.svg" />
     </span>
 
     <InputTextBox value={quantity} className={quantityClass} placeholder={props.placeholder}
       onChange={s => {
         if (s.match(/^\d+$/) || s.match(/^\d+\/\d+$/) || s.match(/^\d+\s+\d+\/\d+$/)) {
-          props.onQuantityChange(s)
+          props.onChange({ quantity: s })
           setQuantityError(false)
         } else {
           setQuantityError(true)
         }
       }} />
 
-    <select className="recipe-ingredient-unit" value={props.unit} onChange={e => props.onUnitChange(e.target.value)}>{
-      Units.map((u, i) => { return (<option key={i} value={u}>{u.length > 0 ? u : "none"}</option>) })
-    }</select>
+    <select className="recipe-ingredient-unit" value={props.model.unit ? props.model.unit : ""}
+      onChange={e => props.onChange({ unit: e.target.value })}>{
+        Units.map((u, i) => { return (<option key={i} value={u}>{u.length > 0 ? u : "none"}</option>) })
+      }</select>
 
-    <InputTextBox value={props.value} className="recipe-ingredient-item" placeholder={props.placeholder}
-      onChange={props.onValueChange} />
+    <InputTextBox className="recipe-ingredient-item" placeholder={props.placeholder}
+      value={props.model.modifier ? props.model.item + ", " + props.model.modifier : props.model.item}
+      onChange={e => {
+        const itemAndMod = e.split(ModifierDividerRegex, 2)
+        if (itemAndMod.length === 1) {
+          props.onChange({ item: e.trim(), modifier: "" })
+        } else {
+          props.onChange({ item: itemAndMod[0].trim(), modifier: itemAndMod[1].trim() })
+        }
+      }} />
 
-    {!props.onDelete ? null :
-      <ImageButton alt="Delete ingredient" src="/icons/delete.svg"
-        className="recipe-ingredient-delete" onClick={props.onDelete} />}
+    <SingleCheckbox label="optional" className="recipe-ingredient-optional"
+      value={props.model.optional} onChange={b => { props.onChange({ optional: b }) }} />
   </div>
   )
 }
@@ -121,6 +149,25 @@ export function RecipeInstruction(props: InstructionProps) {
           onChangeTimer.current = window.setTimeout(changeTimer, 5000)
         }} />
     </div>
-  </div >
+  </div>
+  )
+}
+
+type SingleCheckboxProps = {
+  label: string
+  value: boolean
+  className?: string
+  onChange: (s: boolean) => void
+}
+
+function SingleCheckbox(props: SingleCheckboxProps) {
+
+  const rootClass = props.className ? "input-single-checkbox-root " + props.className : "input-single-checkbox-root"
+  return (
+    <div className={rootClass}>
+      <input type="checkbox" className="input-single-checkbox-input" checked={props.value}
+        onChange={e => { props.onChange(e.target.checked) }} />
+      <span className="input-single-checkbox-label format-font-subscript">{props.label}</span>
+    </div>
   )
 }

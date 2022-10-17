@@ -37,9 +37,10 @@ type RecipeIngredient struct {
 	UserUid   string     `gorm:"index" json:"user_uid"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
-	Meal      MealType   `json:"meal"`
 	SortOrder int        `json:"order"`
 	Quantity  m.Rational `gorm:"decimal(30,2)" json:"quantity"`
 	Unit      *u.Unit    `json:"unit"`
 	Item      string     `gorm:"index" json:"item"`
+	Optional  bool       `gorm:"default:false" json:"optional"`
+	Modifier  string     `json:"modifier"`
 }

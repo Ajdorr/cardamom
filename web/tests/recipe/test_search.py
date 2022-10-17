@@ -33,7 +33,7 @@ def test_search():
   ingre_ele = d.find_element(
       By.CSS_SELECTOR, ".recipe-search-advanced-ingredient input")
 
-  desc_ele.send_keys("delicious")
+  desc_ele.send_keys("irresistable")
   desc_ele.send_keys(Keys.ENTER)
 
   results_eles = w.until(lambda x: x.find_elements(

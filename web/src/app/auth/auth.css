@@ -45,6 +45,7 @@
   border: 1px solid var(--theme-background-color);
 
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .auth-login-btn-logo {

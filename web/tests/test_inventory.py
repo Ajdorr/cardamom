@@ -139,6 +139,11 @@ def test_category_add():
   w.until(lambda x: x.find_element(By.XPATH, inv_item_xpath % "sriracha"))
 
   d.find_element(By.ID, "inventory-list-non-cooking-btn").click()
+  add_item.send_keys("tuna")
+  add_item.send_keys(Keys.ENTER)
+  w.until(lambda x: x.find_element(By.XPATH, inv_item_xpath % "ice cream"))
+
+  d.find_element(By.ID, "inventory-list-non-cooking-btn").click()
   add_item.send_keys("ice cream")
   add_item.send_keys(Keys.ENTER)
   w.until(lambda x: x.find_element(By.XPATH, inv_item_xpath % "ice cream"))
@@ -163,6 +168,7 @@ def test_category_update():
       ("spices", "Spices"),
       ("sauces", "Sauces and Condiments"),
       ("non-cooking", "Non-Cooking"),
+      ("non-perishables", "Non-Perishables"),
       ("cooking", "Cooking"),
   ]
   for short_name, long_name in categories:

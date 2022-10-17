@@ -1,9 +1,9 @@
 Next release
 + Fix all text fonts, pick some to use
-+ Create a saved list of stores
-+ Create spice rack FE
++ Filter recipe lists by meal
 + Add tags
 
 Backlog
++ Create a saved list of stores
 + Raw import recipe
 + Relayout for web
