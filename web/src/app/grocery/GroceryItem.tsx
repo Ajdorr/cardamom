@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { api } from "../api"
 import { ImageButton, InputTextBox } from "../component/input"
+import { SwipeIndicatorWidget } from "../component/widget"
 import { ModifiableDropDown } from "./component/DropDown"
 import { GroceryItemModel } from './schema'
 
@@ -80,12 +81,25 @@ export function GroceryItem(props: GroceryItemProps) {
       setInitX(0); setDeltaX(0)
     }}
   >
+    {deltaX < 0 ?
+      <div style={{
+        width: `${Math.abs(-deltaX)}px`,
+        transform: `translateX(${Math.abs(deltaX)}px)`,
+        right: "0"
+      }}
+        className="grocery-item-delete-indicator">
+        {Math.abs(deltaX) > 40 ? <img alt="delete indicator" src="/icons/delete.svg" /> : null}
+      </div> : null
+    }
+    {deltaX > 0 ? <SwipeIndicatorWidget className="grocery-item-collect-indicator"
+      deltaX={deltaX} height={40} iconSrc="/icons/done.svg" />
+      : null}
     <ImageButton className="grocery-item-collect" alt="collect" src="/icons/done.svg" onClick={e => collectItem()} />
     <InputTextBox value={props.model.item} className="grocery-item-input" onChange={i => onUpdate({ uid: props.model.uid, item: i })} />
     <ModifiableDropDown className="grocery-item-store" value={props.model.store} options={props.stores}
       dropDownButtonOnLeft={true} placeholder="Store"
       onChange={s => onUpdate({ uid: props.model.uid, store: s })} />
-  </div>
+  </div >
   )
 }
 

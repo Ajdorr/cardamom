@@ -35,14 +35,9 @@
 }
 
 /* Grocery List */
-.grocery-list-items {
-  background-color: red;
-}
-
 .grocery-list-root > .grocery-list-store .input-box,
 .grocery-list-root > .grocery-item-add-root .input-box,
 .grocery-list-root > .grocery-list-items .grocery-item-input > .input-box,
-.grocery-list-root > .grocery-list-items > .grocery-list-items-empty,
 .grocery-list-collected-items > .grocery-list-collected-root {
   padding: 0px 0px 0px 5px;
   box-sizing: border-box;
@@ -92,9 +87,28 @@
 }
 
 .grocery-list-items-empty {
+  width: 100%;
   height: var(--format-line-height);
+  text-align: center;
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.grocery-item-delete-indicator {
+  position: absolute;
+  height: var(--format-line-height);
+  background-color: var(--theme-alert-color);
+}
+
+.grocery-item-delete-indicator > img {
+  position: absolute;
+  right: 0;
+  height: var(--format-line-height);
+}
+
+.grocery-item-collect-indicator {
+  background-color: green;
 }
 
 /* Collected Grocery Item Divider */

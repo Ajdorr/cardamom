@@ -18,7 +18,7 @@ function shuffle(a: Array<any>): Array<any> {
   return a
 }
 
-function RecipeShuffle() {
+export default function RecipeShuffle() {
 
   const [meal, setMeal] = useState("dinner")
   const [recipes, setRecipes] = useState<RecipeModel[]>([])
@@ -34,17 +34,22 @@ function RecipeShuffle() {
     })
   }, [meal])
 
+  let MealChoices = new Map(MealTypes)
+  const recipe = recipes[recipes.length - 1]
+
   if (recipes.length === 0) {
     return (<div className="recipe-shuffle-root theme-background">
+
+      <div className="recipe-shuffle-form theme-focus">
+        <FormDropDown label="Meal" options={MealChoices} value={meal} className="recipe-shuffle-form-meal"
+          onChange={setMeal} />
+      </div>
+
       <div className="recipe-shuffle-empty theme-focus">
         <span>{status}</span>
       </div>
     </div>)
   }
-
-  let MealChoices = new Map(MealTypes)
-  MealChoices.set("", "None")
-  const recipe = recipes[recipes.length - 1]
 
   return (<div className="recipe-shuffle-root recipe-shuffle-list theme-background">
 
@@ -89,5 +94,3 @@ function RecipeShuffle() {
     </div>
   </div>)
 }
-
-export default RecipeShuffle

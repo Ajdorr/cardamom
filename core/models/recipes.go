@@ -12,10 +12,11 @@ const (
 	BREAKFAST MealType = "breakfast"
 	LUNCH     MealType = "lunch"
 	DINNER    MealType = "dinner"
-	DESSERT   MealType = "desser"
+	DESSERT   MealType = "dessert"
+	NONE      MealType = "none"
 )
 
-var ValidMeals = []MealType{BREAKFAST, LUNCH, DINNER, DESSERT}
+var ValidMeals = []MealType{BREAKFAST, LUNCH, DINNER, DESSERT, NONE}
 
 type Recipe struct {
 	Uid          string             `gorm:"primaryKey;not null;default:null" json:"uid"`

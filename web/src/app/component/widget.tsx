@@ -2,6 +2,34 @@ import "./widget.css"
 import { useState } from "react";
 import { ImageButton, InputNumberBox } from "./input"
 
+type SwipeIndicatorWidgetProps = {
+  height: number
+  deltaX: number
+  iconSrc: string
+  className?: string
+  isAlignedRight?: boolean
+}
+
+export function SwipeIndicatorWidget(props: SwipeIndicatorWidgetProps) {
+  const icon = Math.abs(props.deltaX) >= props.height ?
+    <img alt="swipe indicator" src={props.iconSrc} style={{
+      height: props.height, right: props.isAlignedRight ? "0" : ""
+    }} />
+    : null
+
+  return (
+    <div style={{
+      height: props.height,
+      width: `${Math.abs(props.deltaX)}px`,
+      transform: `translateX(${(-props.deltaX)}px)`,
+      right: props.isAlignedRight ? "0" : "",
+    }}
+      className={props.className ? "widget-slide-indicator " + props.className : "widget-slide-indicator"}>
+      {icon}
+    </div>
+  )
+}
+
 type IntegerInputWidgetProps = {
   value: number
   minValue: number

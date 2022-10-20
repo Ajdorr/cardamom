@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { api } from "../api"
 import { FormDropDown, FormText, FormTextArea } from "../component/form"
 import { ImageButton } from "../component/input"
+import { getInventory } from "../inventory/inventoryCache"
 import { RecipeIngredient, RecipeInstruction } from "./component/RecipeComp"
 import { CreateRecipeRequest, MealTypes, RecipeModel, Units, UpdateIngredient, UpdateRecipe } from "./schema"
 
@@ -17,6 +18,7 @@ function RecipeSingle(props: RecipeSingleProps) {
 
   const [ingreNewNdx, setIngreNewNdx] = useState(-1)
   const [indicatorClass, setIndicatorClass] = useState("theme-indicator-top")
+  const [inventoryCache, setInventoryCache] = useState<string[]>([])
 
   const [recipe, setRecipe] = useState<RecipeModel>({
     uid: "",
@@ -26,7 +28,7 @@ function RecipeSingle(props: RecipeSingleProps) {
     user_uid: "",
     name: "",
     description: "",
-    meal: "breakfast",
+    meal: "dinner",
     instructions: "",
     ingredients: [],
   })
@@ -142,7 +144,7 @@ function RecipeSingle(props: RecipeSingleProps) {
         user_uid: "",
         name: "",
         description: "",
-        meal: "breakfast",
+        meal: "dinner",
         instructions: "",
         ingredients: [],
       })
@@ -152,6 +154,7 @@ function RecipeSingle(props: RecipeSingleProps) {
       }).catch(e => {
         nav("/recipe/list")
       })
+      getInventory().then(setInventoryCache)
     }
   }, [recipeUid, nav, props.isCreate])
 
@@ -167,22 +170,25 @@ function RecipeSingle(props: RecipeSingleProps) {
     <FormTextArea label="Description" value={recipe.description} className="recipe-single-desc theme-focus"
       onChange={s => updateRecipe({ description: s })} />
 
-    <div className="recipe-single-ingredient-list theme-focus">
+    <div className="recipe-single-ingredients theme-focus">
       <div className="format-font-small">Ingredients</div>
-      {
-        recipe.ingredients.map((ingre, i) => {
-          return (<RecipeIngredient key={i} model={ingre}
-            className={i === ingreNewNdx ? indicatorClass : undefined}
-            onChange={s => updateIngredient(i, s)}
-            onReorderComplete={d => { setIngreNewNdx(-1); reorderIngredient(i, d) }}
-            onReorderMove={d => {
-              setIngreNewNdx(d !== 0 ? i + d : -1);
-              setIndicatorClass(d < 0 ? "theme-indicator-top" : "theme-indicator-bottom")
-            }}
-            onDelete={() => deleteIngredient(i)}
-          />)
-        })
-      }
+      <div className="recipe-single-ingredient-list">
+        {
+          recipe.ingredients.map((ingre, i) => {
+            return (<RecipeIngredient key={i} model={ingre}
+              className={i === ingreNewNdx ? indicatorClass : undefined}
+              isInInventory={inventoryCache.indexOf(ingre.item) >= 0}
+              onChange={s => updateIngredient(i, s)}
+              onReorderComplete={d => { setIngreNewNdx(-1); reorderIngredient(i, d) }}
+              onReorderMove={d => {
+                setIngreNewNdx(d !== 0 ? i + d : -1);
+                setIndicatorClass(d < 0 ? "theme-indicator-top" : "theme-indicator-bottom")
+              }}
+              onDelete={() => deleteIngredient(i)}
+            />)
+          })
+        }
+      </div>
 
       <ImageButton alt="Add ingredient" src="/icons/plus.svg" className="recipe-single-ingredient-add"
         onClick={e => createIngredient()} />

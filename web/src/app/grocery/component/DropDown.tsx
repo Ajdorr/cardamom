@@ -24,16 +24,19 @@ export function ModifiableDropDown(props: ModifiableDropDownProps) {
   }
 
   const clazz = props.className ? "modifiable-drop-down-root " + props.className : "modifiable-drop-down-root"
+  const defaultPlaceholder = props.options.length > 0 ? "Add or select store" : "Add store"
   return (
     <div id={props.id} onMouseLeave={e => setVisible(false)} className={clazz}>
       <div className="modifiable-drop-down-workspace" style={{
         flexDirection: props.dropDownButtonOnLeft ? "row-reverse" : "row"
       }}>
         <InputTextBox value={value} className="modifiable-drop-down-input"
-          placeholder={props.placeholder ? props.placeholder : "Add or select store"}
+          placeholder={props.placeholder ? props.placeholder : defaultPlaceholder}
           onChange={s => save(s)} />
 
-        <ImageButton alt="expand" src="/icons/drop-down.svg" className="modifiable-drop-down-list"
+        <ImageButton alt="expand" src="/icons/drop-down.svg"
+          style={{ visibility: props.options.length > 0 ? "visible" : "hidden" }}
+          className="modifiable-drop-down-list"
           onClick={e => setVisible(!isVisible)} />
 
         {

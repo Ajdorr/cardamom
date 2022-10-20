@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import { InputTextBox } from "../component/input";
+import { setInventory } from "./inventoryCache";
 import InventoryItem from "./InventoryItem";
 import InventoryModal from "./InventoryModal";
 import { InventoryCategories, InventoryItemModel } from "./schema";
@@ -49,6 +50,7 @@ function InventoryList() {
 
   const updateInventoryList = (newItems: InventoryItemModel[]) => {
     setItems(newItems)
+    setInventory(newItems.map(i => i.item))
   }
 
   const updateInventoryItem = (item: InventoryItemModel) => {
@@ -61,22 +63,21 @@ function InventoryList() {
     }))
   }
 
-  const getDisplayItems = () => {
-    return filter ? items.filter(i => { return i.category === filter }) : items
-  }
-
   const refresh = () => {
     api.post("inventory/list").then(rsp => {
-      setItems(rsp.data)
+      updateInventoryList(rsp.data)
     })
   }
 
+  // eslint-disable-next-line
   useEffect(() => { refresh() }, [])
   useEffect(() => {
     if (filter && !InventoryCategories.has(filter)) {
       nav("/inventory")
     }
   }, [filter, nav])
+
+  const displayItems = filter ? items.filter(i => { return i.category === filter }) : items
 
   return (<div className="inventory-list-root">
 
@@ -94,11 +95,19 @@ function InventoryList() {
         }} />
     </div>
 
-    <div className="inventory-list-items">{getDisplayItems().map(i => {
-      return (<InventoryItem key={i.uid} model={i}
-        onUpdate={i => updateInventoryItem(i)}
-        onShowMore={i => { setCurrentItem(i) }} />)
-    })}</div>
+    <div className="inventory-list-items">{
+      displayItems.map(i => {
+        return (<InventoryItem key={i.uid} model={i}
+          onUpdate={i => updateInventoryItem(i)}
+          onShowMore={i => { setCurrentItem(i) }} />)
+      })}
+      {displayItems.length === 0 ?
+        <div className="inventory-list-empty">{
+          filter ? "Nothing in this category" : "Nothing in your inventory"
+        }</div>
+        : null
+      }
+    </div>
 
     {currentItem != null ?
       <InventoryModal model={currentItem} onClose={() => { setCurrentItem(null) }}

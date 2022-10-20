@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from "react"
 import { InputTextBox } from "../../component/input"
 import { IngredientModel, ModifierDividerRegex, Units, UpdateIngredient } from "../schema"
 
+const DragToDeleteTolerance = 60
+
 type IngredientProps = {
   className?: string
   model: IngredientModel
+  isInInventory: boolean
   placeholder?: string
   onChange: (v: UpdateIngredient) => void
   onReorderMove: (s: number) => void
@@ -41,8 +44,14 @@ export function RecipeIngredient(props: IngredientProps) {
   } else if (deltaY !== 0) {
     rootStyle = { transform: `translateY(${deltaY}px)`, opacity: 0.6 }
   }
-  const rootClass = (props.className) ? "recipe-ingredient-root " + props.className : "recipe-ingredient-root"
-  return (<div ref={root} className={rootClass} style={rootStyle}>
+
+  var rootClasses = ["recipe-ingredient-root",
+    props.isInInventory ? "recipe-ingredient-root-own" : "recipe-ingredient-root-lack"]
+  if (props.className) {
+    rootClasses.push(props.className)
+  }
+
+  return (<div ref={root} className={rootClasses.join(" ")} style={rootStyle}>
     {deltaX > 0 ?
       <div style={{ width: `${deltaX}px`, transform: `translateX(-${deltaX}px)` }} className="recipe-ingredient-delete-indicator">
         {deltaX > 40 ? <img alt="delete indicator" src="/icons/delete.svg" /> : null}
@@ -64,7 +73,7 @@ export function RecipeIngredient(props: IngredientProps) {
       onTouchEnd={e => {
         if (Math.abs(deltaY) > Math.abs(deltaX)) {
           props.onReorderComplete(getIndexDelta(deltaY));
-        } else if (Math.abs(deltaX) > 50) {
+        } else if (Math.abs(deltaX) > DragToDeleteTolerance) {
           props.onDelete()
         }
         setInitX(0); setDeltaX(0);

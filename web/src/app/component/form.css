@@ -16,7 +16,7 @@
   font-size: var(--format-font-size-small);
 }
 
-.form-text-root>.input-text-box {
+.form-text-root input {
   font-size: var(--format-font-size-medium);
 }
 
@@ -26,6 +26,7 @@
   flex-direction: column;
 
   padding: 10px 5px;
+
   border-radius: 5px;
   margin: 5px;
 }

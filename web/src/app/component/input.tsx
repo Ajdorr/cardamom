@@ -131,12 +131,14 @@ type ImageButtonProps = {
   src: string
   alt: string
   className?: string
+  style?: React.CSSProperties
   onClick: MouseEventHandler
 }
 
 export function ImageButton(props: ImageButtonProps) {
 
-  return (<div id={props.id} className={props.className ? "input-img-button " + props.className : "input-img-button"}>
+  return (<div id={props.id} style={props.style}
+    className={props.className ? "input-img-button " + props.className : "input-img-button"}>
     <img src={props.src} alt={props.alt} style={{ cursor: "pointer" }}
       onClick={props.onClick} width="100%" height="100%" />
   </div>)

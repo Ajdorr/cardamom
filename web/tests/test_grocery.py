@@ -116,8 +116,8 @@ def test_grocery_collect():
   d.find_element(
       By.CSS_SELECTOR, ".grocery-list-collected-clear-all img").click()
   w.until(lambda x: len(x.find_elements(By.XPATH, grocery_ele % "rice")) == 0)
-  assert len(d.find_elements(
-      By.XPATH, (collected_item % "rice") + "/../span[text()='costco']")) == 0
+  w.until(lambda x: len(x.find_elements(
+      By.XPATH, (collected_item % "rice") + "/../span[text()='costco']")) == 0)
   assert len(d.find_elements(By.XPATH, grocery_ele % "flour")) == 0
   assert len(d.find_elements(
       By.XPATH, (collected_item % "flour") + "/../span[text()='costco']")) == 0

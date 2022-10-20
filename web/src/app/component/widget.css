@@ -1,3 +1,10 @@
+.widget-slide-indicator {
+  position: absolute;
+}
+
+.widget-slide-indicator > img {
+  position: absolute;
+}
 
 .widget-interget-input-root {
   display: flex;

@@ -1,7 +1,7 @@
 .app-root {
   --theme-focus-color: white;
   --theme-on-focus-color: black;
-  --theme-surface-color: lightgrey;
+  --theme-surface-color: #eaeaea;
   --theme-on-surface-color: black;
   --theme-background-color: darkgrey;
   --theme-on-background-color: black;
@@ -26,6 +26,9 @@
   --theme-on-tertiary-color-light: white;
   --theme-tertiary-color-dark: #183667;
   --theme-on-tertiary-color-dark: black;
+
+  --theme-alert-color: #d50000;
+  --theme-on-alert-color: white;
 }
 
 .theme-focus {
@@ -86,6 +89,11 @@
 .theme-tertiary-dark {
   color: var(--theme-on-tertiary-color-dark);
   background-color: var(--theme-tertiary-color-dark);
+}
+
+.theme-alert {
+  color: var(--theme-on-alert-color);
+  background-color: var(--theme-alert-color);
 }
 
 .theme-indicator-top {

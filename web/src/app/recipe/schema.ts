@@ -34,6 +34,7 @@ export const MealTypes = new Map<string, string>([
   ["lunch", "Lunch"],
   ["dinner", "Dinner"],
   ["dessert", "Dessert"],
+  ["none", "None"],
 ])
 
 export interface UpdateRecipe {

@@ -9,8 +9,19 @@ textarea:focus-visible {
 textarea {
   border: none;
   resize: none;
+  padding: 0;
 }
 
 a {
   text-decoration: none;
+}
+
+ol {
+  display: block;
+  list-style-type: decimal;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 25px;
+  margin-inline-end: 0;
+  padding-inline-start: 0;
 }
