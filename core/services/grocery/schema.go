@@ -27,6 +27,23 @@ func (req *AddItemRequest) Validate() (string, error) {
 	return "", nil
 }
 
+type AddItemsRequest struct {
+	Items []string `json:"items"`
+}
+
+func (req *AddItemsRequest) Validate() (string, error) {
+
+	if len(req.Items) == 0 {
+		return log_ext.ReturnBoth("items must not be empty")
+	}
+
+	for i, item := range req.Items {
+		req.Items[i] = strings.ToLower(strings.TrimSpace(item))
+	}
+
+	return "", nil
+}
+
 type UpdateItemRequest struct {
 	Uid   string  `json:"uid"`
 	Item  *string `json:"item,omitempty"`

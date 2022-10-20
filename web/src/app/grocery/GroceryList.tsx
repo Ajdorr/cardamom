@@ -58,7 +58,7 @@ class GroceryList extends Component<{}, GroceryState> {
 
   render() {
     const collectedItems = this.state.items.filter(i => i.is_collected)
-    var displayedItems = this.state.items.filter(i => !i.is_collected)
+    let displayedItems = this.state.items.filter(i => !i.is_collected)
     displayedItems = (this.state.selectedStore !== "") ?
       displayedItems.filter(i => i.store === this.state.selectedStore) : displayedItems
 

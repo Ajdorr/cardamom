@@ -14,7 +14,7 @@ function InventoryItem(props: InventoryItemProps) {
   return (<div className="inventory-item-root">
 
     <InputTextBox value={props.model.item} className="inventory-item-input"
-      onChange={s => {
+      inputAttrs={{ autoCapitalize: "none" }} onChange={s => {
         api.post("inventory/update", { uid: props.model.uid, item: s }).then(rsp => {
           props.onUpdate(rsp.data)
         })

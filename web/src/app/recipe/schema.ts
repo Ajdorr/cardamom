@@ -1,4 +1,4 @@
-export const Units = ["cup", "tsp", "Tbsp", "lbs", "kg", "g", "mL", "L", "pt", "pt", "gal", ""]
+export const Units = ["cup", "tsp", "Tbsp", "lbs", "kg", "g", "mL", "L", "fl oz", "pt", "qt", "gal", ""]
 export const ModifierDividerRegex = /[,;]\s*/
 
 export type RecipeModel = {

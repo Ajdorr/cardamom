@@ -10,13 +10,14 @@ type NumberProps = {
   id?: string
   className?: string
   clearOnChange?: boolean
+  inputAttrs?: any
   onChange: (s: number) => void
 }
 
 export function InputNumberBox(props: NumberProps) {
   const clazz = props.className ? "input-number-box " + props.className : "input-number-box"
   return <InputBox value={props.value.toString()} className={clazz} id={props.id}
-    inputType="number"
+    inputType="number" attrs={props.inputAttrs}
     clearOnChange={props.clearOnChange}
     placeholder={props.placeholder}
     onChange={s => props.onChange(parseInt(s))}
@@ -29,13 +30,14 @@ type TextProps = {
   id?: string
   className?: string
   clearOnChange?: boolean
+  inputAttrs?: any
   onChange: (s: string) => void
 }
 
 export function InputTextBox(props: TextProps) {
   const clazz = props.className ? "input-text-box " + props.className : "input-text-box"
   return <InputBox value={props.value} className={clazz} id={props.id}
-    inputType="text"
+    inputType="text" attrs={props.inputAttrs}
     clearOnChange={props.clearOnChange}
     placeholder={props.placeholder}
     onChange={props.onChange}
@@ -46,6 +48,7 @@ type PasswordProps = {
   value: string
   placeholder?: string
   id?: string
+  inputAttrs?: any
   className?: string
   clearOnChange?: boolean
   onChange: (s: string) => void
@@ -54,7 +57,7 @@ type PasswordProps = {
 export function InputPasswordBox(props: PasswordProps) {
   const clazz = props.className ? "input-password-box " + props.className : "input-password-box"
   return <InputBox value={props.value} className={clazz} id={props.id}
-    inputType="password"
+    inputType="password" attrs={props.inputAttrs}
     clearOnChange={props.clearOnChange}
     placeholder={props.placeholder}
     onChange={props.onChange}
@@ -66,6 +69,7 @@ type InputBoxProps = {
   inputType: string
   placeholder?: string
   id?: string
+  attrs?: any
   className?: string
   clearOnChange?: boolean
   onChange: (s: string) => void
@@ -91,7 +95,7 @@ function InputBox(props: InputBoxProps) {
 
   return (<div id={props.id} className={props.className}>
     <input className="input-box"
-      type={props.inputType}
+      type={props.inputType} {...props.attrs}
       placeholder={props.placeholder}
       value={isFocused ? value : props.value}
       onKeyDown={e => SaveOnEnter(e, () => { save(value) })}

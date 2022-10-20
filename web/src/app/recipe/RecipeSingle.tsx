@@ -39,7 +39,7 @@ function RecipeSingle(props: RecipeSingleProps) {
   }
 
   const updateRecipe = (r: UpdateRecipe) => {
-    var newRecipe = { ...recipe }
+    let newRecipe = { ...recipe }
 
     if (r.name) newRecipe.name = r.name
     if (r.meal) newRecipe.meal = r.meal
@@ -57,7 +57,7 @@ function RecipeSingle(props: RecipeSingleProps) {
 
   const createIngredient = () => {
     if (props.isCreate) {
-      var newRecipe = { ...recipe }
+      let newRecipe = { ...recipe }
       newRecipe.ingredients = [...newRecipe.ingredients, {
         uid: "",
         created_at: "",
@@ -81,7 +81,7 @@ function RecipeSingle(props: RecipeSingleProps) {
         item: "",
         order: recipe.ingredients.length,
       }).then(rsp => {
-        var newRecipe = { ...recipe }
+        let newRecipe = { ...recipe }
         newRecipe.ingredients = [...newRecipe.ingredients, rsp.data]
         setRecipe(newRecipe)
       })
@@ -89,7 +89,7 @@ function RecipeSingle(props: RecipeSingleProps) {
   }
 
   const updateIngredient = (ndx: number, updateRequest: UpdateIngredient) => {
-    var newRecipe = { ...recipe }
+    let newRecipe = { ...recipe }
     newRecipe.ingredients[ndx] = { ...newRecipe.ingredients[ndx], ...updateRequest }
     setRecipe(newRecipe)
     if (!props.isCreate) {
@@ -105,7 +105,7 @@ function RecipeSingle(props: RecipeSingleProps) {
       return
     }
 
-    var newRecipe = { ...recipe }
+    let newRecipe = { ...recipe }
     const ingre = recipe.ingredients[ndx]
     if (delta > 0) {
       newRecipe.ingredients.splice(ndx + delta + 1, 0, ingre)
@@ -129,7 +129,7 @@ function RecipeSingle(props: RecipeSingleProps) {
     if (!props.isCreate) {
       api.post("recipe/ingredient/delete", { uid: recipe.ingredients[ndx].uid })
     }
-    var newRecipe = { ...recipe }
+    let newRecipe = { ...recipe }
     newRecipe.ingredients = newRecipe.ingredients.filter((_, i) => { return i !== ndx })
     setRecipe(newRecipe)
   }
@@ -162,7 +162,7 @@ function RecipeSingle(props: RecipeSingleProps) {
 
     <div className="recipe-single-name-meal">
       <FormText label="Name" value={recipe.name} className="recipe-single-name theme-focus"
-        onChange={s => updateRecipe({ name: s })} />
+        inputAttrs={{ autoCapitalize: "words" }} onChange={s => updateRecipe({ name: s })} />
       <FormDropDown label="Meal" value={recipe.meal} className="recipe-single-meal theme-focus"
         options={MealTypes} onChange={s => updateRecipe({ meal: s })} />
     </div>

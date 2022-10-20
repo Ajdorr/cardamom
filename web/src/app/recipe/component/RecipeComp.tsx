@@ -38,14 +38,14 @@ export function RecipeIngredient(props: IngredientProps) {
     }
   }
 
-  var rootStyle = undefined
+  let rootStyle = undefined
   if (deltaX !== 0) {
     rootStyle = { transform: `translateX(${deltaX}px)` }
   } else if (deltaY !== 0) {
     rootStyle = { transform: `translateY(${deltaY}px)`, opacity: 0.6 }
   }
 
-  var rootClasses = ["recipe-ingredient-root",
+  let rootClasses = ["recipe-ingredient-root",
     props.isInInventory ? "recipe-ingredient-root-own" : "recipe-ingredient-root-lack"]
   if (props.className) {
     rootClasses.push(props.className)
@@ -100,7 +100,7 @@ export function RecipeIngredient(props: IngredientProps) {
 
     <InputTextBox className="recipe-ingredient-item" placeholder={props.placeholder}
       value={props.model.modifier ? props.model.item + ", " + props.model.modifier : props.model.item}
-      onChange={e => {
+      inputAttrs={{ autoCapitalize: "none" }} onChange={e => {
         const itemAndMod = e.split(ModifierDividerRegex, 2)
         if (itemAndMod.length === 1) {
           props.onChange({ item: e.trim(), modifier: "" })

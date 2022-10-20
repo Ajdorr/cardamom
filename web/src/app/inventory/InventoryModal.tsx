@@ -28,7 +28,7 @@ export default function InventoryModal(props: InventoryModalProps) {
   return (<ModalPanel onClose={props.onClose}>
     <div className="inventory-modal-root">
       <InputTextBox value={props.model.item} className="inventory-modal-item"
-        onChange={e => { updateItem({ item: e }) }} />
+        inputAttrs={{ autoCapitalize: "none" }} onChange={e => { updateItem({ item: e }) }} />
       <FormDropDown label="Category" options={InventoryCategories} value={props.model.category}
         className="inventory-modal-category" onChange={e => { updateItem({ category: e }) }} />
       <div className="inventory-modal-delete">

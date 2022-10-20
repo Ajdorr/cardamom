@@ -41,9 +41,9 @@ func (req *CreateRecipeRequest) Validate() (string, error) {
 		return log_ext.ReturnBoth("instructions must not be empty in request")
 	}
 
-	for _, ingre := range req.Ingredients {
-		ingre.Item = strings.TrimSpace(strings.ToLower(ingre.Item))
-		ingre.Modifier = strings.TrimSpace(strings.ToLower(ingre.Modifier))
+	for i, ingre := range req.Ingredients {
+		req.Ingredients[i].Item = strings.TrimSpace(strings.ToLower(ingre.Item))
+		req.Ingredients[i].Modifier = strings.TrimSpace(strings.ToLower(ingre.Modifier))
 	}
 
 	return "", nil

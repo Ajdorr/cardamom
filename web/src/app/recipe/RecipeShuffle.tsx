@@ -51,7 +51,7 @@ export default function RecipeShuffle() {
     </div>)
   }
 
-  return (<div className="recipe-shuffle-root recipe-shuffle-list theme-background">
+  return (<div className="recipe-shuffle-root theme-background">
 
     <div className="recipe-shuffle-form theme-focus">
       <FormDropDown label="Meal" options={MealChoices} value={meal} className="recipe-shuffle-form-meal"
@@ -72,7 +72,11 @@ export default function RecipeShuffle() {
           })
         }
       </div>
-      <div className="recipe-shuffle-instructions"><span>{recipe.instructions}</span></div>
+      <div className="recipe-shuffle-instructions"><ol>
+        {recipe.instructions.split("\n").map(instr => {
+          return (<li>{instr}</li>)
+        })}
+      </ol></div>
     </div>
 
     <div className="recipe-shuffle-action theme-focus">
@@ -84,7 +88,7 @@ export default function RecipeShuffle() {
       <TextButton label="Nah." theme={Theme.Surface}
         className="recipe-shuffle-action-btn"
         onClick={() => {
-          var rs = [...recipes]
+          let rs = [...recipes]
           rs.pop()
           if (rs.length === 0) {
             setStatus("That's all folks!")

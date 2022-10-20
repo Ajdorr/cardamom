@@ -9,7 +9,7 @@ export const api = axios.create({
 api.interceptors.request.use(cfg => {
   // Add CSRF token to all requests
   if (cfg.headers) {
-    var csrf = localStorage.getItem("csrf_token")
+    let csrf = localStorage.getItem("csrf_token")
     if (csrf && csrf !== "") {
       cfg.headers["x-csrf-token"] = csrf
     }
@@ -63,7 +63,7 @@ function onAuthenticate(csrf: string) {
 }
 
 export function isAuthenticated(): boolean {
-  var csrf = localStorage.getItem("csrf_token")
+  let csrf = localStorage.getItem("csrf_token")
   if (!csrf) {
     return false
   }
@@ -133,7 +133,7 @@ export function log(message: string, logLevel: LogLevel, e: any) {
 function refreshAuth(): Promise<AxiosResponse<any, any>> {
   return new Promise<AxiosResponse<any, any>>((resolve, reject) => {
     api.post("auth/refresh").then(rsp => {
-      var csrf = rsp.headers["x-csrf-token"]
+      let csrf = rsp.headers["x-csrf-token"]
       localStorage.setItem("csrf_token", csrf)
       resolve(rsp)
     }).catch(e => {

@@ -6,6 +6,7 @@ type TextProps = {
   value: string
   label: string
   id?: string
+  inputAttrs?: any
   className?: string
   onChange: (s: string) => void
 }
@@ -14,7 +15,7 @@ export function FormText(props: TextProps) {
   const clazz = props.className ? "form-text-root " + props.className : "form-text-root"
   return (<div id={props.id} className={clazz}>
     <div className="form-text-label">{props.label}</div>
-    <InputTextBox value={props.value} onChange={props.onChange} />
+    <InputTextBox value={props.value} inputAttrs={props.inputAttrs} onChange={props.onChange} />
   </div>)
 }
 

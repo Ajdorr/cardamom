@@ -256,22 +256,18 @@
 /* Recipe Shuffle */
 .recipe-shuffle-root {
   height: 100%;
-  padding: 5px 15px 50px 15px;
-  box-sizing: border-box;
-}
-
-.recipe-shuffle-list {
   display: flex;
+  padding: 5px 15px 50px 15px;
+
+  box-sizing: border-box;
   row-gap: 15px;
   flex-direction: column;
   align-items: center;
 }
 
-.recipe-shuffle-recipe,
-.recipe-shuffle-action,
-.recipe-shuffle-form {
-  width: 95%;
+.recipe-shuffle-root > *{
   border-radius: 5px;
+  width: 95%;
 }
 
 .recipe-shuffle-form {
@@ -362,7 +358,6 @@
   box-sizing: border-box;
   justify-content: center;
   text-align: center;
-  border-radius: 5px;
 }
 
 /* Recipe Search  */

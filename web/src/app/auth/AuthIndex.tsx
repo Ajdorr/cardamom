@@ -6,7 +6,7 @@ import Login from "./Login";
 function OAuthReturn() {
 
   const nav = useNavigate()
-  var { source } = useParams()
+  let { source } = useParams()
   const [searchParams,] = useSearchParams()
   const [displayText, setDisplayText] = useState("Redirecting...")
   const code = searchParams.get("code")

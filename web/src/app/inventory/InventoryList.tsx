@@ -83,6 +83,7 @@ function InventoryList() {
 
     <div className="inventory-list-add-item theme-primary-light">
       <InputTextBox value="" className="inventory-list-add-item-input" clearOnChange={true}
+        inputAttrs={{ autoCapitalize: "none" }}
         placeholder="Add inventory item" onChange={s => {
           const newItem = s.trim().toLowerCase()
           if (newItem.length === 0 || items.map(i => i.item).indexOf(newItem) >= 0) {

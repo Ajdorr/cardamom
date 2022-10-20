@@ -29,6 +29,7 @@ export function AddGroceryItem(props: AddGroceryItemProps) {
   }
 
   return (<InputTextBox id={props.id} value="" className="grocery-item-add-root theme-primary-light"
+    inputAttrs={{ autoCapitalize: "none" }}
     placeholder="Add a grocery" clearOnChange={true} onChange={s => save(s)} />)
 }
 
@@ -95,7 +96,8 @@ export function GroceryItem(props: GroceryItemProps) {
       deltaX={deltaX} height={40} iconSrc="/icons/done.svg" />
       : null}
     <ImageButton className="grocery-item-collect" alt="collect" src="/icons/done.svg" onClick={e => collectItem()} />
-    <InputTextBox value={props.model.item} className="grocery-item-input" onChange={i => onUpdate({ uid: props.model.uid, item: i })} />
+    <InputTextBox value={props.model.item} inputAttrs={{ autoCapitalize: "none" }} className="grocery-item-input"
+      onChange={i => onUpdate({ uid: props.model.uid, item: i })} />
     <ModifiableDropDown className="grocery-item-store" value={props.model.store} options={props.stores}
       dropDownButtonOnLeft={true} placeholder="Store"
       onChange={s => onUpdate({ uid: props.model.uid, store: s })} />

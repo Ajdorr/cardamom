@@ -15,7 +15,7 @@ function nullIfEmpty(s: string): string | null {
   return s
 }
 
-function RecipeSearch() {
+export default function RecipeSearch() {
   const [name, setName] = useState("")
   const [meal, setMeal] = useState("")
   const [description, setDescription] = useState("")
@@ -59,7 +59,7 @@ function RecipeSearch() {
   return (<div className="recipe-search-list-root">
     <div className="recipe-search-menu theme-primary-light">
       <InputTextBox value={name} placeholder="Recipe Name" className="recipe-search-menu-name"
-        onChange={e => {
+        inputAttrs={{ autoCapitalize: "none" }} onChange={e => {
           setName(e);
           if (!showAdvanced) {
             if (e.length > 0) {
@@ -76,9 +76,9 @@ function RecipeSearch() {
         <FormDropDown label="Meal" options={SearchMealTypes} value={meal} className="recipe-search-advanced-meal"
           onChange={e => { setMeal(e); search({ meal: nullIfEmpty(e) }) }} />
         <InputTextBox value={description} placeholder="Description" className="recipe-search-advanced-description"
-          onChange={e => { setDescription(e); search({ description: nullIfEmpty(e) }) }} />
+          inputAttrs={{ autoCapitalize: "none" }} onChange={e => { setDescription(e); search({ description: nullIfEmpty(e) }) }} />
         <InputTextBox value={ingredient} placeholder="Ingredient" className="recipe-search-advanced-ingredient"
-          onChange={e => { setIngredient(e); search({ ingredient: nullIfEmpty(e) }) }} />
+          inputAttrs={{ autoCapitalize: "none" }} onChange={e => { setIngredient(e); search({ ingredient: nullIfEmpty(e) }) }} />
       </div>
     </div>
 
@@ -86,4 +86,3 @@ function RecipeSearch() {
   </div >)
 }
 
-export default RecipeSearch

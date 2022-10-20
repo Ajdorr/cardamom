@@ -11,7 +11,7 @@ export default function ModalPanel(props: ModalProps) {
   const boundaryMargin = 15
   const maxContentHeight = window.innerHeight - (2 * boundaryMargin) - 40 // 40 is the line height
 
-  return (<div className="modal-panel-root theme-background">
+  return (<div className="modal-panel-root">
     <div style={{ margin: `${boundaryMargin}px` }} className="modal-panel-boundary">
       <div className="modal-panel-workspace theme-focus">
         <div className="modal-panel-close theme-primary">
