@@ -39,3 +39,7 @@ OAUTH_GOOGLE_CREDS_FILEPATH="/path/to/credentials/file/google-creds.json"
   }
 }
 ```
+
+## Testing
+To clear the golang test cache:
+> `go clean -testcache`

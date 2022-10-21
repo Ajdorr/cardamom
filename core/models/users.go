@@ -4,11 +4,14 @@ import (
 	cfg "cardamom/core/config"
 	"cardamom/core/ext/jwt_ext"
 	"crypto/sha512"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 	"golang.org/x/crypto/pbkdf2"
 	"golang.org/x/exp/slices"
+	"gorm.io/gorm"
 )
 
 type UserRole string
@@ -29,6 +32,16 @@ type User struct {
 	GoogleToken    *string   `gorm:"default:null" json:"-"`
 	FacebookToken  *string   `gorm:"default:null" json:"-"`
 	MicrosoftToken *string   `gorm:"default:null" json:"-"`
+}
+
+func (u *User) BeforeCreate(tx *gorm.DB) error {
+	if !cfg.IsLocal() {
+		u.Uid = gonanoid.Must(32)
+	} else if strings.TrimSpace(u.Uid) == "" {
+		u.Uid = gonanoid.Must(32)
+	}
+
+	return nil
 }
 
 func getSalt() []byte {

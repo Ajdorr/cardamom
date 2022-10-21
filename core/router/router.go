@@ -37,6 +37,7 @@ func RegisterEndpoints(r *gin.Engine) {
 	g = app.Group("/grocery")
 	{
 		g.POST("/create", handlePost(grocery.AddItem, true))
+		g.POST("/create-batch", handlePost(grocery.AddItems, true))
 		g.POST("/list", handleRequest(grocery.ListItems, true))
 		g.POST("/update", handlePost(grocery.UpdateItem, true))
 		g.POST("/delete", handlePost(grocery.DeleteItem, true))
@@ -47,6 +48,7 @@ func RegisterEndpoints(r *gin.Engine) {
 	g = app.Group("/inventory")
 	{
 		g.POST("/create", handlePost(inventory.AddItem, true))
+		g.POST("/create-batch", handlePost(inventory.AddItems, true))
 		g.POST("/list", handleRequest(inventory.ListItems, true))
 		g.POST("/update", handlePost(inventory.UpdateItem, true))
 	}

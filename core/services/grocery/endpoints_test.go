@@ -37,7 +37,6 @@ func TestSimpleCreates(t *testing.T) {
 
 	for _, item := range groceries {
 		testCase.RequestBody = fmt.Sprintf(`{"item":"%s", "store": null}`, item)
-
 		t_ext.API_Test(testCase)
 		if rspBody.Item != item {
 			t.Errorf("attempted to create item '%s' but found '%s'", item, rspBody.Item)
@@ -159,6 +158,50 @@ func TestCreateThenDelete(t *testing.T) {
 	testCase.ExpectedResponseCode = http.StatusOK
 	testCase.ResponseBody = &gin.H{}
 	t_ext.API_Test(testCase)
+}
+
+func TestCreateBatch(t *testing.T) {
+	initialNoStore := models.GroceryItem{}
+	testCase := &t_ext.APITestCase{
+		T:                    t,
+		Method:               "POST",
+		Endpoint:             "/api/grocery/create",
+		ResponseBody:         &initialNoStore,
+		ExpectedResponseCode: http.StatusCreated,
+	}
+	t_ext.AuthorizeTestCase(t, testCase)
+
+	testCase.RequestBody = `{"item":"lays"}`
+	t_ext.API_Test(testCase)
+
+	initialWithStore := models.GroceryItem{}
+	testCase.ResponseBody = &initialWithStore
+	testCase.RequestBody = `{"item":"doritos", "store": "Metro"}`
+	t_ext.API_Test(testCase)
+
+	items := []models.GroceryItem{}
+	testCase.ResponseBody = &items
+	testCase.Endpoint = "/api/grocery/create-batch"
+	testCase.RequestBody = `{"items":["lays", "pringles", "doritos"]}`
+	t_ext.API_Test(testCase)
+
+	t_ext.TestEqual(t, len(items), 3, "invalid number of returned items").FailNowIfUnsuccessful()
+	t_ext.TestEqual(t, initialNoStore.Uid, items[0].Uid, "did not return existing item")
+	t_ext.TestEqual(t, "pringles", items[1].Item, "incorrect item value")
+	t_ext.TestEqual(t, initialWithStore.Uid, items[2].Uid, "did not return existing item")
+	pringlesUid := items[1].Uid
+
+	testCase.ResponseBody = &items
+	testCase.RequestBody = `{"items":["lays", "pringles", "doritos", "snickers"], "store": "no frills"}`
+	t_ext.API_Test(testCase)
+	t_ext.TestEqual(t, len(items), 4, "invalid number of returned items").FailNowIfUnsuccessful()
+	t_ext.TestEqual(t, initialNoStore.Uid, items[0].Uid, "did not return existing item")
+	t_ext.TestEqual(t, pringlesUid, items[1].Uid, "did not return existing item")
+	t_ext.TestEqual(t, initialWithStore.Uid, items[2].Uid, "did not return existing item")
+	t_ext.TestEqual(t, "snickers", items[3].Item, "incorrect item value")
+	for _, item := range items {
+		t_ext.TestEqual(t, "no frills", item.Store, "incorrect store")
+	}
 
 }
 

@@ -98,6 +98,50 @@ func TestCategoryCreates(t *testing.T) {
 	}
 }
 
+func TestCreateBatch(t *testing.T) {
+	initialNoCategory := models.InventoryItem{}
+	testCase := &t_ext.APITestCase{
+		T:                    t,
+		Method:               "POST",
+		Endpoint:             "/api/inventory/create",
+		ResponseBody:         &initialNoCategory,
+		ExpectedResponseCode: http.StatusCreated,
+	}
+	t_ext.AuthorizeTestCase(t, testCase)
+
+	testCase.RequestBody = `{"item":"ruffles"}`
+	t_ext.API_Test(testCase)
+
+	initialWithCategory := models.InventoryItem{}
+	testCase.ResponseBody = &initialWithCategory
+	testCase.RequestBody = `{"item":"tostitos", "category": "non-perishables"}`
+	t_ext.API_Test(testCase)
+
+	items := []models.InventoryItem{}
+	testCase.ResponseBody = &items
+	testCase.Endpoint = "/api/inventory/create-batch"
+	testCase.RequestBody = `{"items":["ruffles", "lays stacks", "tostitos"]}`
+	t_ext.API_Test(testCase)
+
+	t_ext.TestEqual(t, len(items), 3, "invalid number of returned items").FailNowIfUnsuccessful()
+	t_ext.TestEqual(t, initialNoCategory.Uid, items[0].Uid, "did not return existing item")
+	t_ext.TestEqual(t, "lays stacks", items[1].Item, "incorrect item value")
+	t_ext.TestEqual(t, initialWithCategory.Uid, items[2].Uid, "did not return existing item")
+	laysUid := items[1].Uid
+
+	testCase.ResponseBody = &items
+	testCase.RequestBody = `{"items":["ruffles", "lays stacks", "tostitos", "mars"], "category": "non-cooking"}`
+	t_ext.API_Test(testCase)
+	t_ext.TestEqual(t, len(items), 4, "invalid number of returned items").FailNowIfUnsuccessful()
+	t_ext.TestEqual(t, initialNoCategory.Uid, items[0].Uid, "did not return existing item")
+	t_ext.TestEqual(t, laysUid, items[1].Uid, "did not return existing item")
+	t_ext.TestEqual(t, initialWithCategory.Uid, items[2].Uid, "did not return existing item")
+	t_ext.TestEqual(t, "mars", items[3].Item, "incorrect item value")
+	for _, item := range items {
+		t_ext.TestEqual(t, models.NON_COOKING, item.Category, "incorrect category")
+	}
+}
+
 func init() {
 	t_ext.EnsureTestUser()
 }

@@ -19,8 +19,7 @@ func CollectItem(groceryItem *models.GroceryItem, userUid string, isUndo bool) e
 	db := models.DB.Where(&models.InventoryItem{
 		Item:    groceryItem.Item,
 		UserUid: userUid,
-	}).Attrs(&models.GroceryItem{Uid: generateUid()}).
-		FirstOrCreate(&item)
+	}).FirstOrCreate(&item)
 
 	if db.Error != nil {
 		return db.Error

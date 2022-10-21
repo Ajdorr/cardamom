@@ -22,7 +22,6 @@ type oauth2Config_Google struct {
 
 func (c *oauth2Config_Google) get() *oauth2.Config {
 	c.once.Do(func() {
-		// if data, err := os.ReadFile("/home/stone/Downloads/google-creds.json"); err != nil {
 		if data, err := os.ReadFile(cfg.C.OAuthGoogleJsonFilepath); err != nil {
 			panic(err)
 		} else if config, err := google.ConfigFromJSON(

@@ -1,3 +1,4 @@
+export const AlwaysAvailableInventoryItems = ["water"]
 export const InventoryCategories = new Map<string, string>([
   ["cooking", "Cooking"],
   ["spices", "Spices"],

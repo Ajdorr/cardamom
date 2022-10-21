@@ -1,14 +1,19 @@
 Next release
 + Change recipe endpoint to allow for more granular changes
 + Add prep and cook times
-+ Add recipe tags
++ Shuffle recipes which suggests ingredients that you need to complete a recipe
 
 Backlog
-+ Setup staging environment
-+ Grocery List Sharing
-+ Recipe Sharing
-+ Logging Ingestion
++ Add test cases for bad request schemas
 + Reverse add groceries from recipe to list
 + Enforce ingredient names - singular, converter
++ Add recipe tags
++ Attempt to guess inventory item category
++ Suggested recipes with a few missing ingredients
++ Setup staging environment
++ Grocery List Sharing
++ Logging Ingestion
++ Recipe Sharing
 + Setup sandbox environment
 + create command line interface
++ Cleanup test cases, use new interface

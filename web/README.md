@@ -51,3 +51,16 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - Weight: 400
 - Grade: 0
 - Optical size: 48`
+
+## Testing
+Install web drivers onto somewhere one your $PATH
+- Linux/OS X: `/usr/local/bin`
+
+### Chrome
+[Chrome driver downloads page](https://chromedriver.chromium.org/downloads)
+```bash
+wget https://chromedriver.storage.googleapis.com/105.0.5195.52/chromedriver_linux64.zip
+unzip chromedriver_linux64.zip
+sudo mv chromedriver /usr/local/bin/chromedriver
+rm chromedriver_linux64.zip
+```

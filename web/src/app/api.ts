@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { NavigateFunction } from 'react-router-dom';
+import { deleteGroceryCache, setGroceryCache, updateGroceryCache } from './grocery/groceryCache';
+import { invalidateInventoryCache, setInventoryCache, updateInventoryCache } from './inventory/inventoryCache';
 
 export const api = axios.create({
   baseURL: '/api',
@@ -16,30 +18,74 @@ api.interceptors.request.use(cfg => {
   }
   return Promise.resolve(cfg)
 }, err => Promise.reject(err))
+api.interceptors.response.use(onResponse, onResponseError)
 
-api.interceptors.response.use(cfg => Promise.resolve(cfg),
-  err => {
-    if (err.config.url === "auth/refresh") {
-      return Promise.reject(err)
-    } else if (err.response.status === 401) {
-      // Clear the CSRF token
-      localStorage.removeItem("csrf_token")
+function onResponse(rsp: AxiosResponse<any, any>) {
 
-      // If reauthentication was successful, retry the request
-      return new Promise<AxiosResponse<any, any>>((resolve, reject) => {
-        refreshAuth().then(rsp => {
-          api.request(err.config).then(resolve).catch(reject)
-        }).catch(e => {
-          if (window.location.pathname !== "/auth/login") {
-            window.location.href = "/auth/login"
-          }
-          reject(err)
-        })
+  if (rsp.config.baseURL !== "/api") {
+    return Promise.resolve(rsp)
+  }
+
+  switch (rsp.config.url) {
+    // Grocery
+    case "grocery/create":
+    case "grocery/update":
+      updateGroceryCache(rsp.data)
+      break;
+    case "grocery/create-batch":
+      updateGroceryCache(...rsp.data)
+      break;
+    case "grocery/collect":
+      invalidateInventoryCache()
+      break;
+    case "grocery/list":
+      setGroceryCache(rsp.data)
+      break;
+    case "grocery/delete":
+      deleteGroceryCache(rsp.data)
+      break;
+    // Inventory
+    case "inventory/create":
+    case "inventory/update":
+      updateInventoryCache(rsp.data)
+      break;
+    case "inventory/create-batch":
+      updateInventoryCache(...rsp.data)
+      break;
+    case "inventory/list":
+      setInventoryCache(rsp.data)
+      break;
+    case "inventory/delete":
+      deleteGroceryCache(rsp.data)
+      break;
+
+  }
+
+  return Promise.resolve(rsp)
+}
+
+function onResponseError(err: any) {
+  if (err.config.url === "auth/refresh") {
+    return Promise.reject(err)
+  } else if (err.response.status === 401) {
+    // Clear the CSRF token
+    localStorage.removeItem("csrf_token")
+
+    // If reauthentication was successful, retry the request
+    return new Promise<AxiosResponse<any, any>>((resolve, reject) => {
+      refreshAuth().then(rsp => {
+        api.request(err.config).then(resolve).catch(reject)
+      }).catch(e => {
+        if (window.location.pathname !== "/auth/login") {
+          window.location.href = "/auth/login"
+        }
+        reject(err)
       })
-    } else {
-      return Promise.reject(err)
-    }
-  })
+    })
+  } else {
+    return Promise.reject(err)
+  }
+}
 
 export function login(email: string, password: string, callback: () => void) {
   api.post("auth/login", {

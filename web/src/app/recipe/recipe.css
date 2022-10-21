@@ -113,6 +113,20 @@
   box-sizing: border-box;
 }
 
+.recipe-single-ingredient-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.recipe-single-ingredient-header-title {
+  flex-grow: 1;
+}
+
+.recipe-single-ingredient-more {
+  display: block;
+  height: var(--format-font-size-medium);
+}
+
 .recipe-single-ingredient-list > .recipe-ingredient-root:nth-child(odd) {
   background-color: var(--theme-focus-color);
 }
@@ -132,6 +146,55 @@
 }
 
 .recipe-single-save > .input-img-button {
+  height: var(--format-line-height);
+}
+
+/* Recipe Single Modal */
+.recipe-ingredient-modal-missing-ingredients-grid {
+  display: grid;
+  grid-template-columns: 1fr repeat(2, var(--format-line-height));
+  padding: 5px;
+  row-gap: 5px;
+}
+
+.recipe-ingredient-missing-element {
+  display: contents;
+}
+
+.recipe-ingredient-missing-item {
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+}
+
+.recipe-ingredient-modal-button-header {
+  text-align: center;
+}
+
+.recipe-ingredient-modal-missing-ingredients-grid > .recipe-ingredient-missing-element:nth-child(even) > * {
+  background-color: var(--theme-surface-color);
+}
+
+.recipe-ingredient-modal-add-all {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.recipe-ingredient-modal-add-all-grocery,
+.recipe-ingredient-modal-add-all-inventory {
+  width: var(--format-line-height);
+  display: flex;
+
+  padding: 5px;
+
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.recipe-ingredient-modal-add-all-btn {
+  width: var(--format-line-height);
   height: var(--format-line-height);
 }
 
@@ -161,6 +224,8 @@
 .recipe-ingredient-quantity {
   flex: 0 0 40px;
   height: var(--format-line-height);
+  padding-right: 10px;
+  box-sizing: border-box;
 }
 
 .recipe-ingredient-quantity > input {
@@ -209,12 +274,6 @@
 .recipe-ingredient-root-own input[type="text"] {
   color: var(--theme-primary-color-dark)
 }
-
-/* .recipe-ingredient-root-lack input[type="text"],
-.recipe-ingredient-root-lack img,
-.recipe-ingredient-root-lack select {
-  color: #d50000;
-} */
 
 .recipe-ingredient-delete-indicator {
   position: absolute;

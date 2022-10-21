@@ -1,6 +1,6 @@
 import os
 import json
-from typing import Any
+from typing import Any, Dict
 from tests import login
 from . import verify
 from selenium.webdriver.common.by import By
@@ -20,7 +20,7 @@ def test_creates():
     create_flow(d, w, c)
 
 
-def create_flow(d: WebDriver, w: WebDriverWait, info: dict[Any, Any]):
+def create_flow(d: WebDriver, w: WebDriverWait, info: Dict[Any, Any]):
 
   # Go to recipe list screen
   w.until(lambda x: x.find_element(

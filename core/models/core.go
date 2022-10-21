@@ -1,6 +1,11 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	gonanoid "github.com/matoous/go-nanoid/v2"
+	"gorm.io/gorm"
+)
 
 type GroceryItem struct {
 	Uid         string    `gorm:"primaryKey;not null;default:null" json:"uid"`
@@ -10,6 +15,11 @@ type GroceryItem struct {
 	Item        string    `json:"item"`
 	Store       string    `json:"store"`
 	IsCollected bool      `json:"is_collected"`
+}
+
+func (g *GroceryItem) BeforeCreate(tx *gorm.DB) error {
+	g.Uid = gonanoid.Must()
+	return nil
 }
 
 type InventoryCategory string
@@ -34,4 +44,9 @@ type InventoryItem struct {
 	Item      string            `json:"item"`
 	InStock   bool              `json:"in_stock"`
 	Category  InventoryCategory `gorm:"default:cooking" json:"category"`
+}
+
+func (i *InventoryItem) BeforeCreate(tx *gorm.DB) error {
+	i.Uid = gonanoid.Must()
+	return nil
 }

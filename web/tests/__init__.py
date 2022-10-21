@@ -47,6 +47,8 @@ def login() -> Tuple[WebDriver, WebDriverWait]:
 
 def login_oauth() -> Tuple[WebDriver, WebDriverWait]:
 
+  import sys
+  print(sys.path)
   driver, wait = get_driver()
   driver.get(settings.target_host)
   wait.until(lambda d: d.find_element(
@@ -96,5 +98,5 @@ def clear(driver: WebDriver, ele: WebElement):
   else:
     action.key_up(Keys.CONTROL, element=ele)
 
-  action.send_keys_to_element(ele, Keys.BACK_SPACE)
   action.perform()
+  ele.send_keys(Keys.BACK_SPACE)

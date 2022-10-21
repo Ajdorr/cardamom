@@ -3,7 +3,9 @@ import { useNavigate, useParams } from "react-router-dom"
 import { api } from "../api"
 import { FormDropDown, FormText, FormTextArea } from "../component/form"
 import { ImageButton } from "../component/input"
-import { getInventory } from "../inventory/inventoryCache"
+import ModalPanel from "../component/Modal"
+import { getInventoryCache } from "../inventory/inventoryCache"
+import { AlwaysAvailableInventoryItems } from "../inventory/schema"
 import { RecipeIngredient, RecipeInstruction } from "./component/RecipeComp"
 import { CreateRecipeRequest, MealTypes, RecipeModel, Units, UpdateIngredient, UpdateRecipe } from "./schema"
 
@@ -11,7 +13,7 @@ type RecipeSingleProps = {
   isCreate: boolean
 }
 
-function RecipeSingle(props: RecipeSingleProps) {
+export default function RecipeSingle(props: RecipeSingleProps) {
 
   const { recipeUid } = useParams()
   const nav = useNavigate()
@@ -19,6 +21,7 @@ function RecipeSingle(props: RecipeSingleProps) {
   const [ingreNewNdx, setIngreNewNdx] = useState(-1)
   const [indicatorClass, setIndicatorClass] = useState("theme-indicator-top")
   const [inventoryCache, setInventoryCache] = useState<string[]>([])
+  const [displayIngredientMore, setDisplayIngredientMore] = useState(false)
 
   const [recipe, setRecipe] = useState<RecipeModel>({
     uid: "",
@@ -154,10 +157,16 @@ function RecipeSingle(props: RecipeSingleProps) {
       }).catch(e => {
         nav("/recipe/list")
       })
-      getInventory().then(setInventoryCache)
+
+      getInventoryCache().then(cache => {
+        let items = cache.map(i => i.item)
+        items.push(...AlwaysAvailableInventoryItems)
+        setInventoryCache(items)
+      })
     }
   }, [recipeUid, nav, props.isCreate])
 
+  const missingIngredients = recipe.ingredients.map(i => i.item).filter(i => (i.trim().length > 0 && inventoryCache.indexOf(i) < 0))
   return (<div className="recipe-single-root theme-background">
 
     <div className="recipe-single-name-meal">
@@ -171,7 +180,13 @@ function RecipeSingle(props: RecipeSingleProps) {
       onChange={s => updateRecipe({ description: s })} />
 
     <div className="recipe-single-ingredients theme-focus">
-      <div className="format-font-small">Ingredients</div>
+      <div className="recipe-single-ingredient-header">
+        <span className="recipe-single-ingredient-header-title format-font-small">Ingredients</span>
+        {!props.isCreate && missingIngredients.length > 0 ?
+          <ImageButton alt="more ingredient options" src="/icons/more-horizontal.svg"
+            className="recipe-single-ingredient-more" onClick={e => { setDisplayIngredientMore(true) }} />
+          : null}
+      </div>
       <div className="recipe-single-ingredient-list">
         {
           recipe.ingredients.map((ingre, i) => {
@@ -205,8 +220,82 @@ function RecipeSingle(props: RecipeSingleProps) {
           onClick={e => createRecipe()} />
       </div>
       : null}
+    {displayIngredientMore ?
+      <RecipeIngredientMoreModal closeCallback={() => setDisplayIngredientMore(false)} onInventoryAdd={(...i) => {
+        let newCache = [...inventoryCache, ...i];
+        setInventoryCache(newCache);
+      }}
+        missingItems={missingIngredients} />
+      : null}
   </div>)
 
 }
 
-export default RecipeSingle
+type RecipeIngredientMoreModalProps = {
+  missingItems: string[]
+  onInventoryAdd: (...items: string[]) => void
+  closeCallback: () => void
+}
+
+function RecipeIngredientMoreModal(props: RecipeIngredientMoreModalProps) {
+
+  const [addedGrocery, setAddedGrocery] = useState<string[]>([])
+  const [addedInventory, setAddedInventory] = useState<string[]>([])
+
+  return <ModalPanel closeCallback={props.closeCallback}>
+    <div className="recipe-ingredient-modal-root">
+      <div className="recipe-ingredient-modal-missing-ingredients">
+        <div className="recipe-ingredient-modal-missing-ingredients-grid">
+
+          <div className="format-font-small">Ingredients</div>
+          <div className="recipe-ingredient-modal-button-header format-font-subscript">Add to Grocery</div>
+          <div className="recipe-ingredient-modal-button-header format-font-subscript">Add to Inventory</div>
+
+          {props.missingItems.map(i => {
+            return (<div className="recipe-ingredient-missing-element">
+              <div className="recipe-ingredient-missing-item"><span className="format-font-small">{i}</span></div>
+              <ImageButton alt="add to grocery" src="/icons/cart-add.svg" className="recipe-ingredient-missing-add-grocery"
+                disabled={addedGrocery.indexOf(i) >= 0} onClick={e => {
+                  setAddedGrocery([...addedGrocery, i])
+                  api.post("grocery/create", { "item": i })
+                }} />
+              <ImageButton alt="add to inventory" src="/icons/inventory.svg" className="recipe-ingredient-missing-add-inventory"
+                disabled={addedInventory.indexOf(i) >= 0} onClick={e => {
+                  setAddedInventory([...addedInventory, i])
+                  api.post("inventory/create", { "item": i }).then(rsp => {
+                    props.onInventoryAdd(i)
+                    if (props.missingItems.length === 1) {
+                      props.closeCallback()
+                    }
+                  })
+                }} />
+            </div>)
+          })}
+        </div>
+
+        <div className="recipe-ingredient-modal-add-all">
+          <div className="recipe-ingredient-modal-add-all-grocery">
+            <ImageButton alt="add all to grocery" src="/icons/cart-add.svg" className="recipe-ingredient-modal-add-all-btn"
+              onClick={e => {
+                setAddedGrocery([...addedGrocery, ...props.missingItems])
+                api.post("grocery/create-batch", { "items": props.missingItems })
+              }} />
+            <div className="format-font-subscript">Add all to grocery</div>
+          </div>
+
+          <div className="recipe-ingredient-modal-add-all-inventory">
+            <ImageButton alt="add all to grocery" src="/icons/inventory.svg" className="recipe-ingredient-modal-add-all-btn"
+              onClick={e => {
+                api.post("inventory/create-batch", { "items": props.missingItems }).then(rsp => {
+                  props.onInventoryAdd(...props.missingItems)
+                  props.closeCallback()
+                })
+              }} />
+            <div className="format-font-subscript">Add all to inventory</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </ModalPanel>
+}

@@ -20,8 +20,7 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 	db := models.DB.Where(models.GroceryItem{
 		Item:    r.Item,
 		UserUid: user.Uid,
-	}).Attrs(models.GroceryItem{Uid: generateUid()}).
-		FirstOrCreate(&item)
+	}).FirstOrCreate(&item)
 
 	if db.Error != nil {
 		gin_ext.AbortNotFound(c, log_ext.Errorf("finding grocery item -- %w", db.Error))
@@ -43,6 +42,41 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 		Type:   "add",
 		Data:   map[string]string{"item": item.Item, "store": item.Store},
 	})
+}
+
+func AddItems(c *gin.Context, r *AddItemsRequest) {
+	user := auth.GetActiveUserClaims(c)
+
+	items := make([]models.GroceryItem, len(r.Items))
+	for i, itemValue := range r.Items {
+		itemModel := &items[i]
+		db := models.DB.Where(models.GroceryItem{
+			Item:    itemValue,
+			UserUid: user.Uid,
+		}).FirstOrCreate(itemModel)
+
+		if db.Error != nil {
+			gin_ext.AbortNotFound(c, log_ext.Errorf("batch finding grocery item -- %w", db.Error))
+			return
+		}
+
+		if r.Store != nil {
+			itemModel.Store = *r.Store
+		}
+		itemModel.IsCollected = false
+		if err := models.DB.Save(&itemModel).Error; err != nil {
+			gin_ext.ServerError(c, log_ext.Errorf("batch adding grocery item -- %w", db.Error))
+			return
+		}
+
+		events.Publish(&events.Event{
+			Domain: "grocery",
+			Type:   "add",
+			Data:   map[string]string{"item": itemModel.Item, "store": itemModel.Store},
+		})
+	}
+
+	c.JSON(http.StatusCreated, &items)
 }
 
 func ListItems(c *gin.Context) {

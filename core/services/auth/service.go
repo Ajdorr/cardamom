@@ -38,7 +38,6 @@ func createOrGetUser(email string) (*models.User, error) {
 
 	user := &models.User{}
 	err := models.DB.Where(&models.User{Email: email}).
-		Attrs(&models.User{Uid: generateUid()}).
 		FirstOrCreate(&user).Error
 	if err != nil {
 		return nil, err

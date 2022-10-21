@@ -8,16 +8,16 @@ type NumberProps = {
   value: number
   placeholder?: string
   id?: string
+  inputAttrs?: React.HtmlHTMLAttributes<HTMLInputElement>
   className?: string
   clearOnChange?: boolean
-  inputAttrs?: any
   onChange: (s: number) => void
 }
 
 export function InputNumberBox(props: NumberProps) {
   const clazz = props.className ? "input-number-box " + props.className : "input-number-box"
   return <InputBox value={props.value.toString()} className={clazz} id={props.id}
-    inputType="number" attrs={props.inputAttrs}
+    inputType="number" inputAttrs={props.inputAttrs}
     clearOnChange={props.clearOnChange}
     placeholder={props.placeholder}
     onChange={s => props.onChange(parseInt(s))}
@@ -28,16 +28,16 @@ type TextProps = {
   value: string
   placeholder?: string
   id?: string
+  inputAttrs?: React.HtmlHTMLAttributes<HTMLInputElement>
   className?: string
   clearOnChange?: boolean
-  inputAttrs?: any
   onChange: (s: string) => void
 }
 
 export function InputTextBox(props: TextProps) {
   const clazz = props.className ? "input-text-box " + props.className : "input-text-box"
   return <InputBox value={props.value} className={clazz} id={props.id}
-    inputType="text" attrs={props.inputAttrs}
+    inputType="text" inputAttrs={props.inputAttrs}
     clearOnChange={props.clearOnChange}
     placeholder={props.placeholder}
     onChange={props.onChange}
@@ -48,7 +48,7 @@ type PasswordProps = {
   value: string
   placeholder?: string
   id?: string
-  inputAttrs?: any
+  inputAttrs?: React.HtmlHTMLAttributes<HTMLInputElement>
   className?: string
   clearOnChange?: boolean
   onChange: (s: string) => void
@@ -57,7 +57,7 @@ type PasswordProps = {
 export function InputPasswordBox(props: PasswordProps) {
   const clazz = props.className ? "input-password-box " + props.className : "input-password-box"
   return <InputBox value={props.value} className={clazz} id={props.id}
-    inputType="password" attrs={props.inputAttrs}
+    inputType="password" inputAttrs={props.inputAttrs}
     clearOnChange={props.clearOnChange}
     placeholder={props.placeholder}
     onChange={props.onChange}
@@ -69,7 +69,7 @@ type InputBoxProps = {
   inputType: string
   placeholder?: string
   id?: string
-  attrs?: any
+  inputAttrs?: React.HtmlHTMLAttributes<HTMLInputElement>
   className?: string
   clearOnChange?: boolean
   onChange: (s: string) => void
@@ -95,7 +95,7 @@ function InputBox(props: InputBoxProps) {
 
   return (<div id={props.id} className={props.className}>
     <input className="input-box"
-      type={props.inputType} {...props.attrs}
+      type={props.inputType} {...props.inputAttrs}
       placeholder={props.placeholder}
       value={isFocused ? value : props.value}
       onKeyDown={e => SaveOnEnter(e, () => { save(value) })}
@@ -134,6 +134,7 @@ type ImageButtonProps = {
   id?: string
   src: string
   alt: string
+  disabled?: boolean
   className?: string
   style?: React.CSSProperties
   onClick: MouseEventHandler
@@ -141,9 +142,12 @@ type ImageButtonProps = {
 
 export function ImageButton(props: ImageButtonProps) {
 
-  return (<div id={props.id} style={props.style}
-    className={props.className ? "input-img-button " + props.className : "input-img-button"}>
-    <img src={props.src} alt={props.alt} style={{ cursor: "pointer" }}
+  let rootClasses = ["input-img-button"]
+  if (props.disabled) rootClasses.push("input-disabled")
+  if (props.className) rootClasses.push(props.className)
+
+  return (<div id={props.id} style={props.style} className={rootClasses.join(" ")}>
+    <img src={props.src} alt={props.alt} style={{ cursor: "pointer", opacity: props.disabled ? "0.4" : "" }}
       onClick={props.onClick} width="100%" height="100%" />
   </div>)
 

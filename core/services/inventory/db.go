@@ -2,8 +2,6 @@ package inventory
 
 import (
 	"cardamom/core/models"
-
-	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 func itemByUid(itemUid string, userUid string) (*models.InventoryItem, error) {
@@ -13,8 +11,4 @@ func itemByUid(itemUid string, userUid string) (*models.InventoryItem, error) {
 		UserUid: userUid,
 	}).First(&item).Error
 	return &item, err
-}
-
-func generateUid() string {
-	return gonanoid.Must()
 }

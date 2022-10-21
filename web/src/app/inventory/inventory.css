@@ -58,10 +58,11 @@
   font-size: var(--format-font-size-medium);
 }
 
-.inventory-modal-delete {
+.inventory-modal-actions {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
 }
+
 .inventory-modal-delete-btn {
   width: var(--format-line-height);
 }

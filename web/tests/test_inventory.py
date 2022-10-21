@@ -141,7 +141,7 @@ def test_category_add():
   d.find_element(By.ID, "inventory-list-non-cooking-btn").click()
   add_item.send_keys("tuna")
   add_item.send_keys(Keys.ENTER)
-  w.until(lambda x: x.find_element(By.XPATH, inv_item_xpath % "ice cream"))
+  w.until(lambda x: x.find_element(By.XPATH, inv_item_xpath % "tuna"))
 
   d.find_element(By.ID, "inventory-list-non-cooking-btn").click()
   add_item.send_keys("ice cream")

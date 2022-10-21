@@ -20,7 +20,7 @@ func (req *AddItemRequest) Validate() (string, error) {
 	if req.Store != nil {
 		*req.Store = strings.ToLower(strings.TrimSpace(*req.Store))
 		if len(*req.Store) == 0 {
-			return log_ext.ReturnBoth("store must not be the empty string")
+			return log_ext.ReturnBoth("store must not be an empty string")
 		}
 	}
 
@@ -29,6 +29,7 @@ func (req *AddItemRequest) Validate() (string, error) {
 
 type AddItemsRequest struct {
 	Items []string `json:"items"`
+	Store *string  `json:"store,omitempty"`
 }
 
 func (req *AddItemsRequest) Validate() (string, error) {
@@ -39,6 +40,16 @@ func (req *AddItemsRequest) Validate() (string, error) {
 
 	for i, item := range req.Items {
 		req.Items[i] = strings.ToLower(strings.TrimSpace(item))
+		if len(req.Items[i]) == 0 {
+			return log_ext.ReturnBoth("item must not be empty")
+		}
+	}
+
+	if req.Store != nil {
+		*req.Store = strings.ToLower(strings.TrimSpace(*req.Store))
+		if len(*req.Store) == 0 {
+			return log_ext.ReturnBoth("store must not be an empty string")
+		}
 	}
 
 	return "", nil

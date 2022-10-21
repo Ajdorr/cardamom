@@ -58,7 +58,12 @@ export function RecipeIngredient(props: IngredientProps) {
       </div> : null
     }
     <span className="recipe-ingredient-marker"
-      onTouchStart={e => { setInitX(e.touches[0].clientX); setInitY(e.touches[0].clientY) }}
+      onTouchStart={e => {
+        setInitX(e.touches[0].clientX); setInitY(e.touches[0].clientY);
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur()
+        }
+      }}
       onTouchMove={e => {
         const dY = e.touches[0].clientY - initY;
         const dX = e.touches[0].clientX - initX;

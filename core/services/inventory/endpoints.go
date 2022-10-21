@@ -25,7 +25,7 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 	db := models.DB.Where(&models.InventoryItem{
 		Item:    r.Item,
 		UserUid: claims.Uid,
-	}).Attrs(&models.InventoryItem{Uid: generateUid(), Category: category}).
+	}).Attrs(&models.InventoryItem{Category: models.COOKING}).
 		FirstOrCreate(&item)
 
 	if db.Error != nil {
@@ -34,7 +34,9 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 	}
 
 	item.InStock = true
-	item.Category = category
+	if r.Category != nil {
+		item.Category = category
+	}
 
 	if err := models.DB.Save(&item).Error; err != nil {
 		gin_ext.ServerError(c, log_ext.Errorf("updating quantity to database -- %w", err))
@@ -42,6 +44,43 @@ func AddItem(c *gin.Context, r *AddItemRequest) {
 	}
 
 	c.JSON(http.StatusCreated, &item)
+}
+
+func AddItems(c *gin.Context, r *AddItemsRequest) {
+	claims := auth.GetActiveUserClaims(c)
+
+	var category models.InventoryCategory
+	if r.Category != nil {
+		category = *r.Category
+	} else {
+		// FIXME attempt to guess the category, add to Attrs
+		category = models.COOKING
+	}
+
+	items := make([]models.InventoryItem, len(r.Items))
+	for i, itemValue := range r.Items {
+		itemModel := &items[i]
+		db := models.DB.Where(&models.InventoryItem{
+			Item:    itemValue,
+			UserUid: claims.Uid,
+		}).Attrs(&models.InventoryItem{Category: models.COOKING}).
+			FirstOrCreate(&itemModel)
+
+		if db.Error != nil {
+			gin_ext.ServerError(c, log_ext.Errorf("adding item to database -- %w", db.Error))
+			return
+		}
+
+		itemModel.InStock = true
+		itemModel.Category = category
+
+		if err := models.DB.Save(&itemModel).Error; err != nil {
+			gin_ext.ServerError(c, log_ext.Errorf("updating quantity to database -- %w", err))
+			return
+		}
+	}
+
+	c.JSON(http.StatusCreated, &items)
 }
 
 func ListItems(c *gin.Context) {

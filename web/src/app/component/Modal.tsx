@@ -3,7 +3,7 @@ import "./modal.css"
 
 export interface ModalProps {
   children?: React.ReactNode;
-  onClose: () => void
+  closeCallback: () => void
 }
 
 export default function ModalPanel(props: ModalProps) {
@@ -16,7 +16,7 @@ export default function ModalPanel(props: ModalProps) {
       <div className="modal-panel-workspace theme-focus">
         <div className="modal-panel-close theme-primary">
           <ImageButton alt="Close" src="/icons/close.svg" className="modal-panel-close-btn"
-            onClick={e => { props.onClose() }} />
+            onClick={e => { props.closeCallback() }} />
         </div>
         <div style={{ maxHeight: `${maxContentHeight}px` }} className="modal-panel-content">
           {props.children}

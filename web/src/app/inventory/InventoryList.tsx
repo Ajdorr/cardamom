@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import { InputTextBox } from "../component/input";
-import { setInventory } from "./inventoryCache";
 import InventoryItem from "./InventoryItem";
 import InventoryModal from "./InventoryModal";
 import { InventoryCategories, InventoryItemModel } from "./schema";
@@ -48,9 +47,12 @@ function InventoryList() {
   const [items, setItems] = useState<InventoryItemModel[]>([])
   const [currentItem, setCurrentItem] = useState<InventoryItemModel | null>(null)
 
+  const displayFilter = (f: string): string => {
+    return f.split("-").map(s => s[0].toUpperCase() + s.substring(1).toLowerCase()).join("-")
+  }
+
   const updateInventoryList = (newItems: InventoryItemModel[]) => {
     setItems(newItems)
-    setInventory(newItems.map(i => i.item))
   }
 
   const updateInventoryItem = (item: InventoryItemModel) => {
@@ -71,11 +73,7 @@ function InventoryList() {
 
   // eslint-disable-next-line
   useEffect(() => { refresh() }, [])
-  useEffect(() => {
-    if (filter && !InventoryCategories.has(filter)) {
-      nav("/inventory")
-    }
-  }, [filter, nav])
+  useEffect(() => { if (filter && !InventoryCategories.has(filter)) nav("/inventory") }, [filter, nav])
 
   const displayItems = filter ? items.filter(i => { return i.category === filter }) : items
 
@@ -84,7 +82,7 @@ function InventoryList() {
     <div className="inventory-list-add-item theme-primary-light">
       <InputTextBox value="" className="inventory-list-add-item-input" clearOnChange={true}
         inputAttrs={{ autoCapitalize: "none" }}
-        placeholder="Add inventory item" onChange={s => {
+        placeholder={`Add to ${filter ? displayFilter(filter) : "Inventory"}`} onChange={s => {
           const newItem = s.trim().toLowerCase()
           if (newItem.length === 0 || items.map(i => i.item).indexOf(newItem) >= 0) {
             return
@@ -104,7 +102,7 @@ function InventoryList() {
       })}
       {displayItems.length === 0 ?
         <div className="inventory-list-empty">{
-          filter ? "Nothing in this category" : "Nothing in your inventory"
+          filter ? `Nothing in ${displayFilter(filter)}` : "Nothing in your inventory"
         }</div>
         : null
       }
