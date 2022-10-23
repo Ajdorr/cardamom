@@ -32,11 +32,12 @@ def create_flow(d: WebDriver, w: WebDriverWait, info: Dict[Any, Any]):
 
   # Name
   d.find_element(
-      By.CSS_SELECTOR, ".recipe-single-name input").send_keys(info["name"])
+      By.CSS_SELECTOR, ".recipe-create-name input").send_keys(info["name"])
+  d.find_element(By.CSS_SELECTOR, ".recipe-create-submit").click()
 
   # Meal
-  d.find_element(
-      By.CSS_SELECTOR, ".recipe-single-meal select").send_keys(info["meal"])
+  w.until(lambda x: x.find_element(
+      By.CSS_SELECTOR, ".recipe-single-meal select")).send_keys(info["meal"])
 
   # Description
   d.find_element(
@@ -72,7 +73,6 @@ def create_flow(d: WebDriver, w: WebDriverWait, info: Dict[Any, Any]):
 
   verify(d, info)
   # Save
-  d.find_element(By.CSS_SELECTOR, ".recipe-single-save img").click()
   w.until(lambda x: x.find_element(
       By.XPATH, "//div[contains(@class,'recipe-single-name')]/*/input[@value!='']"))
   verify(d, info)

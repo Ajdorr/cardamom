@@ -91,27 +91,36 @@ func ListItems(c *gin.Context) {
 
 func CollectItem(c *gin.Context, r *CollectItemRequest) {
 	user := auth.GetActiveUserClaims(c)
-	item, err := itemByUid(r.Uid, user.Uid)
+	groceryItem, err := itemByUid(r.Uid, user.Uid)
 	if err != nil {
 		gin_ext.Abort(c, http.StatusBadRequest, log_ext.Errorf("attempt to update non existant item -- %w", err))
 		return
 	}
 
-	if item.IsCollected != r.IsCollected {
-		if r.IsCollected {
-			inventory.CollectItem(item, user.Uid, false)
-		} else { // Undo
-			inventory.CollectItem(item, user.Uid, true)
-		}
+	inventoryItem, err := inventory.FindOrCreateItem(groceryItem.Item, user.Uid)
+	if err != nil {
+		gin_ext.Abort(c, http.StatusBadRequest, log_ext.Errorf("attempt to update non existant item -- %w", err))
+		return
+	}
 
-		item.IsCollected = r.IsCollected
-		if err = models.DB.Save(&item).Error; err != nil {
+	if groceryItem.IsCollected != r.IsCollected {
+		// If collected then it will be in stock, if not collected it will be unstocked
+		groceryItem.IsCollected = r.IsCollected
+		inventoryItem.InStock = r.IsCollected
+		if err = models.DB.Save(&groceryItem).Error; err != nil {
 			gin_ext.ServerError(c, log_ext.Errorf("unable to update GroceryItem -- %w", err))
+			return
+		}
+		if err = models.DB.Save(&inventoryItem).Error; err != nil {
+			gin_ext.ServerError(c, log_ext.Errorf("unable to update InventoryItem -- %w", err))
 			return
 		}
 	}
 
-	c.JSON(http.StatusOK, &item)
+	c.JSON(http.StatusOK, &gin.H{
+		"grocery_item":   &groceryItem,
+		"inventory_item": &inventoryItem,
+	})
 }
 
 func UpdateItem(c *gin.Context, r *UpdateItemRequest) {

@@ -1,0 +1,23 @@
+.recipe-create-root {
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.recipe-create-workspace {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  row-gap: 5px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.recipe-create-header {
+  text-align: center;
+}
+
+.recipe-create-name {
+  border: 1px solid var(--theme-background-color);
+}

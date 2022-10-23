@@ -100,7 +100,7 @@ func ListItems(c *gin.Context) {
 
 func UpdateItem(c *gin.Context, r *UpdateItemRequest) {
 	user := auth.GetActiveUserClaims(c)
-	if item, err := itemByUid(r.Uid, user.Uid); err != nil {
+	if item, err := ItemByUid(r.Uid, user.Uid); err != nil {
 		gin_ext.AbortNotFound(c, log_ext.Errorf("attempt to update non existant item(%s) -- %w", r.Uid, err))
 	} else {
 

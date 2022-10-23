@@ -53,10 +53,14 @@ def test_complex():
   d.find_element(By.ID, "recipe-index-create-btn").click()
 
   # Name
-  name_ele = d.find_element(By.CSS_SELECTOR, ".recipe-single-name input")
+  name_ele = d.find_element(By.CSS_SELECTOR, ".recipe-create-name input")
   name_ele.send_keys(info["name"][:-4])
   clear(d, name_ele)
   name_ele.send_keys(info["name"])
+  d.find_element(By.CSS_SELECTOR, ".recipe-create-submit").click()
+
+  name_ele = w.until(
+      lambda x: x.find_element(By.CSS_SELECTOR, ".recipe-single-name input"))
 
   # Meal
   meal_ele = d.find_element(By.CSS_SELECTOR, ".recipe-single-meal select")
@@ -71,14 +75,18 @@ def test_complex():
   # Add ingredient
   add_ingre = d.find_element(
       By.CSS_SELECTOR, ".recipe-single-ingredient-add img")
-  for _ in info["ingre"]:
-    add_ingre.click()
 
-  for i, ingre in enumerate(d.find_elements(By.CLASS_NAME, "recipe-ingredient-root")):
-    quantity = ingre.find_element(
+  for i, ingre in enumerate(info["ingre"]):
+    add_ingre.click()
+    w.until(lambda x: len(x.find_elements(
+        By.CLASS_NAME, "recipe-ingredient-root")) > i)
+    ingre_ele = d.find_elements(By.CLASS_NAME, "recipe-ingredient-root")[i]
+
+    quantity = ingre_ele.find_element(
         By.CSS_SELECTOR, ".recipe-ingredient-quantity input")
-    unit = ingre.find_element(By.CSS_SELECTOR, ".recipe-ingredient-unit")
-    item = ingre.find_element(By.CSS_SELECTOR, ".recipe-ingredient-item input")
+    unit = ingre_ele.find_element(By.CSS_SELECTOR, ".recipe-ingredient-unit")
+    item = ingre_ele.find_element(
+        By.CSS_SELECTOR, ".recipe-ingredient-item input")
 
     quantity.send_keys("zz")
     unit.send_keys("none")
@@ -98,8 +106,7 @@ def test_complex():
   instr.send_keys(Keys.TAB)
 
   verify(d, info)
-  # Save
-  d.find_element(By.CSS_SELECTOR, ".recipe-single-save img").click()
+  d.refresh()
   w.until(lambda x: x.find_element(
       By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img"))
   verify(d, info)

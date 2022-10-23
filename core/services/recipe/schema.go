@@ -33,12 +33,8 @@ func (req *CreateRecipeRequest) Validate() (string, error) {
 		return log_ext.ReturnBoth("name must not be empty in request")
 	}
 
-	if len(req.Ingredients) == 0 {
-		return log_ext.ReturnBoth("ingredients must not be empty in request")
-	}
-
-	if len(req.Instructions) == 0 {
-		return log_ext.ReturnBoth("instructions must not be empty in request")
+	if len(req.Meal) == 0 {
+		req.Meal = models.DINNER
 	}
 
 	for i, ingre := range req.Ingredients {
@@ -155,13 +151,17 @@ func (req *SearchRecipeRequest) Validate() (string, error) {
 }
 
 type GetAvailableRecipeRequest struct {
-	Meal *models.MealType `json:"meal,omitempty"`
+	Meal                   *models.MealType `json:"meal,omitempty"`
+	MissingIngredientCount uint             `json:"missing,omitempty"`
 }
 
 func (req *GetAvailableRecipeRequest) Validate() (string, error) {
 
 	if req.Meal != nil && !funk.Contains(models.ValidMeals, *req.Meal) {
 		return log_ext.ReturnBoth("invalid meal type")
+	}
+	if req.MissingIngredientCount > 3 {
+		return log_ext.ReturnBoth("max missing count is 3")
 	}
 
 	return "", nil

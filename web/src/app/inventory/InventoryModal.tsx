@@ -4,36 +4,23 @@ import { InventoryCategories, InventoryItemModel } from "./schema"
 import { FormDropDown } from "../component/form"
 import { api } from "../api"
 import { ImageButton, InputTextBox } from "../component/input"
-import { useEffect, useState } from "react"
-import { getGroceryCache } from "../grocery/groceryCache"
+import { useContext } from "react"
+import { AppCacheContext } from "../AppCache"
 
 type InventoryModalProps = {
   model: InventoryItemModel
-  onUpdate: (model: InventoryItemModel) => void
-  onUnstock: (model: InventoryItemModel) => void
-  onClose: () => void
+  closeCallback: () => void
 }
 
 export default function InventoryModal(props: InventoryModalProps) {
 
-  const [groceryCache, setGroceryCache] = useState<string[]>([])
+  const { grocery } = useContext(AppCacheContext)
 
   const updateItem = (input: { item?: string, category?: string, in_stock?: boolean }) => {
-    api.post("inventory/update", { uid: props.model.uid, ...input }).then(rsp => {
-      if (rsp.data.in_stock) {
-        props.onUpdate(rsp.data)
-      } else {
-        props.onUnstock(rsp.data)
-        props.onClose()
-      }
-    })
+    api.post("inventory/update", { uid: props.model.uid, ...input })
   }
 
-  useEffect(() => {
-    getGroceryCache().then(items => setGroceryCache(items.filter(i => !i.is_collected).map(i => i.item)))
-  }, [])
-
-  return (<ModalPanel closeCallback={props.onClose}>
+  return (<ModalPanel closeCallback={props.closeCallback}>
     <div className="inventory-modal-root">
       <InputTextBox value={props.model.item} className="inventory-modal-item"
         inputAttrs={{ autoCapitalize: "none" }} onChange={e => { updateItem({ item: e }) }} />
@@ -41,14 +28,10 @@ export default function InventoryModal(props: InventoryModalProps) {
         className="inventory-modal-category" onChange={e => { updateItem({ category: e }) }} />
       <div className="inventory-modal-actions">
         <ImageButton alt="Delete item" src="/icons/cart-add.svg" className="inventory-modal-add-to-grocery-btn"
-          disabled={groceryCache.indexOf(props.model.item) >= 0}
-          onClick={e => {
-            api.post("grocery/create", { item: props.model.item }).then(rsp => {
-              setGroceryCache([...groceryCache, props.model.item])
-            })
-          }} />
+          disabled={grocery.map(i => i.item).indexOf(props.model.item) >= 0}
+          onClick={e => { api.post("grocery/create", { item: props.model.item }) }} />
         <ImageButton alt="Delete item" src="/icons/delete.svg" className="inventory-modal-delete-btn"
-          onClick={e => { updateItem({ in_stock: false }) }} />
+          onClick={e => { updateItem({ in_stock: false }); props.closeCallback() }} />
       </div>
     </div>
   </ModalPanel>)

@@ -1,4 +1,4 @@
-import "./recipe.css"
+import "./css/recipe.css"
 import { Component } from "react"
 import { Link, Route, Routes, useParams } from "react-router-dom"
 import RecipeList from "./RecipeList"
@@ -6,6 +6,7 @@ import RecipeSingle from "./RecipeSingle"
 import RecipeShuffle from "./RecipeShuffle"
 import RecipeTrashList from "./RecipeTrashList"
 import RecipeSearch from "./RecipeSearch"
+import RecipeCreate from "./RecipeCreate"
 
 export function RecipeContextMenu() {
 
@@ -43,11 +44,11 @@ class RecipeIndex extends Component {
 
       <Routes>
         <Route path="list" element={<RecipeList />} />
-        <Route path="create" element={<RecipeSingle isCreate={true} />} />
+        <Route path="create" element={<RecipeCreate />} />
         <Route path="available" element={<RecipeShuffle />} />
         <Route path="trash" element={<RecipeTrashList />} />
         <Route path="search" element={<RecipeSearch />} />
-        <Route path="edit/:recipeUid" element={<RecipeSingle isCreate={false} />} />
+        <Route path="edit/:recipeUid" element={<RecipeSingle />} />
       </Routes>
     </div>)
   }

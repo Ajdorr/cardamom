@@ -1,3 +1,4 @@
+import "./component.css"
 import { useEffect, useRef, useState } from "react"
 import { InputTextBox } from "../../component/input"
 import { IngredientModel, ModifierDividerRegex, Units, UpdateIngredient } from "../schema"

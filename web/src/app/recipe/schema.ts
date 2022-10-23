@@ -51,20 +51,6 @@ export interface UpdateIngredient {
   modifier?: string | null
 }
 
-export function CreateRecipeRequest(model: RecipeModel): any {
-  return {
-    name: model.name,
-    description: model.description,
-    meal: model.meal,
-    instructions: model.instructions,
-    ingredients: model.ingredients.map(i => {
-      return {
-        quantity: i.quantity, unit: i.unit, item: i.item, modifier: i.modifier, optional: i.optional
-      }
-    }),
-  }
-}
-
 export function UpdateRecipeRequest(model: RecipeModel): any {
   return {
     uid: model.uid,

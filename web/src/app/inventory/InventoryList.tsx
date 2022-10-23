@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
+import { AppCacheContext } from "../AppCache";
 import { InputTextBox } from "../component/input";
 import InventoryItem from "./InventoryItem";
 import InventoryModal from "./InventoryModal";
-import { InventoryCategories, InventoryItemModel } from "./schema";
+import { InventoryCategories } from "./schema";
 
 export function InventoryMenu() {
 
@@ -42,40 +43,17 @@ export function InventoryMenu() {
 
 function InventoryList() {
 
-  const { filter } = useParams()
   const nav = useNavigate()
-  const [items, setItems] = useState<InventoryItemModel[]>([])
-  const [currentItem, setCurrentItem] = useState<InventoryItemModel | null>(null)
+  const { filter } = useParams()
+  const { inventory } = useContext(AppCacheContext)
+  const [currentItem, setCurrentItem] = useState<string | null>(null)
 
   const displayFilter = (f: string): string => {
     return f.split("-").map(s => s[0].toUpperCase() + s.substring(1).toLowerCase()).join("-")
   }
 
-  const updateInventoryList = (newItems: InventoryItemModel[]) => {
-    setItems(newItems)
-  }
-
-  const updateInventoryItem = (item: InventoryItemModel) => {
-    updateInventoryList(items.map(i => {
-      if (i.uid === item.uid) {
-        return item
-      } else {
-        return i
-      }
-    }))
-  }
-
-  const refresh = () => {
-    api.post("inventory/list").then(rsp => {
-      updateInventoryList(rsp.data)
-    })
-  }
-
-  // eslint-disable-next-line
-  useEffect(() => { refresh() }, [])
   useEffect(() => { if (filter && !InventoryCategories.has(filter)) nav("/inventory") }, [filter, nav])
-
-  const displayItems = filter ? items.filter(i => { return i.category === filter }) : items
+  const displayItems = filter ? inventory.filter(i => { return i.category === filter }) : inventory
 
   return (<div className="inventory-list-root">
 
@@ -84,21 +62,17 @@ function InventoryList() {
         inputAttrs={{ autoCapitalize: "none" }}
         placeholder={`Add to ${filter ? displayFilter(filter) : "Inventory"}`} onChange={s => {
           const newItem = s.trim().toLowerCase()
-          if (newItem.length === 0 || items.map(i => i.item).indexOf(newItem) >= 0) {
+          if (newItem.length === 0 || inventory.map(i => i.item).indexOf(newItem) >= 0) {
             return
           }
 
-          api.post("inventory/create", { item: s, category: filter }).then(rsp => {
-            updateInventoryList([...items, rsp.data])
-          })
+          api.post("inventory/create", { item: s, category: filter })
         }} />
     </div>
 
     <div className="inventory-list-items">{
       displayItems.map(i => {
-        return (<InventoryItem key={i.uid} model={i}
-          onUpdate={i => updateInventoryItem(i)}
-          onShowMore={i => { setCurrentItem(i) }} />)
+        return (<InventoryItem key={i.uid} model={i} onShowMore={i => { setCurrentItem(i.uid) }} />)
       })}
       {displayItems.length === 0 ?
         <div className="inventory-list-empty">{
@@ -109,9 +83,8 @@ function InventoryList() {
     </div>
 
     {currentItem != null ?
-      <InventoryModal model={currentItem} onClose={() => { setCurrentItem(null) }}
-        onUpdate={i => { updateInventoryItem(i); setCurrentItem(i); }}
-        onUnstock={vic => updateInventoryList(items.filter(i => i.uid !== vic.uid))} />
+      <InventoryModal model={inventory.filter(i => i.uid === currentItem)[0]}
+        closeCallback={() => { setCurrentItem(null) }} />
       : null}
   </div>)
 

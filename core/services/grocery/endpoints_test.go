@@ -3,6 +3,7 @@ package grocery_test
 import (
 	t_ext "cardamom/core/ext/testing_ext"
 	"cardamom/core/models"
+	"cardamom/core/services/inventory"
 	"fmt"
 	"net/http"
 	"strings"
@@ -97,45 +98,100 @@ func TestDoubleCreate(t *testing.T) {
 }
 
 func TestCollectThenCreate(t *testing.T) {
-
-	rspBody := models.GroceryItem{}
+	groceryItem := models.GroceryItem{}
 	testCase := &t_ext.APITestCase{
 		T:                    t,
 		Method:               "POST",
 		Endpoint:             "/api/grocery/create",
-		ResponseBody:         &rspBody,
+		ResponseBody:         &groceryItem,
 		RequestBody:          `{"item":"ice"}`,
 		ExpectedResponseCode: http.StatusCreated,
 	}
 	t_ext.AuthorizeTestCase(t, testCase)
 	t_ext.API_Test(testCase)
-	uid := rspBody.Uid
+	uid := groceryItem.Uid
 
+	type CollectResponse struct {
+		GroceryItem   models.GroceryItem   `json:"grocery_item"`
+		InventoryItem models.InventoryItem `json:"inventory_item"`
+	}
+	collectRsp := CollectResponse{}
 	testCase.Endpoint = "/api/grocery/collect"
 	testCase.ExpectedResponseCode = http.StatusOK
-	testCase.RequestBody = fmt.Sprintf(`{"uid": "%s", "is_collected": true}`, rspBody.Uid)
+	testCase.RequestBody = fmt.Sprintf(`{"uid": "%s", "is_collected": true}`, groceryItem.Uid)
+	testCase.ResponseBody = &collectRsp
 	t_ext.API_Test(testCase)
-	if !rspBody.IsCollected {
+	if !collectRsp.GroceryItem.IsCollected {
 		t.Errorf("item was not collected")
 	}
-	if rspBody.Uid != uid {
+	if collectRsp.GroceryItem.Uid != uid {
 		t.Errorf("uid mismatch on collect")
 	}
 
 	testCase.Endpoint = "/api/grocery/create"
 	testCase.ExpectedResponseCode = http.StatusCreated
 	testCase.RequestBody = `{"item": "ice"}`
-	if rspBody.Uid != uid {
-		t.Errorf("uid mismatch on readd")
+	testCase.ResponseBody = &groceryItem
+	if groceryItem.Uid != uid {
+		t.Errorf("uid mismatch on read")
 	}
 
 	testCase.Endpoint = "/api/grocery/collect"
 	testCase.ExpectedResponseCode = http.StatusOK
-	testCase.RequestBody = fmt.Sprintf(`{"uid": "%s", "is_collected": false}`, rspBody.Uid)
+	testCase.RequestBody = fmt.Sprintf(`{"uid": "%s", "is_collected": false}`, groceryItem.Uid)
 	t_ext.API_Test(testCase)
-	if rspBody.IsCollected {
+	if groceryItem.IsCollected {
 		t.Errorf("item was not uncollected")
 	}
+}
+
+func TestCollectThenUndo(t *testing.T) {
+	type CollectResponse struct {
+		GroceryItem   *models.GroceryItem   `json:"grocery_item"`
+		InventoryItem *models.InventoryItem `json:"inventory_item"`
+	}
+	groceryItem := &models.GroceryItem{}
+	testCase := &t_ext.APITestCase{
+		T:                    t,
+		Method:               "POST",
+		Endpoint:             "/api/grocery/create",
+		ResponseBody:         groceryItem,
+		RequestBody:          `{"item":"guava"}`,
+		ExpectedResponseCode: http.StatusCreated,
+	}
+	t_ext.AuthorizeTestCase(t, testCase)
+	t_ext.API_Test(testCase)
+	uid := groceryItem.Uid
+
+	testCase.Endpoint = "/api/grocery/collect"
+	testCase.ExpectedResponseCode = http.StatusOK
+	testCase.RequestBody = fmt.Sprintf(`{"uid": "%s", "is_collected": true}`, uid)
+	inventoryItem := &models.InventoryItem{}
+	testCase.ResponseBody = &CollectResponse{
+		GroceryItem:   groceryItem,
+		InventoryItem: inventoryItem,
+	}
+	t_ext.API_Test(testCase)
+	if !groceryItem.IsCollected {
+		t.Errorf("item was not collected")
+	}
+	if groceryItem.Uid != uid {
+		t.Errorf("uid mismatch on collect")
+	}
+	inventoryItem, err := inventory.ItemByValue("guava", t_ext.GetTestUser().Uid)
+	if err != nil {
+		t.Fatal("unable to get inventory item")
+	}
+	t_ext.TestEqual(t, inventoryItem.InStock, true, "inventory item was not in stock")
+
+	testCase.RequestBody = fmt.Sprintf(`{"uid": "%s", "is_collected": false}`, uid)
+	t_ext.API_Test(testCase)
+
+	inventoryItem, err = inventory.ItemByValue("guava", t_ext.GetTestUser().Uid)
+	if err != nil {
+		t.Fatal("unable to get inventory item")
+	}
+	t_ext.TestEqual(t, inventoryItem.InStock, false, "inventory item was not in stock")
 }
 
 func TestCreateThenDelete(t *testing.T) {
@@ -202,7 +258,6 @@ func TestCreateBatch(t *testing.T) {
 	for _, item := range items {
 		t_ext.TestEqual(t, "no frills", item.Store, "incorrect store")
 	}
-
 }
 
 func init() {

@@ -1,0 +1,113 @@
+/* Recipe Ingredient */
+.recipe-ingredient-root {
+  display: flex;
+  flex-direction: row;
+}
+
+.recipe-ingredient-marker {
+  flex: 0 0 var(--format-line-height);
+  height: var(--format-line-height);
+  width: var(--format-line-height);
+  text-align: center;
+
+  /* disable scroll on touch */
+  touch-action: none;
+}
+
+.recipe-ingredient-marker img {
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.recipe-ingredient-quantity {
+  flex: 0 0 40px;
+  height: var(--format-line-height);
+  padding-right: 10px;
+  box-sizing: border-box;
+}
+
+.recipe-ingredient-quantity > input {
+  text-align: right;
+}
+
+.recipe-ingredient-unit {
+  flex: 0 0 min-content;
+  width: min-content;
+  height: var(--format-line-height);
+
+  background-color: unset;
+  border: none;
+}
+
+.recipe-ingredient-item {
+  padding-left: 5px;
+  flex: 4 0 40px;
+  height: var(--format-line-height);
+}
+
+.recipe-ingredient-optional {
+  flex: 0 0 var(--format-line-height);
+  height: var(--format-line-height);
+}
+
+.recipe-ingredient-quantity-error {
+  box-sizing: border-box;
+}
+
+.recipe-ingredient-quantity-error {
+  border: 1px solid red;
+}
+
+.recipe-single-ingredient-add {
+  height: var(--format-line-height);
+  display: flex;
+  justify-content: center;
+}
+
+.recipe-single-ingredient-add > img{
+  width: var(--format-line-height);
+}
+
+.recipe-ingredient-root-own select,
+.recipe-ingredient-root-own input[type="text"] {
+  color: var(--theme-primary-color-dark)
+}
+
+.recipe-ingredient-delete-indicator {
+  position: absolute;
+  height: var(--format-line-height);
+  background-color: var(--theme-alert-color);
+}
+
+.recipe-ingredient-delete-indicator > img {
+  height: var(--format-line-height);
+}
+
+/* Recipe Instruction */
+.recipe-instruction-root {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  display: grid;
+  flex-direction: row;
+}
+
+.recipe-instruction-list {
+  box-sizing: border-box;
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.recipe-instruction-list > textarea {
+  width: 100%;
+  height: 100%;
+
+  padding-left: 25px;
+  box-sizing: border-box;
+}
+
+.recipe-instruction-list textarea,
+.recipe-instruction-list li {
+  font-size: var(--format-font-size-small);
+}

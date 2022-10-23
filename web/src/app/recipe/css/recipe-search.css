@@ -1,0 +1,52 @@
+/* Recipe Search  */
+.recipe-search-list-root {
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe-search-menu {
+  display: grid;
+  grid-template-areas:
+  "search more"
+  "advanced advanced";
+  grid-template-columns: 1fr var(--format-line-height);
+  grid-template-rows: var(--format-line-height) max-content;
+
+  padding: 0px 5px;
+}
+
+.recipe-search-menu-name {
+  grid-area: search;
+}
+
+.recipe-search-menu-show-advanced {
+  grid-area: more;
+}
+
+.recipe-search-advanced-menu {
+  flex-direction: column;
+}
+
+.recipe-search-advanced-menu > .input-text-box {
+  height: var(--format-line-height);
+}
+
+.recipe-search-advanced-submit {
+  grid-area: search;
+  width: var(--format-line-height);
+}
+
+.recipe-search-list-recipes {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.recipe-search-list-empty {
+  display: flex;
+}
+
+.recipe-search-list-empty > span {
+  padding: 10px;
+  text-align: center;
+}

@@ -1,3 +1,4 @@
+import "./css/recipe-shuffle.css"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { api } from "../api"
@@ -73,8 +74,8 @@ export default function RecipeShuffle() {
         }
       </div>
       <div className="recipe-shuffle-instructions"><ol>
-        {recipe.instructions.split("\n").map(instr => {
-          return (<li>{instr}</li>)
+        {recipe.instructions.split("\n").map((instr, i) => {
+          return (<li key={i}>{instr}</li>)
         })}
       </ol></div>
     </div>

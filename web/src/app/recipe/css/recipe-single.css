@@ -1,0 +1,112 @@
+/* Recipe Single */
+.recipe-single-root {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.recipe-single-name-meal {
+  display: flex;
+  flex-direction: row;
+}
+
+.recipe-single-name {
+  flex-grow: 1;
+  height: var(--format-line-height);
+}
+
+.recipe-single-meal {
+  flex-grow: 2;
+  height: var(--format-line-height);
+}
+
+.recipe-single-desc > .form-textarea-input {
+  height: 90px;
+}
+
+.recipe-single-ingredients, .recipe-single-instruction-list {
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.recipe-single-ingredient-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.recipe-single-ingredient-header-title {
+  flex-grow: 1;
+}
+
+.recipe-single-ingredient-more {
+  display: block;
+  height: var(--format-font-size-medium);
+}
+
+.recipe-single-ingredient-list > .recipe-ingredient-root:not(:last-child) {
+  border-bottom: 1px solid var(--theme-surface-color);
+}
+
+.recipe-single-save {
+  display: flex;
+  justify-content: center;
+
+  margin: 5px;
+  border-radius: 5px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.recipe-single-save > .input-img-button {
+  height: var(--format-line-height);
+}
+
+/* Recipe Single Modal */
+.recipe-ingredient-modal-missing-ingredients-grid {
+  display: grid;
+  grid-template-columns: 1fr repeat(2, var(--format-line-height));
+  padding: 5px;
+  row-gap: 5px;
+}
+
+.recipe-ingredient-missing-element {
+  display: contents;
+}
+
+.recipe-ingredient-missing-item {
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+}
+
+.recipe-ingredient-modal-button-header {
+  text-align: center;
+}
+
+.recipe-ingredient-modal-missing-ingredients-grid > .recipe-ingredient-missing-element:nth-child(even) > * {
+  background-color: var(--theme-surface-color);
+}
+
+.recipe-ingredient-modal-add-all {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.recipe-ingredient-modal-add-all-grocery,
+.recipe-ingredient-modal-add-all-inventory {
+  width: var(--format-line-height);
+  display: flex;
+
+  padding: 5px;
+
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.recipe-ingredient-modal-add-all-btn {
+  width: var(--format-line-height);
+  height: var(--format-line-height);
+}

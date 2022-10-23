@@ -7,9 +7,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 def test_add_missing():
-  grocery_xpath_fmt = "//div[contains(@class, 'grocery-item-input')]/input[@value='%s']"
-  inventory_xpath_fmt = "//div[contains(@class, 'inventory-item-input')]/input[@value='%s']"
-
   d, w = login()
 
   # Go to recipe list screen
@@ -21,21 +18,21 @@ def test_add_missing():
       By.CSS_SELECTOR, "a .recipe-list-element-name"
   ))
   recipes[0].click()
+  recipe_url = d.current_url
 
+  # Open more ingredient modal panel
   w.until(lambda x: x.find_element(
       By.CLASS_NAME, "recipe-single-ingredient-more")).click()
-  recipe_url = d.current_url
-  missing_eles = w.until(lambda x: x.find_elements(
-      By.CLASS_NAME, "recipe-ingredient-missing-element"))
 
-  missing_grocery = missing_eles[0].find_element(
-      By.CSS_SELECTOR, ".recipe-ingredient-missing-item span").text
-  missing_eles[0].find_element(
-      By.CSS_SELECTOR, ".recipe-ingredient-missing-add-grocery img").click()
-  missing_inventory = missing_eles[1].find_element(
-      By.CSS_SELECTOR, ".recipe-ingredient-missing-item span").text
-  missing_eles[1].find_element(
-      By.CSS_SELECTOR, ".recipe-ingredient-missing-add-inventory img").click()
+  # find all ingredients
+  ingre_eles = w.until(lambda x: x.find_elements(
+      By.CSS_SELECTOR, ".recipe-ingredient-missing-element>.recipe-ingredient-missing-item>span"))
+  ingredients = [ele.text for ele in ingre_eles]
+  item1 = ingredients[0]
+  item2 = ingredients[1]
+
+  # Collect all groceries
+  d.find_element(By.CSS_SELECTOR, ".recipe-ingredient-modal-add-all-grocery img").click()
 
   # Go to groceries
   d.find_element(By.CSS_SELECTOR, ".modal-panel-close-btn img").click()
@@ -44,60 +41,103 @@ def test_add_missing():
 
   # Wait for load
   w.until(lambda x: x.find_elements(By.CLASS_NAME, "grocery-item-root"))
-  assert len(d.find_elements(
-      By.XPATH, grocery_xpath_fmt % missing_grocery)) == 1
+  # Check that the grocery is there
+  for item in ingredients:
+    assert len(d.find_elements(By.XPATH, f"//input[@value='{item}']")) == 1
 
-  # Go to inventory
-  d.find_element(By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img").click()
+  # Collect the grocery items
   d.find_element(
-      By.CSS_SELECTOR, "#workspace-menu-link-inventory img").click()
+      By.XPATH,
+      "//input[@value='%s']/../../div[contains(@class,'grocery-item-collect')]/img" % item1).click()
+  d.find_element(
+      By.XPATH,
+      "//input[@value='%s']/../../div[contains(@class,'grocery-item-collect')]/img" % item2).click()
 
-  # wait for load
-  w.until(lambda x: x.find_elements(By.CLASS_NAME, "inventory-item-root"))
-  assert len(d.find_elements(
-      By.XPATH, inventory_xpath_fmt % missing_inventory)) == 1
-
-  # Go back to recipe
+  # Go back to the recipe
   d.get(recipe_url)
+  # Open more modal panel
   w.until(lambda x: x.find_element(
       By.CLASS_NAME, "recipe-single-ingredient-more")).click()
 
-  missing_eles = w.until(lambda x: x.find_elements(
-      By.CLASS_NAME, "recipe-ingredient-missing-element"))
-  missing_ingres = [
-      e.find_element(
-          By.CSS_SELECTOR, ".recipe-ingredient-missing-item span").text
-      for e in missing_eles
-  ]
+  # Check ingredients are the correct state
+  for item in ingredients:
+    grocery_btn = d.find_element(
+        By.XPATH,
+        f"//span[text()='{item}']/../../div[contains(@class, 'recipe-ingredient-modal-add-ingredient')]")
+    if item == item1 or item == item2:
+      assert "input-disabled" not in grocery_btn.get_dom_attribute("class")
+    else:
+      assert "input-disabled" in grocery_btn.get_dom_attribute("class")
 
-  # Add all to grocery
+  # recollect grocery item1
   d.find_element(
-      By.CSS_SELECTOR, ".recipe-ingredient-modal-add-all-grocery img").click()
+      By.XPATH,
+      f"//span[text()='{item1}']/../../div[contains(@class,"
+      "'recipe-ingredient-modal-add-ingredient')]/img").click()
 
-  # Go back to groceries
+  # Collect all inventory items
+  d.find_element(By.CSS_SELECTOR, ".recipe-ingredient-modal-add-all-inventory img").click()
+
+  # Go to groceries
   d.find_element(By.CSS_SELECTOR, ".modal-panel-close-btn img").click()
   d.find_element(By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img").click()
   d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-grocery img").click()
 
+  # Wait for load
   w.until(lambda x: x.find_elements(By.CLASS_NAME, "grocery-item-root"))
-  for ingre in missing_ingres:
-    assert len(d.find_elements(By.XPATH, grocery_xpath_fmt % ingre)) == 1
+  # Collect the grocery items
+  assert len(d.find_elements(
+      By.XPATH,
+      f"//input[@value='{item1}']/../../div[contains(@class,'grocery-item-collect')]/img")) == 1
+
+  # Go to inventory
+  d.find_element(By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img").click()
+  d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-inventory img").click()
+
+  # wait for load
+  w.until(lambda x: x.find_elements(By.CLASS_NAME, "inventory-item-root"))
+  # Check all ingredients are in inventory
+  for item in ingredients:
+    assert len(d.find_elements(By.XPATH, f"//input[@value='{item}']")) == 1
+
+  d.find_element(
+      By.XPATH,
+      f"//input[@value='{item1}']/../../div[contains(@class,'inventory-item-show-more')]/img").click()
+  d.find_element(By.CSS_SELECTOR, ".inventory-modal-delete-btn img").click()
+
+  d.find_element(
+      By.XPATH,
+      f"//input[@value='{item2}']/../../div[contains(@class,'inventory-item-show-more')]/img").click()
+  d.find_element(By.CSS_SELECTOR, ".inventory-modal-delete-btn img").click()
 
   # Go back to recipe
   d.get(recipe_url)
   w.until(lambda x: x.find_element(
       By.CLASS_NAME, "recipe-single-ingredient-more")).click()
 
-  missing_eles = w.until(lambda x: x.find_elements(
-      By.CLASS_NAME, "recipe-ingredient-missing-element"))
-  # Add all inventory
-  d.find_element(
-      By.CSS_SELECTOR, ".recipe-ingredient-modal-add-all-inventory img").click()
+  ele = d.find_element(
+      By.XPATH,
+      f"//span[text()='{item1}']/../../"
+      "div[contains(@class, 'recipe-ingredient-missing-add-inventory')]/img")
+  assert ele.get_dom_attribute("src") == "/icons/inventory.svg"
+  ele.click()
 
-  # Go back to inventory and verify
+  ele = d.find_element(
+      By.XPATH,
+      f"//span[text()='{item2}']/../../"
+      "div[contains(@class, 'recipe-ingredient-missing-add-inventory')]/img")
+  assert ele.get_dom_attribute("src") == "/icons/inventory.svg"
+
+  # Go to groceries
+  d.find_element(By.CSS_SELECTOR, ".modal-panel-close-btn img").click()
   d.find_element(By.CSS_SELECTOR, ".workspace-menu-bar-show-btn img").click()
-  d.find_element(
-      By.CSS_SELECTOR, "#workspace-menu-link-inventory img").click()
+  d.find_element(By.CSS_SELECTOR, "#workspace-menu-link-inventory img").click()
+
+  # wait for load
   w.until(lambda x: x.find_elements(By.CLASS_NAME, "inventory-item-root"))
-  for ingre in missing_ingres:
-    assert len(d.find_elements(By.XPATH, inventory_xpath_fmt % ingre)) == 1
+  assert len(d.find_elements(By.XPATH, f"//input[@value='{item1}']")) == 1
+
+  d.find_element(
+      By.XPATH,
+      f"//input[@value='{item1}']/../../div[contains(@class,'inventory-item-show-more')]/img").click()
+  d.find_element(By.CSS_SELECTOR, ".inventory-modal-delete-btn img").click()

@@ -10,6 +10,7 @@ import InventoryList, { InventoryMenu as InventoryContextMenu } from './inventor
 import RecipeIndex, { RecipeContextMenu } from './recipe/RecipeIndex';
 import AuthIndex from './auth/AuthIndex';
 import { ImageButton } from './component/input';
+import AppCache from './AppCache';
 
 function Home() {
   return (
@@ -79,14 +80,16 @@ function Workspace() {
     <div className="workspace-root">
       <WorkspaceHeader />
       <div className="workspace-main">
-        <Routes>
-          <Route path="grocery" element={<GroceryList />} />
-          <Route path="inventory" element={<InventoryList />} />
-          <Route path="inventory/:filter" element={<InventoryList />} />
-          <Route path="recipe/*" element={<RecipeIndex />} />
-          <Route path="account" element={<Account />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AppCache>
+          <Routes>
+            <Route path="grocery" element={<GroceryList />} />
+            <Route path="inventory" element={<InventoryList />} />
+            <Route path="inventory/:filter" element={<InventoryList />} />
+            <Route path="recipe/*" element={<RecipeIndex />} />
+            <Route path="account" element={<Account />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AppCache>
       </div>
     </div>
   );

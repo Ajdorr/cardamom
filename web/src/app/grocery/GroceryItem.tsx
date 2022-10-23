@@ -10,7 +10,6 @@ const DragToDeleteTolerance = 60
 type AddGroceryItemProps = {
   id: string
   store: string
-  onAdd: (item: GroceryItemModel) => void
 }
 
 export function AddGroceryItem(props: AddGroceryItemProps) {
@@ -23,8 +22,6 @@ export function AddGroceryItem(props: AddGroceryItemProps) {
     api.post("grocery/create", {
       item: item,
       store: props.store.length > 0 ? props.store : null
-    }).then(rsp => {
-      props.onAdd(rsp.data)
     })
   }
 
@@ -36,8 +33,6 @@ export function AddGroceryItem(props: AddGroceryItemProps) {
 type GroceryItemProps = {
   model: GroceryItemModel
   stores: string[]
-  onUpdate: (i: GroceryItemModel) => void
-  onDelete: (i: GroceryItemModel) => void
 }
 
 type UpdateRequest = {
@@ -50,34 +45,25 @@ export function GroceryItem(props: GroceryItemProps) {
 
   const [initX, setInitX] = useState(0)
   const [deltaX, setDeltaX] = useState(0)
+  const [initY, setInitY] = useState(0)
   const cssStyle = (deltaX !== 0) ? { transform: `translateX(${deltaX}px)` } : undefined
 
   const onUpdate = (req: UpdateRequest) => {
-
-    // Prevent screen jitter
-    props.model.item = req.item ? req.item : props.model.item
-    props.model.store = req.store ? req.store : props.model.store
-    props.onUpdate(props.model)
-
-    api.post("grocery/update", req).then(rsp => {
-      props.onUpdate(rsp.data)
-    })
-  }
-
-  const collectItem = () => {
-    api.post("grocery/collect", { uid: props.model.uid, is_collected: true }).then(rsp => {
-      props.onUpdate(rsp.data)
-    })
+    api.post("grocery/update", req)
   }
 
   return (<div style={cssStyle} className="grocery-item-root"
-    onTouchStart={e => { setInitX(e.touches[0].clientX) }}
-    onTouchMove={e => { setDeltaX(e.touches[0].clientX - initX); }}
+    onTouchStart={e => { setInitX(e.touches[0].clientX); setInitY(e.touches[0].clientY) }}
+    onTouchMove={e => {
+      if (Math.abs(e.touches[0].clientY - initY) < 30) {
+        setDeltaX(e.touches[0].clientX - initX);
+      } else {
+        setDeltaX(0);
+      }
+    }}
     onTouchEnd={e => {
       if (Math.abs(deltaX) >= DragToDeleteTolerance) {
-        api.post("grocery/delete", { uid: props.model.uid }).then(rsp => {
-          props.onDelete(props.model)
-        })
+        api.post("grocery/delete", { uid: props.model.uid })
       }
       setInitX(0); setDeltaX(0)
     }}
@@ -95,7 +81,8 @@ export function GroceryItem(props: GroceryItemProps) {
     {deltaX > 0 ? <SwipeIndicatorWidget className="grocery-item-collect-indicator"
       deltaX={deltaX} height={40} iconSrc="/icons/done.svg" />
       : null}
-    <ImageButton className="grocery-item-collect" alt="collect" src="/icons/done.svg" onClick={e => collectItem()} />
+    <ImageButton className="grocery-item-collect" alt="collect" src="/icons/done.svg"
+      onClick={e => api.post("grocery/collect", { uid: props.model.uid, is_collected: true })} />
     <InputTextBox value={props.model.item} inputAttrs={{ autoCapitalize: "none" }} className="grocery-item-input"
       onChange={i => onUpdate({ uid: props.model.uid, item: i })} />
     <ModifiableDropDown className="grocery-item-store" value={props.model.store} options={props.stores}

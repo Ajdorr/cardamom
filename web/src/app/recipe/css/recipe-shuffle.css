@@ -1,0 +1,107 @@
+/* Recipe Shuffle */
+.recipe-shuffle-root {
+  height: 100%;
+  display: flex;
+  padding: 5px 15px 50px 15px;
+
+  box-sizing: border-box;
+  row-gap: 15px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recipe-shuffle-root > *{
+  border-radius: 5px;
+  width: 95%;
+}
+
+.recipe-shuffle-form {
+  flex: 0 0 max-content;
+}
+
+.recipe-shuffle-recipe {
+  display: flex;
+  flex-direction: column;
+
+  padding: 10px;
+
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows:
+    max-content
+    var(--format-line-height)
+    repeat(3, max-content);
+
+  column-gap: 5px;
+  row-gap: 15px;
+
+  grid-template-areas:
+  "name name"
+  "desc desc"
+  "ingre ingre"
+  ;
+
+  box-sizing: border-box;
+  flex: 1 1 max-content;
+  overflow-y: scroll;
+}
+
+.recipe-shuffle-action {
+  display: flex;
+  flex-direction: row;
+
+  padding: 15px;
+
+  column-gap: 5px;
+  box-sizing: border-box;
+  flex: 0 0 max-content;
+  justify-content: space-between;
+}
+
+.recipe-shuffle-root-grid > *{
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.recipe-shuffle-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-shuffle-ingredient-list {
+  display: grid;
+  column-gap: 5px;
+  grid-template-columns: 45px 35px 1fr;
+}
+
+.recipe-shuffle-ingredient-list > * { display: contents; }
+
+.recipe-shuffle-ingredient-quantity {
+  border-radius: 5px;
+}
+
+.recipe-shuffle-ingredient-quantity {
+  text-align: right;
+}
+
+.recipe-shuffle-action-panel {
+  display: flex;
+  flex-direction: row;
+}
+
+.recipe-shuffle-action-panel>* {
+  flex: 1;
+  margin: 5px;
+  height: var(--format-line-height);
+}
+
+.recipe-shuffle-empty {
+  display: flex;
+
+  padding: 10px 5px;
+  box-sizing: border-box;
+  justify-content: center;
+  text-align: center;
+}
+
