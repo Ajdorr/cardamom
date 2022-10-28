@@ -2,6 +2,7 @@ from tests import login
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
 
 
 def get_attr(e: WebElement, by: By, selector: str, attr: str) -> str:
@@ -33,16 +34,15 @@ def test_grocery_basic_usage():
   add_item.send_keys("eGGs")
 
   # Add to Metro
-  clear_store = d.find_element(
-      By.CSS_SELECTOR, "#grocery-list-store .modifiable-drop-down-clear img")
-  clear_store.click()
+  store_select = Select(d.find_element(By.CSS_SELECTOR, "#grocery-list-store select"))
+  store_select.select_by_value("")
   set_store.send_keys("Metro")
   add_item.send_keys("broCcolI")
   add_item.send_keys(Keys.ENTER)
   add_item.send_keys("kale")
 
   # Show all
-  clear_store.click()
+  store_select.select_by_value("")
 
   # verify
   groceries = dict(map(lambda g: (

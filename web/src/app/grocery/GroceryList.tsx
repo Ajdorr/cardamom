@@ -1,9 +1,9 @@
 import "./grocery.css"
-import { useContext, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import { api } from '../api';
 import { ImageButton } from '../component/input';
 import { GroceryItem, AddGroceryItem } from './GroceryItem'
-import { ModifiableDropDown } from "./component/DropDown";
+import { ModifiableDropDown } from "./component/StoreDropDown";
 import { AppCacheContext } from "../AppCache";
 
 export default function GroceryList() {
@@ -12,15 +12,21 @@ export default function GroceryList() {
   const [selectedStore, setSelectedStore] = useState("")
 
   const collectedItems = grocery.filter(i => i.is_collected)
-  const uniqueStores = grocery.map(i => i.store).filter((s, i, a) => a.indexOf(s) === i && s.length > 0)
-  let displayedItems = grocery.filter(i => !i.is_collected)
-  displayedItems = (selectedStore !== "") ? displayedItems.filter(i => i.store === selectedStore) : displayedItems
+  const uniqueStores = useMemo(() => {
+    let stores = grocery.map(i => i.store).filter((s, i, a) => a.indexOf(s) === i && s.length > 0)
+    stores.push("")
+    return stores
+  }, [grocery])
+
+  const displayedItems = useMemo(() => {
+    let uncollectedItems = grocery.filter(i => !i.is_collected)
+    return (selectedStore !== "") ? uncollectedItems.filter(i => i.store === selectedStore) : uncollectedItems
+  }, [grocery, selectedStore])
 
   return (
     <div className="grocery-list-root">
       <ModifiableDropDown options={uniqueStores} value={selectedStore} id={"grocery-list-store"}
-        className="grocery-list-store theme-primary-light" displayClear={true}
-        onChange={setSelectedStore}
+        className="grocery-list-store theme-primary-light" onChange={setSelectedStore}
       />
 
       <AddGroceryItem id="grocery-list-add-item" store={selectedStore} />

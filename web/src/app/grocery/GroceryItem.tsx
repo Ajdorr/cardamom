@@ -2,7 +2,7 @@ import { useState } from "react"
 import { api } from "../api"
 import { ImageButton, InputTextBox } from "../component/input"
 import { SwipeIndicatorWidget } from "../component/widget"
-import { ModifiableDropDown } from "./component/DropDown"
+import { ModifiableDropDown } from "./component/StoreDropDown"
 import { GroceryItemModel } from './schema'
 
 const DragToDeleteTolerance = 60

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import { AppCacheContext } from "../AppCache";
@@ -53,7 +53,9 @@ function InventoryList() {
   }
 
   useEffect(() => { if (filter && !InventoryCategories.has(filter)) nav("/inventory") }, [filter, nav])
-  const displayItems = filter ? inventory.filter(i => { return i.category === filter }) : inventory
+  const displayItems = useMemo(() => {
+    return filter ? inventory.filter(i => { return i.category === filter }) : inventory
+  }, [filter, inventory])
 
   return (<div className="inventory-list-root">
 

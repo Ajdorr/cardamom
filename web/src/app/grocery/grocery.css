@@ -1,21 +1,21 @@
 /* Grocery Drop Down */
-.modifiable-drop-down-workspace {
+.store-drop-down-workspace {
   display: flex;
   height: 100%;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.modifiable-drop-down-input {
-  flex-grow: 1;
+.store-drop-down-input {
+  flex: 1 1 80px;
   display: flex;
 }
 
-.modifiable-drop-down-input > input {
+.store-drop-down-input > input {
   text-transform: capitalize;
 }
 
-.modifiable-drop-down-overlay  {
+.store-drop-down-overlay  {
   position: absolute;
   max-width: 250px;
   box-sizing: border-box;
@@ -27,7 +27,7 @@
   text-transform: capitalize;
 }
 
-.modifiable-drop-down-overlay > div {
+.store-drop-down-overlay > div {
   padding: 5px 0px;
   text-overflow: ellipsis;
   white-space: nowrap;

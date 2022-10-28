@@ -1,0 +1,23 @@
+.store-drop-down-select {
+  border: none;
+  outline: none;
+  outline-offset: 0;
+}
+
+.store-drop-down-select div {
+  display: none;
+}
+
+.store-drop-down-select {
+  height: var(--format-line-height);
+  width: var(--format-line-height);
+
+  font-size: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+  background-image: url("/public/icons/drop-down.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+}

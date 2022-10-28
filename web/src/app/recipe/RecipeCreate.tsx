@@ -15,7 +15,8 @@ export default function RecipeCreate() {
   return (<div className="recipe-create-root theme-background">
     <div className="recipe-create-workspace theme-focus">
       <div className="recipe-create-header format-font-large">Create a new recipe</div>
-      <FormText label="Recipe Name" className="recipe-create-name" value={name} onChange={setName} />
+      <FormText label="Recipe Name" className="recipe-create-name" value={name}
+        inputAttrs={{ autoCapitalize: "words" }} onChange={setName} />
       <TextButton label="Create!" theme={Theme.Primary} className="recipe-create-submit" onClick={e => {
         api.post("recipe/create", { "name": name }).then(rsp => { nav(`/recipe/edit/${rsp.data.uid}`) })
       }} />

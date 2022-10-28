@@ -6,7 +6,7 @@ type TextProps = {
   value: string
   label: string
   id?: string
-  inputAttrs?: any
+  inputAttrs?: React.HtmlHTMLAttributes<HTMLInputElement>
   className?: string
   onChange: (s: string) => void
 }
