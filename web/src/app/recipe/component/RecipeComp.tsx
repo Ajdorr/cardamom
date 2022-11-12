@@ -8,6 +8,7 @@ const DragToDeleteTolerance = 60
 type IngredientProps = {
   className?: string
   model: IngredientModel
+  isDraggable: boolean
   isInInventory: boolean
   placeholder?: string
   onChange: (v: UpdateIngredient) => void
@@ -60,12 +61,20 @@ export function RecipeIngredient(props: IngredientProps) {
     }
     <span className="recipe-ingredient-marker"
       onTouchStart={e => {
+        if (!props.isDraggable) {
+          return
+        }
+
         setInitX(e.touches[0].clientX); setInitY(e.touches[0].clientY);
         if (document.activeElement instanceof HTMLElement) {
           document.activeElement.blur()
         }
       }}
       onTouchMove={e => {
+        if (!props.isDraggable) {
+          return
+        }
+
         const dY = e.touches[0].clientY - initY;
         const dX = e.touches[0].clientX - initX;
 
@@ -77,6 +86,10 @@ export function RecipeIngredient(props: IngredientProps) {
         }
       }}
       onTouchEnd={e => {
+        if (!props.isDraggable) {
+          return
+        }
+
         if (Math.abs(deltaY) > Math.abs(deltaX)) {
           props.onReorderComplete(getIndexDelta(deltaY));
         } else if (Math.abs(deltaX) > DragToDeleteTolerance) {
@@ -86,7 +99,7 @@ export function RecipeIngredient(props: IngredientProps) {
         setInitY(0); setDeltaY(0);
       }}
     >
-      <img alt="draggable" src="/icons/drag-indicator.svg" />
+      <img alt="draggable" src="/icons/drag-indicator.svg" style={{ visibility: props.isDraggable ? "visible" : "hidden" }} />
     </span>
 
     <InputTextBox value={quantity} className={quantityClass} placeholder={props.placeholder}

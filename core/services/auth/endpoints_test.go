@@ -67,11 +67,14 @@ func TestRefesh(t *testing.T) {
 	rsp := t_ext.API_Test(testCase)
 
 	cookies := rsp.Cookies()
-	if len(cookies) != 1 {
+	if len(cookies) != 2 {
 		t.Errorf("incorrect number of cookies returned on login(%d)", len(cookies))
 	} else {
 		if cookies[0].Name != "access_token" {
 			t.Errorf("missing access token: %s", cookies[0].Name)
+		}
+		if cookies[1].Name != "refresh_token" {
+			t.Errorf("missing refresh token: %s", cookies[0].Name)
 		}
 	}
 

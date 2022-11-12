@@ -18,6 +18,7 @@ export default function RecipeSingle() {
 
   const [ingreNewNdx, setIngreNewNdx] = useState(-1)
   const [indicatorClass, setIndicatorClass] = useState("theme-indicator-top")
+  const [areIngredientsEditable, setEditableIngredients] = useState(false)
   const [displayIngredientMore, setDisplayIngredientMore] = useState(false)
 
   const [recipe, setRecipe] = useState<RecipeModel>({
@@ -129,6 +130,8 @@ export default function RecipeSingle() {
     <div className="recipe-single-ingredients theme-focus">
       <div className="recipe-single-ingredient-header">
         <span className="recipe-single-ingredient-header-title format-font-small">Ingredients</span>
+        <ImageButton alt="more ingredient options" src={areIngredientsEditable ? "/icons/done.svg" : "/icons/edit.svg"}
+          className="recipe-single-ingredient-edit" onClick={e => { setEditableIngredients(!areIngredientsEditable) }} />
         <ImageButton alt="more ingredient options" src="/icons/more-horizontal.svg"
           className="recipe-single-ingredient-more" onClick={e => { setDisplayIngredientMore(true) }} />
       </div>
@@ -137,6 +140,7 @@ export default function RecipeSingle() {
           recipe.ingredients.map((ingre, i) => {
             return (<RecipeIngredient key={i} model={ingre}
               className={i === ingreNewNdx ? indicatorClass : undefined}
+              isDraggable={areIngredientsEditable}
               isInInventory={totalInventory.indexOf(ingre.item) >= 0}
               onChange={s => updateIngredient(i, s)}
               onReorderComplete={d => { setIngreNewNdx(-1); reorderIngredient(i, d) }}

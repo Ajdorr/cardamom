@@ -1,4 +1,3 @@
-import os
 from sys import platform
 from pydantic import BaseSettings
 from dotenv import load_dotenv
@@ -10,6 +9,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 
 class Settings(BaseSettings):
@@ -27,7 +27,13 @@ settings = Settings()
 
 def get_driver() -> Tuple[WebDriver, WebDriverWait]:
   if settings.browser == "chrome":
-    driver = webdriver.Chrome()
+    options = ChromeOptions()
+    if platform == "linux":
+      options.add_argument('--no-sandbox')
+      options.add_argument('--headless')
+      options.add_argument('--disable-extensions')
+      options.add_argument('--disable-dev-shm-usage')
+    driver = webdriver.Chrome(options=options)
   elif settings.browser == "safari":
     driver = webdriver.Safari()
   elif settings.browser == "firefox":

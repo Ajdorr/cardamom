@@ -80,16 +80,9 @@ func Refresh(c *gin.Context) {
 	} else if err = models.DB.First(&user, "uid = ?", claims.Uid).Error; err != nil {
 		gin_ext.Abort(c, http.StatusUnauthorized, log_ext.Errorf("refresh token validation -- %w", err))
 		// Create the access token
-	} else if access_token, csrf, err := user.GetAccessToken(); err != nil {
-		gin_ext.Abort(c, http.StatusUnauthorized, log_ext.Errorf("refresh token validation -- %w", err))
-		// } else if refresh_token, _, err := user.GetRefreshToken(); err != nil {
-		// gin_ext.ServerError(c, log_ext.Errorf("creating refresh JWT -- %w", err))
 	} else {
 		// TODO Invalidate refresh token and set it
-		isSecure := !cfg.IsLocal()
-		setAccessToken(c, access_token, csrf, isSecure)
-		// setRefreshToken(c, refresh_token, isSecure)
-		c.JSON(http.StatusOK, &gin.H{})
+		sendAuthTokenResponse(c, &user)
 	}
 }
 

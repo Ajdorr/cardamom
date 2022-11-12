@@ -43,14 +43,20 @@ def create_flow(d: WebDriver, w: WebDriverWait, info: Dict[Any, Any]):
   d.find_element(
       By.CSS_SELECTOR, ".recipe-single-desc textarea").send_keys(info["desc"])
 
+  # Make ingredients editable
+  d.find_element(
+      By.CSS_SELECTOR, ".recipe-single-ingredient-edit img").click()
   # Add ingredient
   add_ingredient = d.find_element(
       By.CSS_SELECTOR, ".recipe-single-ingredient-add img")
 
   for i, ingre in enumerate(info["ingre"]):
     add_ingredient.click()
-    w.until(lambda x: len(x.find_elements(
-        By.CLASS_NAME, "recipe-ingredient-root")) > i)
+    try: 
+      w.until(lambda x: len(x.find_elements(
+          By.CLASS_NAME, "recipe-ingredient-root")) > i)
+    except Exception as e:
+      raise e
     ingre_ele = d.find_elements(By.CLASS_NAME, "recipe-ingredient-root")[i]
     # Add ingredients
     ingre_ele.find_element(
@@ -58,10 +64,12 @@ def create_flow(d: WebDriver, w: WebDriverWait, info: Dict[Any, Any]):
         ".recipe-ingredient-quantity input").send_keys(Keys.BACKSPACE + ingre["quantity"])
     ingre_ele.find_element(
         By.CSS_SELECTOR, ".recipe-ingredient-unit").send_keys(ingre["unit"])
-    item = ", ".join([ingre["item"], ingre["modifier"]]
-                     ) if "modifier" in ingre else ingre["item"]
+    item = ", ".join(
+      [ingre["item"], ingre["modifier"]]) if "modifier" in ingre else ingre["item"]
     ingre_ele.find_element(
         By.CSS_SELECTOR, ".recipe-ingredient-item input").send_keys(item)
+    ingre_ele.find_element(
+        By.CSS_SELECTOR, ".recipe-ingredient-item input").send_keys(Keys.TAB)
     if ingre.get("optional", False):
       ingre_ele.find_element(
           By.CSS_SELECTOR, ".recipe-ingredient-optional input").click()

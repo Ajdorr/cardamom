@@ -98,7 +98,7 @@ func (u User) GetRefreshToken() (string, string, error) {
 			Issuer:    cfg.C.Domain,
 			Subject:   "refresh_token",
 			Audience:  []string{cfg.C.Domain},
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 30)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 		},
 		Uid:   u.Uid,

@@ -39,7 +39,7 @@
   flex-grow: 1;
 }
 
-.recipe-single-ingredient-more {
+.recipe-single-ingredient-more, .recipe-single-ingredient-edit {
   display: block;
   height: var(--format-font-size-medium);
 }
