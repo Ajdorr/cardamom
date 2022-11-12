@@ -2,7 +2,7 @@ import "./store-drop-down.css"
 import { useState } from "react"
 import { InputTextBox } from "../../component/input"
 
-type ModifiableDropDownProps = {
+type StoreDropDownProps = {
   options: string[]
   value: string
   id?: string
@@ -12,7 +12,7 @@ type ModifiableDropDownProps = {
   onChange: (s: string) => void
 }
 
-export function ModifiableDropDown(props: ModifiableDropDownProps) {
+export function StoreDropDown(props: StoreDropDownProps) {
 
   const [value, setValue] = useState(props.value)
 
@@ -34,8 +34,8 @@ export function ModifiableDropDown(props: ModifiableDropDownProps) {
           placeholder={props.placeholder ? props.placeholder : defaultPlaceholder}
           onChange={s => update(s)} />
 
-        <select className="store-drop-down-select" onChange={e => { update(e.target.value) }}>
-          {props.options.map(opt => <option value={opt}>{opt}</option>)}
+        <select className="store-drop-down-select" value={props.value} onChange={e => { update(e.target.value) }}>
+          {props.options.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
         </select>
       </div>
     </div>

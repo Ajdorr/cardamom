@@ -3,7 +3,7 @@ import { useContext, useMemo, useState } from 'react'
 import { api } from '../api';
 import { ImageButton } from '../component/input';
 import { GroceryItem, AddGroceryItem } from './GroceryItem'
-import { ModifiableDropDown } from "./component/StoreDropDown";
+import { StoreDropDown } from "./component/StoreDropDown";
 import { AppCacheContext } from "../AppCache";
 
 export default function GroceryList() {
@@ -14,7 +14,7 @@ export default function GroceryList() {
   const collectedItems = grocery.filter(i => i.is_collected)
   const uniqueStores = useMemo(() => {
     let stores = grocery.map(i => i.store).filter((s, i, a) => a.indexOf(s) === i && s.length > 0)
-    stores.push("")
+    stores.splice(0, 0, "")
     return stores
   }, [grocery])
 
@@ -25,7 +25,7 @@ export default function GroceryList() {
 
   return (
     <div className="grocery-list-root">
-      <ModifiableDropDown options={uniqueStores} value={selectedStore} id={"grocery-list-store"}
+      <StoreDropDown options={uniqueStores} value={selectedStore} id={"grocery-list-store"}
         className="grocery-list-store theme-primary-light" onChange={setSelectedStore}
       />
 

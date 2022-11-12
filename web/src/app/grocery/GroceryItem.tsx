@@ -2,7 +2,7 @@ import { useState } from "react"
 import { api } from "../api"
 import { ImageButton, InputTextBox } from "../component/input"
 import { SwipeIndicatorWidget } from "../component/widget"
-import { ModifiableDropDown } from "./component/StoreDropDown"
+import { StoreDropDown } from "./component/StoreDropDown"
 import { GroceryItemModel } from './schema'
 
 const DragToDeleteTolerance = 60
@@ -85,7 +85,7 @@ export function GroceryItem(props: GroceryItemProps) {
       onClick={e => api.post("grocery/collect", { uid: props.model.uid, is_collected: true })} />
     <InputTextBox value={props.model.item} inputAttrs={{ autoCapitalize: "none" }} className="grocery-item-input"
       onChange={i => onUpdate({ uid: props.model.uid, item: i })} />
-    <ModifiableDropDown className="grocery-item-store" value={props.model.store} options={props.stores}
+    <StoreDropDown className="grocery-item-store" value={props.model.store} options={props.stores}
       dropDownButtonOnLeft={true} placeholder="Store"
       onChange={s => onUpdate({ uid: props.model.uid, store: s })} />
   </div >

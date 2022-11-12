@@ -76,7 +76,10 @@ export default function AppCache(props: AppCacheProps) {
         setGroceryItems(rsp.data)
         break;
       case "grocery/delete":
-        setGroceryItems(groceryItems.filter(i => i.uid !== rsp.data.uid))
+        let reqData = JSON.parse(rsp.config.data)
+        if (reqData) {
+          setGroceryItems(groceryItems.filter(i => i.uid !== reqData.uid))
+        }
         break;
       case "grocery/clear":
         setGroceryItems(groceryItems.filter(i => !i.is_collected))
