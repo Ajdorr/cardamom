@@ -1,0 +1,40 @@
+server:
+  env: local
+  host: localhost
+  port: 3000
+  domain: localhost:3000
+  jwtTokenSecret: CardamomIsGreat!1234
+  passwordSalt: '#SecretCardamomSalt-5555'
+
+events:
+  eventFileStreamDirectory: ''
+
+db: 
+  host: localhost
+  port: 5432
+  username: test
+  password: password
+  database: core
+
+oauth2:
+  github:
+    clientId: fake-id
+    clientSecret: fake-secret
+  facebook:
+    clientId: fake-id
+    clientSecret: eae6fd76403ea87c39f75d6de12279fe
+  microsoft:
+    clientId: fake-id
+    clientSecret: y1u8Q~hwyOOAMaIKdBLzCg8QrCL52~lwr0uM5cem
+  google:
+    clientId: fake-id
+    clientSecret: fake-secret
+    projectId: fake-project-id
+    authUri: "https://localhost/auth"
+    tokenUri: "https://localhost/token"
+    authProviderX509CertUrl: "https://www.googleapis.com/oauth2/v1/certs"
+    redirectUris: 
+      - "http://localhost:8080/auth/oauth-return/google"
+    
+
+

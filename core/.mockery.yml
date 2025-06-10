@@ -1,0 +1,18 @@
+all: false
+dir: '{{.InterfaceDir}}'
+filename: mocks_test.go
+force-file-write: true
+formatter: goimports
+log-level: info
+structname: '{{.Mock}}{{.InterfaceName}}'
+pkgname: '{{.SrcPackageName}}_mock'
+recursive: false
+require-template-schema-exists: true
+template: testify
+template-schema: '{{.Template}}.schema.json'
+packages:
+  github.com/gin-gonic/gin:
+    config:
+      all: true
+      dir: test/mock/gin
+      filename: gin_mock.go

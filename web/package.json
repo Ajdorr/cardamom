@@ -6,7 +6,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^29.5.14",
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
@@ -19,10 +19,11 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "eject": "react-scripts eject",
+    "test": "jest",
+    "test-watch": "jest --coverage --watchAll"
   },
   "eslintConfig": {
     "extends": [
@@ -44,6 +45,12 @@
   },
   "proxy": "http://localhost:3000/",
   "devDependencies": {
-    "react-test-renderer": "^18.2.0"
+    "@craco/craco": "^7.1.0",
+    "babel-jest": "^30.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.0.0",
+    "jest-environment-jsdom": "^30.0.0",
+    "react-test-renderer": "^19.1.0",
+    "ts-jest": "^29.4.0"
   }
 }

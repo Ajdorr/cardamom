@@ -1,9 +1,10 @@
 package main
 
 import (
-	cfg "cardamom/core/config"
-	"cardamom/core/events"
-	"cardamom/core/router"
+	cfg "cardamom/core/source/config"
+	"cardamom/core/source/db"
+	"cardamom/core/source/events"
+	"cardamom/core/source/router"
 	"context"
 	"fmt"
 	"net/http"
@@ -41,13 +42,13 @@ func main() {
 
 	ctx := getContext()
 
-	// Init server
+	db.Connect()
+
 	server := &http.Server{
-		Addr:    fmt.Sprintf("%s:%s", cfg.C.Host, cfg.C.Port),
+		Addr:    fmt.Sprintf("%s:%s", cfg.C.Server.Host, cfg.C.Server.Port),
 		Handler: router.Engine,
 	}
 
-	// Start server wait
 	go runServer(server)
 	<-ctx.Done()
 

@@ -1,0 +1,15 @@
+export enum Theme {
+  Focus = "theme-focus",
+  Surface = "theme-surface",
+  Background = "theme-background",
+  Primary = "theme-primary",
+  PrimaryLight = "theme-primary-light",
+  PrimaryDark = "theme-primary-dark",
+  Secondary = "theme-secondary",
+  SecondaryLight = "theme-secondary-light",
+  SecondaryDark = "theme-secondary-light",
+  Tertiary = "theme-tertiary",
+  TertiaryLight = "theme-tertiary-light",
+  TertiaryDark = "theme-tertiary-dark",
+  None = "",
+}

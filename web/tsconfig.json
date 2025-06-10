@@ -6,6 +6,13 @@
       "dom.iterable",
       "esnext"
     ],
+    "baseUrl": "./src",
+    "paths": {
+      "@core/*": ["core/*"],
+      "@pages/*": ["pages/*"],
+      "@auth/*": ["auth/*"],
+      "@component/*": ["component/*"],
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -21,6 +28,6 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-  ]
+    "./src/**/*", "./test/**/*"
+, "craco.config.js"  ]
 }

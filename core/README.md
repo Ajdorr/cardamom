@@ -6,6 +6,12 @@ For local environment variables required see config/init.go
 go run bin/migrate/migrate.go
 ```
 
+# Database Migration
+## Install Golang Migrate
+```bash
+go install github.com/golang-migrate/migrate/v4
+```
+
 # Run Locally
 ```bash
 go run bin/server/server.go
